@@ -1,0 +1,135 @@
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+drop schema if exists wallt_db cascade;
+create schema wallt_db;
+SET search_path TO wallt_db;
+
+create table users
+(
+    user_id     serial             not null primary key,
+    username    varchar(50)        not null
+        constraint users_pk_2
+            unique,
+    first_name  varchar(50)        not null,
+    middle_name varchar(50)        not null,
+    last_name   varchar(50)        not null,
+    email       varchar(100)       not null
+        constraint users_pk_3
+            unique,
+    phone       varchar(10)        not null
+        constraint users_pk_4
+            unique,
+    photo       varchar(255)       not null,
+    verified    bool default false not null,
+    blocked     bool default false not null
+);
+
+create table roles
+(
+    role_id serial  not null primary key,
+    name    varchar not null
+        constraint roles_pk_2
+            unique
+);
+
+create table users_roles
+(
+    user_id integer not null,
+    role_id integer not null,
+    constraint users_roles_pk
+        primary key (user_id, role_id)
+);
+
+create table cards
+(
+    card_id   serial      not null primary key,
+    number    varchar(50) not null
+        constraint cards2_pk_2
+            unique,
+    holder_id integer     not null
+        constraint cards2_users_id_fk
+            references users
+);
+
+create table currencies
+(
+    currency_id serial     not null primary key,
+    name        varchar(3) not null
+        constraint currencies_pk_2
+            unique
+);
+
+
+create table wallets
+(
+    wallet_id   serial            not null primary key,
+    holder_id   integer           not null
+        constraint wallets_users_id_fk
+            references users,
+    amount      bigint  default 0 not null,
+    currency_id integer default 0 not null
+        constraint wallets_currencies_currency_id_fk
+            references currencies
+);
+
+create table transactions
+(
+    transaction_id  serial             not null primary key,
+    receiver_wallet integer            not null
+        constraint transactions_wallets_wallet_id_fk_2
+            references wallets,
+    sender_wallet   integer            not null
+        constraint transactions_wallets_wallet_id_fk
+            references wallets,
+    amount          bigint             not null,
+    currency_id     integer            not null
+        constraint transactions_currencies_currency_id_fk
+            references currencies,
+    status          bool default false not null
+);
+
+create table transfers
+(
+    transfer_id serial                not null primary key,
+    card_id     integer               not null
+        constraint c
+            references cards,
+    amount      bigint  default 0     not null,
+    status      boolean default false not null,
+    currency_id integer               not null
+        constraint transfers_currencies_currency_id_fk
+            references currencies,
+    wallet_id   integer               not null
+        constraint transfers_wallets_wallet_id_fk
+            references wallets,
+    direction   varchar(20)           not null
+);
+
+create table countries
+(
+    country_id serial      not null primary key,
+    name       varchar(50) not null
+        constraint countries_pk_2
+            unique
+);
+
+create table cities
+(
+    city_id    serial primary key,
+    name       varchar(50) not null
+        constraint cities_pk_2
+            unique,
+    country_id integer     not null
+        constraint cities_countries_country_id_fk
+            references countries
+);
+
+create table addresses
+(
+    address_id serial      not null primary key,
+    street     varchar(50) not null,
+    street     varchar(50) not null,
+    city_id    integer     not null
+        constraint addresses_cities_city_id_fk
+            references cities
+);
+
