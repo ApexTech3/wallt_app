@@ -1,6 +1,5 @@
 package com.apex.tech3.wallt_app.services;
 
-import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.repositories.contracts.WalletRepository;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
@@ -22,6 +21,7 @@ public class WalletServiceImpl implements WalletService {
     public Wallet get(int id) {
         return repository.getById(id);
     }
+
     @Override
     public List<Wallet> getAll() {
         return repository.findAll();
@@ -29,6 +29,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<Wallet> getByHolderAndCurrency(Integer holderId, Integer currencyId) {
-        return repository.findByHolderAndCurrency(holderId,currencyId);
+        return repository.findByHolderAndCurrency(holderId, currencyId);
     }
 }

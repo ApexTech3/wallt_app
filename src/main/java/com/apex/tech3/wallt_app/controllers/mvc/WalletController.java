@@ -30,7 +30,7 @@ public class WalletController {
 
     @GetMapping("/filter")
     public String getFilterWallets(Model model) {
-        model.addAttribute("wallets", walletService.getByHolderAndCurrency(null, 2));
+        model.addAttribute("wallets", walletService.getByHolderAndCurrency(null, null));
         return "wallets";
     }
 }

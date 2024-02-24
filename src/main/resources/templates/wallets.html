@@ -3,15 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <title>Wallets</title>
+    <style>
+        #walletTable th {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<table class="table">
+<table id="walletTable">
+    <thead>
+    <tr>
+        <th id="id">Id</th>
+        <th id="holder">Holder</th>
+        <th id="amount">Amount</th>
+        <th id="currency">Currency</th>
+    </tr>
+    </thead>
     <tbody>
     <tr th:each="wallet : ${wallets}">
-        <th scope="row" th:text="${wallet.holder.username}">1</th>
-        <td th:text="${#numbers.formatDecimal(wallet.amount/100.00, 0, 'COMMA', 2, 'POINT')} + ' ' + ${wallet.currency.name}">1.23</td>
+        <td th:text="${wallet.id}">1</td>
+        <td th:text="${wallet.holder.username}">1</td>
+        <td th:text="${#numbers.formatDecimal(wallet.amount/100.00, 0, 'COMMA', 2, 'POINT')}">
+            1.23
+        </td>
+        <td th:text="${wallet.currency.name}">1</td>
     </tr>
     </tbody>
 </table>
 </body>
+<script>
+    window.onload = function() {
+        var table = document.getElementById("walletTable");
+        var headers = table.getElementsByTagName("THEAD")[0].getElementsByTagName("TH");
+        var rows = Array.prototype.slice.call(table.getElementsByTagName("TR"));
+        rows = rows.slice(1); // Exclude the header row
+
+        var sortColumn = 0; // The column to sort by (0 = id, 1 = holder, 2 = amount, 3 = currency)
+        var sortOrder = 1; // The sort order (1 = ascending, -1 = descending)
+
+        for (var i = 0; i < headers.length; i++) {
+            headers[i].addEventListener("click", function() {
+                // If the same header is clicked again, reverse the sort order
+                if (sortColumn === this.cellIndex) {
+                    sortOrder *= -1;
+                } else {
+                    // If a different header is clicked, sort in ascending order
+                    sortColumn = this.cellIndex;
+                    sortOrder = 1;
+                }
+
+                // Sort the rows
+                rows.sort(function(a, b) {
+                    var aValue = a.cells[sortColumn].innerText;
+                    var bValue = b.cells[sortColumn].innerText;
+
+                    // If sorting by amount or currency
+                    if (sortColumn === 2 || sortColumn === 3) {
+                        aValue = aValue.replace(/,/g, '').replace('.', ''); // Remove commas and points
+                        bValue = bValue.replace(/,/g, '').replace('.', ''); // Remove commas and points
+                    }
+
+                    // If the values are numeric, convert them to numbers
+                    if (!isNaN(aValue) && !isNaN(bValue)) {
+                        aValue = Number(aValue);
+                        bValue = Number(bValue);
+                    }
+
+                    // Compare the values
+                    if (aValue < bValue) {
+                        return -1 * sortOrder;
+                    } else if (aValue > bValue) {
+                        return 1 * sortOrder;
+                    } else {
+                        return 0;
+                    }
+                });
+
+                // Append the sorted rows to the table
+                for (var j = 0; j < rows.length; j++) {
+                    table.appendChild(rows[j]);
+                }
+            });
+        }
+    };
+</script>
 </html>
