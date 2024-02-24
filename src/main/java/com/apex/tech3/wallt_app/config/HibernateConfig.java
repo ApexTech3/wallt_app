@@ -24,11 +24,11 @@ public class HibernateConfig {
         dbPassword = env.getProperty("spring.datasource.password");
     }
 
-    @Bean (name = "entityManagerFactory")
+    @Bean(name = "entityManagerFactory")
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.forum.models");
+        sessionFactory.setPackagesToScan("com.apex.tech3.wallt_app.models");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

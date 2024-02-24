@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Card</title>
+</head>
+<body>
+<table class="table">
+    <tbody>
+        <th scope="row" th:text="${card.id}">1</th>
+        <td><a href="#" th:href="@{/cards/{id}(id=${card.id})}" th:text="${card.number}">123456"</a></td>
+        <td th:text="${card.cvv}">Pesho</td>
+        <td th:text="${card.holder.firstName}">Pesho</td>
+        <td th:text="${card.holder.lastName}">Pesho</td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

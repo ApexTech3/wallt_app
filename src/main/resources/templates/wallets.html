@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallets</title>
+</head>
+<body>
+<table class="table">
+    <tbody>
+    <tr th:each="wallet : ${wallets}">
+        <th scope="row" th:text="${wallet.holder.username}">1</th>
+        <td th:text="${#numbers.formatDecimal(wallet.amount/100.00, 0, 'COMMA', 2, 'POINT')} + ' ' + ${wallet.currency.name}">1.23</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

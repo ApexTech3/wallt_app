@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+<table class="table">
+    <tbody>
+        <th scope="row" th:text="${user.id}">1</th>
+        <td><a href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}">pesho"</a></td>
+        <td th:text="${user.firstName}">Pesho</td>
+        <td th:text="${user.middleName}">Pesho</td>
+        <td th:text="${user.lastName}">Peshov</td>
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.phone}">Email</td>
+        <td th:text="${user.profilePicture}">Email</td>
+        <td th:text="${user.address}">Email</td>
+        <td th:text="${user.blocked}">Email</td>
+        <td th:text="${user.verified}">Email</td>
+        <td th:text="${user.roles}">USER</td>
+    </tbody>
+</table>
+</body>
+</html>

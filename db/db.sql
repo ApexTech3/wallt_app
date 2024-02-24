@@ -2,25 +2,60 @@ SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 drop schema if exists wallt_db cascade;
 create schema wallt_db;
 SET search_path TO wallt_db;
+CREATE SEQUENCE increment_SEQ START 1;
+
+create table countries
+(
+    country_id serial      not null primary key,
+    name       varchar(50) not null
+        constraint countries_pk_2
+            unique
+);
+
+create table cities
+(
+    city_id    serial primary key,
+    name       varchar(50) not null
+        constraint cities_pk_2
+            unique,
+    country_id integer     not null
+        constraint cities_countries_country_id_fk
+            references countries
+);
+
+create table addresses
+(
+    address_id serial      not null primary key,
+    street     varchar(50) not null,
+    number     integer     not null,
+    city_id    integer     not null
+        constraint addresses_cities_city_id_fk
+            references cities
+);
 
 create table users
 (
-    user_id     serial             not null primary key,
-    username    varchar(50)        not null
+    user_id     serial
+        primary key,
+    username    varchar(50)           not null
         constraint users_pk_2
             unique,
-    first_name  varchar(50)        not null,
-    middle_name varchar(50)        not null,
-    last_name   varchar(50)        not null,
-    email       varchar(100)       not null
+    password    varchar(32)           not null,
+    first_name  varchar(50)           not null,
+    middle_name varchar(50)           not null,
+    last_name   varchar(50)           not null,
+    email       varchar(100)          not null
         constraint users_pk_3
             unique,
-    phone       varchar(10)        not null
+    phone       varchar(10)           not null
         constraint users_pk_4
             unique,
-    photo       varchar(255)       not null,
-    verified    bool default false not null,
-    blocked     bool default false not null
+    photo       varchar(255)          not null,
+    address_id  integer
+        constraint users_addresses_address_id_fk
+            references addresses,
+    verified    boolean default false not null,
+    blocked     boolean default false not null
 );
 
 create table roles
@@ -41,11 +76,13 @@ create table users_roles
 
 create table cards
 (
-    card_id   serial      not null primary key,
-    number    varchar(50) not null
+    card_id         serial      not null primary key,
+    number          varchar(50) not null
         constraint cards2_pk_2
             unique,
-    holder_id integer     not null
+    expiration_date date        not null,
+    cvv             varchar(3)  not null,
+    holder_id       integer     not null
         constraint cards2_users_id_fk
             references users
 );
@@ -73,18 +110,18 @@ create table wallets
 
 create table transactions
 (
-    transaction_id  serial             not null primary key,
-    receiver_wallet integer            not null
+    transaction_id  serial                       not null primary key,
+    receiver_wallet integer                      not null
         constraint transactions_wallets_wallet_id_fk_2
             references wallets,
-    sender_wallet   integer            not null
+    sender_wallet   integer                      not null
         constraint transactions_wallets_wallet_id_fk
             references wallets,
-    amount          bigint             not null,
-    currency_id     integer            not null
+    amount          bigint                       not null,
+    currency_id     integer                      not null
         constraint transactions_currencies_currency_id_fk
             references currencies,
-    status          bool default false not null
+    status          varchar(10) default 'FAILED' not null
 );
 
 create table transfers
@@ -103,33 +140,3 @@ create table transfers
             references wallets,
     direction   varchar(20)           not null
 );
-
-create table countries
-(
-    country_id serial      not null primary key,
-    name       varchar(50) not null
-        constraint countries_pk_2
-            unique
-);
-
-create table cities
-(
-    city_id    serial primary key,
-    name       varchar(50) not null
-        constraint cities_pk_2
-            unique,
-    country_id integer     not null
-        constraint cities_countries_country_id_fk
-            references countries
-);
-
-create table addresses
-(
-    address_id serial      not null primary key,
-    street     varchar(50) not null,
-    street     varchar(50) not null,
-    city_id    integer     not null
-        constraint addresses_cities_city_id_fk
-            references cities
-);
-
