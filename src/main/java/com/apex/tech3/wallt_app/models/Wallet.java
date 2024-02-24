@@ -1,7 +1,9 @@
 package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "wallets", schema = "wallt_db")
 public class Wallet {
@@ -18,36 +20,4 @@ public class Wallet {
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getHolder() {
-        return holder;
-    }
-
-    public void setHolder(User holder) {
-        this.holder = holder;
-    }
-
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
 }

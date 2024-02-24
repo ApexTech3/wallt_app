@@ -1,7 +1,9 @@
 package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "transfers", schema = "wallt_db")
 public class Transfer {
