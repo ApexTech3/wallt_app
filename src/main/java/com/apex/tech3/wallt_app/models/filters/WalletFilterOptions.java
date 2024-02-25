@@ -8,4 +8,7 @@ public class WalletFilterOptions {
     private Long amountGreaterThan;
     private Long amountLessThan;
     private Integer currencyId;
+    private int page;
+    private String sortBy;
+    private String sortOrder;
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wallet</title>
+</head>
+<body>
+<table id="walletTable">
+    <thead>
+    <tr>
+        <th id="id">Id</th>
+        <th id="holder">Holder</th>
+        <th id="amount">Amount</th>
+        <th id="currency">Currency</th>
+    </tr>
+    </thead>
+    <tbody>
+        <td th:text="${wallet.id}">1</td>
+        <td th:text="${wallet.holder.username}">1</td>
+        <td th:text="${#numbers.formatDecimal(wallet.amount/100.00, 0, 'COMMA', 2, 'POINT')}">
+            1.23
+        </td>
+        <td th:text="${wallet.currency.name}">1</td>
+    </tbody>
+</table>
+</body>
+</html>
