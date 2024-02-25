@@ -1,9 +1,11 @@
 package com.apex.tech3.wallt_app.controllers.mvc;
 
+import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -29,8 +31,9 @@ public class WalletController {
     }
 
     @GetMapping("/filter")
-    public String getFilterWallets(Model model) {
-        model.addAttribute("wallets", walletService.getByHolderAndCurrency(null, null));
+    public String getFilterWallets(@ModelAttribute("filterOptions") WalletFilterOptions filterOptions, Model model) {
+        model.addAttribute("filterOptions", new WalletFilterOptions());
+        model.addAttribute("wallets", walletService.getByHolderAndCurrency(filterOptions));
         return "wallets";
     }
 }

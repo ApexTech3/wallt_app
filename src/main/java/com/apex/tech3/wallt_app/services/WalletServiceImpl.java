@@ -1,8 +1,10 @@
 package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.models.Wallet;
+import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
 import com.apex.tech3.wallt_app.repositories.contracts.WalletRepository;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet get(int id) {
-        return repository.getById(id);
+        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -28,7 +30,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<Wallet> getByHolderAndCurrency(Integer holderId, Integer currencyId) {
-        return repository.findByHolderAndCurrency(holderId, currencyId);
+    public List<Wallet> getByHolderAndCurrency(WalletFilterOptions filterOptions) {
+        return repository.findByHolderAndCurrency(filterOptions.getHolderId(), filterOptions.getAmountGreaterThan(),
+                filterOptions.getAmountLessThan(), filterOptions.getCurrencyId());
     }
 }

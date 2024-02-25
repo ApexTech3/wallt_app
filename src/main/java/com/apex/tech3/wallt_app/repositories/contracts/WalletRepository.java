@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface WalletRepository extends JpaRepository<Wallet, Integer> {
-    List<Wallet> findAll();
 
-    Wallet getById(int id);
-
-    @Query("from Wallet where (:holderId is null or holder.id= :holderId) and (:currencyId is null or currency.id = :currencyId)")
-    List<Wallet> findByHolderAndCurrency(@Param("holderId") Integer holderId, @Param("currencyId") Integer currencyId);
+    @Query("from Wallet where (:holderId is null or holder.id= :holderId) " +
+            "and (:amountGreaterThan is null or amount >= :amountGreaterThan) " +
+            "and (:amountLessThan is null or amount <= :amountLessThan) " +
+            "and (:currencyId is null or currency.id = :currencyId)")
+    List<Wallet> findByHolderAndCurrency(@Param("holderId") Integer holderId,
+                                         @Param("amountGreaterThan") Long amountGreaterThan,
+                                         @Param("amountLessThan") Long amountLessThan,
+                                         @Param("currencyId") Integer currencyId);
 }

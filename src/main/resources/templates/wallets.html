@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Wallets</title>
@@ -12,6 +12,37 @@
     </style>
 </head>
 <body>
+<div class="inner-main">
+    <!-- Inner main header -->
+    <div th:fragment="inner-main-header" class="inner-main-header">
+        <div class="header-container d-flex justify-content-between align-items-center w-100">
+            <div class="search-wrapper d-flex align-items-center">
+                <form action="#" th:action="@{/wallets/filter}" method="get" th:object="${filterOptions}">
+                    <div class="input-group input-icon input-icon-sm">
+                        <div class="input-group-append">
+                            <input type="text" placeholder="Holder ID" th:field="*{holderId}"
+                                   class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                        </div>
+                        <div class="input-group-append">
+                            <input type="text" placeholder="Greater than" th:field="*{amountGreaterThan}"
+                                   class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                        </div>
+                        <div class="input-group-append">
+                            <input type="text" placeholder="Less than" th:field="*{amountLessThan}"
+                                   class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                        </div>
+                        <div class="input-group-append">
+                            <input type="text" placeholder="Currency ID" th:field="*{currencyId}"
+                                   class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                        </div>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table id="walletTable">
     <thead>
     <tr>
@@ -34,7 +65,7 @@
 </table>
 </body>
 <script>
-    window.onload = function() {
+    window.onload = function () {
         var table = document.getElementById("walletTable");
         var headers = table.getElementsByTagName("THEAD")[0].getElementsByTagName("TH");
         var rows = Array.prototype.slice.call(table.getElementsByTagName("TR"));
@@ -44,7 +75,7 @@
         var sortOrder = 1; // The sort order (1 = ascending, -1 = descending)
 
         for (var i = 0; i < headers.length; i++) {
-            headers[i].addEventListener("click", function() {
+            headers[i].addEventListener("click", function () {
                 // If the same header is clicked again, reverse the sort order
                 if (sortColumn === this.cellIndex) {
                     sortOrder *= -1;
@@ -55,7 +86,7 @@
                 }
 
                 // Sort the rows
-                rows.sort(function(a, b) {
+                rows.sort(function (a, b) {
                     var aValue = a.cells[sortColumn].innerText;
                     var bValue = b.cells[sortColumn].innerText;
 
