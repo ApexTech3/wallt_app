@@ -35,6 +35,4 @@ public class WalletController {
         model.addAttribute("totalPages", wallets.getTotalPages());
         return "wallets";
     }
-//    @RequestParam(name = "page", defaultValue = "1") int page,
-
 }
