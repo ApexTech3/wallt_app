@@ -32,7 +32,7 @@ public class HomeController {
     public String getAll(Model model) {
         model.addAttribute("users", userService.getAll());
         model.addAttribute("wallet", walletService.get(4));
-        return "index";
+        return "html/index";
     }
 
     @GetMapping("/{id}")
@@ -44,7 +44,7 @@ public class HomeController {
     @GetMapping("/login")
     public String loginBasic(Model model) {
         model.addAttribute("user", new User());
-        return "auth-login-basic";
+        return "html/signin";
     }
 
     @PostMapping("/login")
