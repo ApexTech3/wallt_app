@@ -19,7 +19,6 @@
   data-theme="theme-default"
   data-assets-path="../assets/"
   data-template="vertical-menu-template-free"
-  xmlns:th="http://www.thymeleaf.org"
 >
   <head>
     <meta charset="utf-8" />
@@ -33,7 +32,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../static/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,22 +43,22 @@
     />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="../static/fonts/boxicons.css" />
+    <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="../static/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="../static/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="../static/css/demo.css"/>
+    <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="../assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="../static/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 
-    <link rel="stylesheet" href="../static/libs/apex-charts/apex-charts.css" />
+    <link rel="stylesheet" href="../assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <!-- Page CSS -->
 
     <!-- Helpers -->
-    <script src="../static/js/helpers.js"></script>
+    <script src="../assets/vendor/js/helpers.js"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
@@ -158,27 +157,27 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/layouts-without-menu.html" class="menu-link">
+                  <a href="layouts-without-menu.html" class="menu-link">
                     <div data-i18n="Without menu">Without menu</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/layouts-without-navbar.html" class="menu-link">
+                  <a href="layouts-without-navbar.html" class="menu-link">
                     <div data-i18n="Without navbar">Without navbar</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/layouts-container.html" class="menu-link">
+                  <a href="layouts-container.html" class="menu-link">
                     <div data-i18n="Container">Container</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/layouts-fluid.html" class="menu-link">
+                  <a href="layouts-fluid.html" class="menu-link">
                     <div data-i18n="Fluid">Fluid</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/layouts-blank.html" class="menu-link">
+                  <a href="layouts-blank.html" class="menu-link">
                     <div data-i18n="Blank">Blank</div>
                   </a>
                 </li>
@@ -195,17 +194,17 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/pages-account-settings-account.html" class="menu-link">
+                  <a href="pages-account-settings-account.html" class="menu-link">
                     <div data-i18n="Account">Account</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/pages-account-settings-notifications.html" class="menu-link">
+                  <a href="pages-account-settings-notifications.html" class="menu-link">
                     <div data-i18n="Notifications">Notifications</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/pages-account-settings-connections.html" class="menu-link">
+                  <a href="pages-account-settings-connections.html" class="menu-link">
                     <div data-i18n="Connections">Connections</div>
                   </a>
                 </li>
@@ -223,12 +222,12 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/auth-register-basic.html" class="menu-link" target="_blank">
+                  <a href="auth-register-basic.html" class="menu-link" target="_blank">
                     <div data-i18n="Basic">Register</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/auth-forgot-password-basic.html" class="menu-link" target="_blank">
+                  <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
                     <div data-i18n="Basic">Forgot Password</div>
                   </a>
                 </li>
@@ -241,12 +240,12 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/pages-misc-error.html" class="menu-link">
+                  <a href="pages-misc-error.html" class="menu-link">
                     <div data-i18n="Error">Error</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/pages-misc-under-maintenance.html" class="menu-link">
+                  <a href="pages-misc-under-maintenance.html" class="menu-link">
                     <div data-i18n="Under Maintenance">Under Maintenance</div>
                   </a>
                 </li>
@@ -256,7 +255,7 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
             <!-- Cards -->
             <li class="menu-item">
-              <a href="html/cards-basic.html" class="menu-link">
+              <a href="cards-basic.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
                 <div data-i18n="Basic">Cards</div>
               </a>
@@ -269,97 +268,97 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/ui-accordion.html" class="menu-link">
+                  <a href="ui-accordion.html" class="menu-link">
                     <div data-i18n="Accordion">Accordion</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-alerts.html" class="menu-link">
+                  <a href="ui-alerts.html" class="menu-link">
                     <div data-i18n="Alerts">Alerts</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-badges.html" class="menu-link">
+                  <a href="ui-badges.html" class="menu-link">
                     <div data-i18n="Badges">Badges</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-buttons.html" class="menu-link">
+                  <a href="ui-buttons.html" class="menu-link">
                     <div data-i18n="Buttons">Buttons</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-carousel.html" class="menu-link">
+                  <a href="ui-carousel.html" class="menu-link">
                     <div data-i18n="Carousel">Carousel</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-collapse.html" class="menu-link">
+                  <a href="ui-collapse.html" class="menu-link">
                     <div data-i18n="Collapse">Collapse</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-dropdowns.html" class="menu-link">
+                  <a href="ui-dropdowns.html" class="menu-link">
                     <div data-i18n="Dropdowns">Dropdowns</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-footer.html" class="menu-link">
+                  <a href="ui-footer.html" class="menu-link">
                     <div data-i18n="Footer">Footer</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-list-groups.html" class="menu-link">
+                  <a href="ui-list-groups.html" class="menu-link">
                     <div data-i18n="List Groups">List groups</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-modals.html" class="menu-link">
+                  <a href="ui-modals.html" class="menu-link">
                     <div data-i18n="Modals">Modals</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-navbar.html" class="menu-link">
+                  <a href="ui-navbar.html" class="menu-link">
                     <div data-i18n="Navbar">Navbar</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-offcanvas.html" class="menu-link">
+                  <a href="ui-offcanvas.html" class="menu-link">
                     <div data-i18n="Offcanvas">Offcanvas</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-pagination-breadcrumbs.html" class="menu-link">
+                  <a href="ui-pagination-breadcrumbs.html" class="menu-link">
                     <div data-i18n="Pagination &amp; Breadcrumbs">Pagination &amp; Breadcrumbs</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-progress.html" class="menu-link">
+                  <a href="ui-progress.html" class="menu-link">
                     <div data-i18n="Progress">Progress</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-spinners.html" class="menu-link">
+                  <a href="ui-spinners.html" class="menu-link">
                     <div data-i18n="Spinners">Spinners</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-tabs-pills.html" class="menu-link">
+                  <a href="ui-tabs-pills.html" class="menu-link">
                     <div data-i18n="Tabs &amp; Pills">Tabs &amp; Pills</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-toasts.html" class="menu-link">
+                  <a href="ui-toasts.html" class="menu-link">
                     <div data-i18n="Toasts">Toasts</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-tooltips-popovers.html" class="menu-link">
+                  <a href="ui-tooltips-popovers.html" class="menu-link">
                     <div data-i18n="Tooltips & Popovers">Tooltips &amp; popovers</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/ui-typography.html" class="menu-link">
+                  <a href="ui-typography.html" class="menu-link">
                     <div data-i18n="Typography">Typography</div>
                   </a>
                 </li>
@@ -374,12 +373,12 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/extended-ui-perfect-scrollbar.html" class="menu-link">
+                  <a href="extended-ui-perfect-scrollbar.html" class="menu-link">
                     <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/extended-ui-text-divider.html" class="menu-link">
+                  <a href="extended-ui-text-divider.html" class="menu-link">
                     <div data-i18n="Text Divider">Text Divider</div>
                   </a>
                 </li>
@@ -387,7 +386,7 @@
             </li>
 
             <li class="menu-item">
-              <a href="html/icons-boxicons.html" class="menu-link">
+              <a href="icons-boxicons.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-crown"></i>
                 <div data-i18n="Boxicons">Boxicons</div>
               </a>
@@ -403,12 +402,12 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/forms-basic-inputs.html" class="menu-link">
+                  <a href="forms-basic-inputs.html" class="menu-link">
                     <div data-i18n="Basic Inputs">Basic Inputs</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/forms-input-groups.html" class="menu-link">
+                  <a href="forms-input-groups.html" class="menu-link">
                     <div data-i18n="Input groups">Input groups</div>
                   </a>
                 </li>
@@ -421,12 +420,12 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="html/form-layouts-vertical.html" class="menu-link">
+                  <a href="form-layouts-vertical.html" class="menu-link">
                     <div data-i18n="Vertical Form">Vertical Form</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="html/form-layouts-horizontal.html" class="menu-link">
+                  <a href="form-layouts-horizontal.html" class="menu-link">
                     <div data-i18n="Horizontal Form">Horizontal Form</div>
                   </a>
                 </li>
@@ -434,7 +433,7 @@
             </li>
             <!-- Tables -->
             <li class="menu-item">
-              <a href="html/tables-basic.html" class="menu-link">
+              <a href="tables-basic.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
                 <div data-i18n="Tables">Tables</div>
               </a>
@@ -512,7 +511,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="../static/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -521,7 +520,7 @@
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
-                              <img src="../static/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                              <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
@@ -596,7 +595,7 @@
                       <div class="col-sm-5 text-center text-sm-left">
                         <div class="card-body pb-0 px-0 px-md-4">
                           <img
-                            src="../static/img/illustrations/man-with-laptop-light.png"
+                            src="../assets/img/illustrations/man-with-laptop-light.png"
                             height="140"
                             alt="View Badge User"
                             data-app-dark-img="illustrations/man-with-laptop-dark.png"
@@ -615,7 +614,7 @@
                           <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
                               <img
-                                src="../static/img/icons/unicons/chart-success.png"
+                                src="../assets/img/icons/unicons/chart-success.png"
                                 alt="chart success"
                                 class="rounded"
                               />
@@ -638,7 +637,7 @@
                             </div>
                           </div>
                           <span class="fw-semibold d-block mb-1">Profit</span>
-                          <h3 class="card-title mb-2" th:text="'$'+${wallet.getAmount()}">$12,628</h3>
+                          <h3 class="card-title mb-2">$12,628</h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +72.80%</small>
                         </div>
                       </div>
@@ -649,7 +648,7 @@
                           <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
                               <img
-                                src="../static/img/icons/unicons/wallet-info.png"
+                                src="../assets/img/icons/unicons/wallet-info.png"
                                 alt="Credit Card"
                                 class="rounded"
                               />
@@ -744,7 +743,7 @@
                         <div class="card-body">
                           <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
-                              <img src="../static/img/icons/unicons/paypal.png" alt="Credit Card" class="rounded" />
+                              <img src="../assets/img/icons/unicons/paypal.png" alt="Credit Card" class="rounded" />
                             </div>
                             <div class="dropdown">
                               <button
@@ -774,7 +773,7 @@
                         <div class="card-body">
                           <div class="card-title d-flex align-items-start justify-content-between">
                             <div class="avatar flex-shrink-0">
-                              <img src="../static/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
+                              <img src="../assets/img/icons/unicons/cc-primary.png" alt="Credit Card" class="rounded" />
                             </div>
                             <div class="dropdown">
                               <button
@@ -958,7 +957,7 @@
                         <div class="tab-pane fade show active" id="navs-tabs-line-card-income" role="tabpanel">
                           <div class="d-flex p-4 pt-3">
                             <div class="avatar flex-shrink-0 me-3">
-                              <img src="../static/img/icons/unicons/wallet.png" alt="User" />
+                              <img src="../assets/img/icons/unicons/wallet.png" alt="User" />
                             </div>
                             <div>
                               <small class="text-muted d-block">Total Balance</small>
@@ -1015,7 +1014,7 @@
                       <ul class="p-0 m-0">
                         <li class="d-flex mb-4 pb-1">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/paypal.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/paypal.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1030,7 +1029,7 @@
                         </li>
                         <li class="d-flex mb-4 pb-1">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/wallet.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/wallet.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1045,7 +1044,7 @@
                         </li>
                         <li class="d-flex mb-4 pb-1">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/chart.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/chart.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1060,7 +1059,7 @@
                         </li>
                         <li class="d-flex mb-4 pb-1">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/cc-success.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/cc-success.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1075,7 +1074,7 @@
                         </li>
                         <li class="d-flex mb-4 pb-1">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/wallet.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/wallet.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1090,7 +1089,7 @@
                         </li>
                         <li class="d-flex">
                           <div class="avatar flex-shrink-0 me-3">
-                            <img src="../static/img/icons/unicons/cc-warning.png" alt="User" class="rounded" />
+                            <img src="../assets/img/icons/unicons/cc-warning.png" alt="User" class="rounded" />
                           </div>
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                             <div class="me-2">
@@ -1167,17 +1166,17 @@
     </div>
 
     <!-- Core JS -->
-    <!-- build:js assets/js/core.js -->
-    <script src="../static/libs/jquery/jquery.js"></script>
-    <script src="../static/libs/popper/popper.js"></script>
-    <script src="../static/js/bootstrap.js"></script>
-    <script src="../static/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../assets/vendor/js/bootstrap.js"></script>
+    <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="../static/js/menu.js"></script>
+    <script src="../assets/vendor/js/menu.js"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="../static/libs/apex-charts/apexcharts.js"></script>
+    <script src="../assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
