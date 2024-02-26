@@ -1,9 +1,8 @@
 package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.models.User;
-import com.apex.tech3.wallt_app.repositories.contracts.UserRepository;
+import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(int id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return repository.getReferenceById(id);
     }
 
     @Override

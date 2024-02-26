@@ -1,4 +1,4 @@
-package com.apex.tech3.wallt_app.repositories.contracts;
+package com.apex.tech3.wallt_app.repositories;
 
 import com.apex.tech3.wallt_app.models.Wallet;
 import org.springframework.data.domain.Page;

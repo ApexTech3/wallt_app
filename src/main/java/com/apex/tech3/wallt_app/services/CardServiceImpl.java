@@ -1,9 +1,8 @@
 package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.models.Card;
-import com.apex.tech3.wallt_app.repositories.contracts.CardRepository;
+import com.apex.tech3.wallt_app.repositories.CardRepository;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Card get(int id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return repository.getReferenceById(id);
     }
 
     @Override
