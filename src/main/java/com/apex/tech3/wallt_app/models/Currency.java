@@ -14,4 +14,6 @@ public class Currency {
     private int id;
     @Column(name = "name")
     private String name;
+
+    //TODO are we going to use external API for rates or store them in our DB?
 }

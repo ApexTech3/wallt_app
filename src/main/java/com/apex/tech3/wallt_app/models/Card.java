@@ -19,7 +19,7 @@ public class Card {
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
     @Column(name = "cvv")
-    private String cvv;
+    private String cvv; //TODO should it be stored? or validate at time of transaction
     @ManyToOne
     @JoinColumn(name = "holder_id")
     private User holder;

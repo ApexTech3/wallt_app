@@ -13,7 +13,7 @@ public class User {
     @SequenceGenerator(name = "user_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
     @Column(name = "user_id")
     private int id;
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
     @Column(name = "password")
     private String password;
@@ -23,7 +23,7 @@ public class User {
     private String middleName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
     @Column(name = "phone")
     private String phone;
