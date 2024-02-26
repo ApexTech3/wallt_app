@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.Attribute;
-
 @Controller
 @RequestMapping("/")
 public class HomeController {
