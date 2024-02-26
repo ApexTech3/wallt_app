@@ -2,6 +2,8 @@ package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Data
@@ -33,10 +35,13 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", schema = "wallt_db", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles", schema = "wallt_db",
+            joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @Column(name = "blocked")
     private boolean isBlocked;
     @Column(name = "verified")
     private boolean isVerified;
+    @Column(name = "stamp_created")
+    private Timestamp stampCreated;
 }

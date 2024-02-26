@@ -4,6 +4,9 @@ import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "transactions", schema = "wallt_db")
@@ -25,4 +28,6 @@ public class Transaction {
     private Currency currency;
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
+    @Column(name = "stamp_created")
+    private Timestamp stampCreated;
 }

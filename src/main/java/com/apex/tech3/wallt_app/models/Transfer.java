@@ -1,7 +1,10 @@
 package com.apex.tech3.wallt_app.models;
 
+import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -12,23 +15,23 @@ public class Transfer {
     @SequenceGenerator(name = "transfer_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
     @Column(name = "transfer_id")
     private int id;
-    @Column(name = "card_id", nullable = false)
-    private int cardId;
-
+    @ManyToOne
+    @JoinColumn(name = "card_id")
+    private Card card;
     @Column(name = "amount", nullable = false)
     private long amount;
-
     @Column(name = "status", nullable = false)
     private boolean status;
-
-    @Column(name = "currency_id", nullable = false)
-    private int currencyId;
-
-    @Column(name = "wallet_id", nullable = false)
-    private int walletId;
-
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+    @ManyToOne
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private Wallet wallet;
     @Column(name = "direction", nullable = false, length = 20)
-    private String direction;
+    private DirectionEnum direction;
+    @Column(name = "stamp_created")
+    private Timestamp stampCreated;
 
 
 }

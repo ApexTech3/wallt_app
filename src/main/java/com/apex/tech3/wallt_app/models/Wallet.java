@@ -3,6 +3,8 @@ package com.apex.tech3.wallt_app.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 @Entity
 @Table(name = "wallets", schema = "wallt_db")
@@ -16,8 +18,10 @@ public class Wallet {
     @JoinColumn(name = "holder_id")
     private User holder;
     @Column(name = "amount")
-    private long amount;
+    private long amountInCents; //stored in cents
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
+    @Column(name = "stamp_created")
+    private Timestamp stampCreated;
 }
