@@ -28,6 +28,7 @@ public class Transfer {
     @ManyToOne
     @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
+    @Enumerated(EnumType.STRING)
     @Column(name = "direction", nullable = false, length = 20)
     private DirectionEnum direction;
     @Column(name = "stamp_created")
