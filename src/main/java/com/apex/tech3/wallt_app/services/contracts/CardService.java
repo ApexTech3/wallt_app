@@ -8,4 +8,10 @@ public interface CardService {
     Card get(int id);
 
     List<Card> getAll();
+
+    Card create(Card card);
+
+    Card update(Card card);
+
+    void delete(int id);
 }

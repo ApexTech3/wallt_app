@@ -27,4 +27,17 @@ public class CardServiceImpl implements CardService {
     public List<Card> getAll() {
         return repository.findAll();
     }
+
+    @Override
+    public Card create(Card card) {
+        return repository.save(card);
+    }
+    @Override
+    public Card update(Card card) {
+        return repository.save(card);
+    }
+    @Override
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
 }
