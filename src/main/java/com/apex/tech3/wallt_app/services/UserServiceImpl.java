@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
+import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(int id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
     }
 
     @Override

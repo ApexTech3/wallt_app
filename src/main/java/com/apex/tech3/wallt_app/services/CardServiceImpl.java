@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.services;
 
+import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.models.Card;
 import com.apex.tech3.wallt_app.repositories.CardRepository;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
@@ -19,7 +20,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Card get(int id) {
-        return repository.getReferenceById(id);
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Card", id));
     }
 
     @Override

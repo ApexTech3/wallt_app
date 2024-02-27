@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_sequence")
-    @SequenceGenerator(name = "card_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "card_sequence", sequenceName = "wallt_db.increment_seq", allocationSize = 1)
     @Column(name = "card_id")
     private int id;
     @Column(name = "first_last_name")

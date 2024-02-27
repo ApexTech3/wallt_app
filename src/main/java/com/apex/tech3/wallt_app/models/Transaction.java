@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
-    @SequenceGenerator(name = "transaction_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "transaction_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
     @Column(name = "transaction_id")
     private int id;
     @ManyToOne

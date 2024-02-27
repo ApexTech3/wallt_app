@@ -56,7 +56,7 @@
     <tr th:each="wallet : ${wallets}">
         <td><a href="#" th:href="@{/wallets/{id}(id=${wallet.id})}" th:text="${wallet.id}">1</a></td>
         <td th:text="${wallet.holder.username}">Pesho</td>
-        <td th:text="${#numbers.formatDecimal(wallet.amount/100.00, 0, 2, 'POINT')}">
+        <td th:text="${wallet.amount}">
             1.23
         </td>
         <td th:text="${wallet.currency.name}">bgn</td>

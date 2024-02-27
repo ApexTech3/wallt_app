@@ -19,7 +19,7 @@ public class Wallet {
     @JoinColumn(name = "holder_id")
     private User holder;
     @Column(name = "amount")
-    private BigDecimal amountInCents; //stored in cents
+    private BigDecimal amount;
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
