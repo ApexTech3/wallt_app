@@ -5,6 +5,7 @@ import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data
@@ -20,7 +21,7 @@ public class Transfer {
     @JoinColumn(name = "card_id")
     private Card card;
     @Column(name = "amount", nullable = false)
-    private long amount;
+    private BigDecimal amount;
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
     @ManyToOne

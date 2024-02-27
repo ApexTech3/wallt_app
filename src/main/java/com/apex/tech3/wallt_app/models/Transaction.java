@@ -4,6 +4,7 @@ import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -22,7 +23,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "sender_wallet")
     private Wallet senderWallet;
-    private long amount;
+    private BigDecimal amount;
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;

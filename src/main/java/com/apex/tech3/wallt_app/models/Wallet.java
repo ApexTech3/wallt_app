@@ -3,6 +3,7 @@ package com.apex.tech3.wallt_app.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Data
@@ -18,7 +19,7 @@ public class Wallet {
     @JoinColumn(name = "holder_id")
     private User holder;
     @Column(name = "amount")
-    private long amountInCents; //stored in cents
+    private BigDecimal amountInCents; //stored in cents
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
