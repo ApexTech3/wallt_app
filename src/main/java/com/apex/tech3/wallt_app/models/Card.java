@@ -16,11 +16,13 @@ public class Card {
     @Column(name = "card_id")
     private int id;
     @Column(name = "first_last_name")
-    private String firstLastName;
+    private String cardHolderName;
     @Column(name = "number")
     private String number;
-    @Column(name = "expiration_date")
-    private LocalDate expirationDate;
+    @Column(name = "expiration_month")
+    private String expirationMonth;
+    @Column(name = "expiration_year")
+    private String expirationYear;
     @Column(name = "cvv")
     private String cvv;
     @ManyToOne
