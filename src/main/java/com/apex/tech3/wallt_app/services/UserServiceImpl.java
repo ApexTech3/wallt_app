@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.services;
 
+import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
@@ -25,5 +26,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public User register(User user) {
+        if (repository.existsByUsername(user.getUsername())) {
+            throw new EntityDuplicateException("User", "username", user.getUsername());
+        }
+        return repository.save(user);
     }
 }

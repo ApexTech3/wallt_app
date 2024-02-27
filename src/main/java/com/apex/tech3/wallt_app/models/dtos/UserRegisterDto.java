@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
 import com.apex.tech3.wallt_app.models.Address;
+import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -8,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserRegisterDto {
+public class UserRegisterDto implements Register {
     @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols")
     private String username;
     @NotEmpty(message = "Password cannot be empty")

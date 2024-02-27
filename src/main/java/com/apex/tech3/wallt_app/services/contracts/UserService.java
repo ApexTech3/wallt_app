@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserService {
     User get(int id);
     List<User> getAll();
+    User register(User user);
 }
