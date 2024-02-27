@@ -3,6 +3,7 @@ package com.apex.tech3.wallt_app.models;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -29,6 +30,7 @@ public class Transaction {
     private Currency currency;
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
+    @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
 }

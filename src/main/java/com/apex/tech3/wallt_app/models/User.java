@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -42,6 +43,7 @@ public class User {
     private boolean isBlocked;
     @Column(name = "verified")
     private boolean isVerified;
+    @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
 }

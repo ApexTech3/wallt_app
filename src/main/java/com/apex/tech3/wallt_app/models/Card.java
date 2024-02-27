@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "holder_id")
     private User holder;
+    @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
 }

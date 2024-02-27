@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -23,6 +24,7 @@ public class Wallet {
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
+    @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
 }
