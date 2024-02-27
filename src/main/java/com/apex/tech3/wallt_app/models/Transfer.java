@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app.models;
 
 import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
+import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,8 +21,8 @@ public class Transfer {
     private Card card;
     @Column(name = "amount", nullable = false)
     private long amount;
-    @Column(name = "status", nullable = false)
-    private boolean status;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
