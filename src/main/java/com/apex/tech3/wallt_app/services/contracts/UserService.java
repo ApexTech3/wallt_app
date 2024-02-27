@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserService {
     User get(int id);
+    User get(String username);
     List<User> getAll();
     User register(User user);
 }
