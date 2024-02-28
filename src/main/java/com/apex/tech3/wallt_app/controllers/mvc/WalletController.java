@@ -3,6 +3,8 @@ package com.apex.tech3.wallt_app.controllers.mvc;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,11 @@ public class WalletController {
     public WalletController(WalletService walletService) {
         this.walletService = walletService;
     }
-
+    @ModelAttribute
+    public void populateAttributes(HttpSession httpSession, Model model, HttpServletRequest request) {
+        model.addAttribute("requestURI", request.getRequestURI());
+        model.addAttribute("filterOptions", new WalletFilterOptions());
+    }
     @GetMapping("/{id}")
     public String getSingleWallet(@PathVariable int id, Model model) {
         model.addAttribute("wallet", walletService.get(id));
@@ -28,7 +34,6 @@ public class WalletController {
 
     @GetMapping
     public String getAll(@ModelAttribute("filterOptions") WalletFilterOptions filterOptions, Model model) {
-        model.addAttribute("filterOptions", new WalletFilterOptions());
         Page<Wallet> wallets = walletService.getAll(filterOptions);
         model.addAttribute("wallets", wallets.getContent());
         model.addAttribute("currentPage", filterOptions.getPage());

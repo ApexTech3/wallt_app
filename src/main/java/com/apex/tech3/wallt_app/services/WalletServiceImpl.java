@@ -29,8 +29,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Page<Wallet> getAll(WalletFilterOptions filterOptions) {
-        return repository.findByHolderAndCurrency(filterOptions.getHolderId(), filterOptions.getAmountGreaterThan(),
-                filterOptions.getAmountLessThan(), filterOptions.getCurrencyId(), createPageable(filterOptions));
+        return repository.findAllFilteredSortedAndPaginated(filterOptions, createPageable(filterOptions));
     }
 
     private Pageable createPageable(WalletFilterOptions filterOptions) {
