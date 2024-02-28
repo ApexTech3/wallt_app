@@ -3,6 +3,7 @@ package com.apex.tech3.wallt_app.helpers;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
+import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,5 +38,20 @@ public class UserMapper {
         userResponse.setStampCreated(user.getStampCreated());
         return userResponse;
     }
+    public User fromUpdateDto(UserUpdateDto userUpdateDto) {
+        User user = new User();
+        user.setUsername(userUpdateDto.getUsername());
+        user.setPassword(userUpdateDto.getPassword());
+        user.setFirstName(userUpdateDto.getFirstName());
+        user.setMiddleName(userUpdateDto.getMiddleName());
+        user.setLastName(userUpdateDto.getLastName());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setPhone(userUpdateDto.getPhone());
+        user.setProfilePicture(userUpdateDto.getProfilePicture());
+        user.setAddress(userUpdateDto.getAddress());
+        return user;
+    }
+
+
 
 }

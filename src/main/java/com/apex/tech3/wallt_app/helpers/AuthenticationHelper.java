@@ -27,9 +27,9 @@ public class AuthenticationHelper {
         this.userService = userService;
     }
 
-//    public static boolean isAdmin(User user) {
-//        return user.getRoles().stream().anyMatch(r -> r.getRole().equals("ADMIN"));
-//    }
+    public static boolean isAdmin(User user) {
+        return user.getRoles().stream().anyMatch(r -> r.getName().equals("ADMIN"));
+    }
     public static boolean isBlocked(User user) {
         return user.isBlocked();
     }

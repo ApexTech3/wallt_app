@@ -9,4 +9,5 @@ public interface UserService {
     User get(String username);
     List<User> getAll();
     User register(User user);
+    User update(User user, User requester);
 }
