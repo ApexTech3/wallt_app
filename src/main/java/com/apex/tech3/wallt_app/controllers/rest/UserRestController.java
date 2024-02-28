@@ -46,11 +46,12 @@ public class UserRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @PutMapping("/{id}")
-    public UserResponseDto updateInfo(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+    @PutMapping("/{id}")//todo
+    public UserResponseDto updateInfo(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserUpdateDto userUpdateDto,
+                                      @PathVariable int id) {
         try {
             User requester = helper.tryGetUser(headers);
-            User user = userMapper.fromUpdateDto(userUpdateDto);
+            User user = userMapper.fromUpdateDto(userUpdateDto, id);
             return userMapper.toResponseDto(userService.update(user, requester));
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -60,4 +61,6 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
+
+
 }

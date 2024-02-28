@@ -38,8 +38,9 @@ public class UserMapper {
         userResponse.setStampCreated(user.getStampCreated());
         return userResponse;
     }
-    public User fromUpdateDto(UserUpdateDto userUpdateDto) {
+    public User fromUpdateDto(UserUpdateDto userUpdateDto, int id) {
         User user = new User();
+        user.setId(id);
         user.setUsername(userUpdateDto.getUsername());
         user.setPassword(userUpdateDto.getPassword());
         user.setFirstName(userUpdateDto.getFirstName());
