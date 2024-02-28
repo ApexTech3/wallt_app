@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -21,6 +22,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public Card get(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Card", id));
+    }
+
+    @Override
+    public Set<Card> getByHolderId(int userId) {
+        return repository.findByHolderId(userId);
     }
 
     @Override
@@ -39,5 +45,9 @@ public class CardServiceImpl implements CardService {
     @Override
     public void delete(int id) {
         repository.deleteById(id);
+    }
+    @Override
+    public boolean exists(String number) {
+        return repository.existsByNumber(number);
     }
 }

@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User tryAuthorizeUser(User user, User requester) {
-        if (!user.getUsername().equals(requester.getUsername()) && !AuthenticationHelper.isAdmin(requester)) {
+        if (!user.getUsername().equals(requester.getUsername()) && !AuthenticationHelper.isBlocked(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         return user;

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.naming.AuthenticationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -45,33 +46,47 @@ public class CardRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
+    @GetMapping("/{userId}")
+    public List<CardDto> getByUserId(@PathVariable int userId) {
+        List<CardDto> cards = cardService.getByHolderId(userId).stream().map(CardMapper::toDto).toList();
+        if(cards.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cards found for this user.");
+        }
+        return cards;
+    }
+
+    @SecurityRequirement(name = "Authorization")
     @PostMapping
     public CardDto createCard(@RequestHeader @NotNull HttpHeaders headers,
                               @Validated(Register.class) @RequestBody CardDto cardDto) {
 
-        try{
+        try {
             User user = authenticationHelper.tryGetUser(headers);
             Card card = cardMapper.fromDto(cardDto);
+            if(cardService.exists(card.getNumber())) {
+                throw new EntityDuplicateException("Card with this number already exists.");
+            }
             card.setHolder(user);
             cardService.create(card);
             return CardMapper.toDto(card);
-        } catch (AuthorizationException | AuthenticationException e) {
+        } catch(AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (EntityDuplicateException e) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch(EntityDuplicateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
     @SecurityRequirement(name = "Authorization")
     @DeleteMapping("/{id}")
-    public void deleteCard(@RequestHeader @NotNull HttpHeaders headers, @PathVariable int id) {
+    public void deactivateCard(@RequestHeader @NotNull HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Card card = cardService.get(id);
             if (card.getHolder().getId() != user.getId()) {
                 throw new AuthorizationException("You are not the owner of this card.");
             }
-            cardService.delete(id);
+            card.setActive(false);
+            cardService.update(card);
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
