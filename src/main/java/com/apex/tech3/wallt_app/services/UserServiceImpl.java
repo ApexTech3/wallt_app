@@ -17,12 +17,10 @@ public class UserServiceImpl implements UserService {
 
     private static final String UNAUTHORIZED_USER_ERROR = "You are not authorized to perform this operation";
     private final UserRepository repository;
-    private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, AuthenticationHelper authenticationHelper) {
+    public UserServiceImpl(UserRepository repository) {
         this.repository = repository;
-        this.authenticationHelper = authenticationHelper;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class UserServiceImpl implements UserService {
     public User update(User user, User requester) {
         tryAuthorizeUser(user, requester);
         checkIfUniqueEmail(user);
-        return repository.update(user);
+        return repository.save(user);
     }
 
     private void checkIfUniqueEmail(User user) {
