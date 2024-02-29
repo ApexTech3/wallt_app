@@ -46,4 +46,6 @@ public class User {
     @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 }

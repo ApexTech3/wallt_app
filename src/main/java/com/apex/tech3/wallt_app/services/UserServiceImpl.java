@@ -84,6 +84,7 @@ public class UserServiceImpl implements UserService {
         updated.setBlocked(old.isBlocked());
         updated.setVerified(old.isVerified());
         updated.setStampCreated(old.getStampCreated());
+        updated.setDeleted(false);
         return updated;
     }
 
@@ -91,7 +92,6 @@ public class UserServiceImpl implements UserService {
         String newPassword = toUpdate.getNewPassword();
         String passwordConfirmation = toUpdate.getPasswordConfirmation();
 
-        // Check if the new password meets complexity requirements and matches the confirmation
         if (newPassword.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^]).{8,}$")
                 && newPassword.equals(passwordConfirmation)) {
             updated.setPassword(newPassword);

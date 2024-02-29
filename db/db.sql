@@ -55,7 +55,8 @@ create table users
         constraint users_addresses_address_id_fk
             references addresses,
     verified    boolean default false not null,
-    blocked     boolean default false not null
+    blocked     boolean default false not null,
+    is_deleted     boolean default false not null
 );
 
 create table roles
@@ -143,19 +144,19 @@ create table transfers
 
 INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
-VALUES ('pesho', '1234', 'pesho', 'peshov', 'peshov', 'pesho@peshomail.com', 'pesho', 'pesho', 1, false, false);
+VALUES ('pesho', '1234', 'pesho', 'peshov', 'peshov', 'pesho@peshomail.com', 'pesho', 'pesho', 1, false, false, false);
 INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
-VALUES ('gosho', '1234', 'gosho', 'goshov', 'gosho', 'gosho@goshomail.com', 'gosho', 'gosho', 1, false, false);
+VALUES ('gosho', '1234', 'gosho', 'goshov', 'gosho', 'gosho@goshomail.com', 'gosho', 'gosho', 1, false, false, false);
 INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
-VALUES ('tosho', '1234', 'tosho', 'toshov', 'toshov', 'tosho@toshomail.com', 'tosho', 'tosho', 1, false, false);
+VALUES ('tosho', '1234', 'tosho', 'toshov', 'toshov', 'tosho@toshomail.com', 'tosho', 'tosho', 1, false, false, false);
 INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
-VALUES ('ivan', '1234', 'ivan', 'ivanov', 'ivanov', 'ivan@ivanmail.com', 'ivan', 'ivan', 1, false, false);
+VALUES ('ivan', '1234', 'ivan', 'ivanov', 'ivanov', 'ivan@ivanmail.com', 'ivan', 'ivan', 1, false, false, false);
 INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
-VALUES ('mariika', '1234', 'mariika', 'mariikova', 'mariikova', 'mariika@mariikamail.com', 'mariika', 'mariika', 1, false, false);
+VALUES ('mariika', '1234', 'mariika', 'mariikova', 'mariikova', 'mariika@mariikamail.com', 'mariika', 'mariika', 1, false, false, false);
 
 INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
 VALUES (1, 12345678, 1);
