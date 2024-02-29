@@ -10,16 +10,10 @@ import java.sql.Timestamp;
 
 @Data
 public class TransferDto {
-    private int id;
-    @Positive(message = "Card ID should be positive", groups = {Deposit.class})
+    @Positive(message = "Card ID should be positive")
     private int cardId;
-    @Positive(message = "Wallet ID should be positive", groups = {Deposit.class})
+    @Positive(message = "Wallet ID should be positive")
     private int walletId;
-    @Positive(message = "Currency ID should be positive", groups = {Deposit.class})
-    private int currencyId;
-    @Positive(message = "Amount should be positive", groups = {Deposit.class})
+    @Positive(message = "Amount should be positive")
     private BigDecimal amount;
-    private boolean status;
-    private DirectionEnum direction;
-    private Timestamp stampCreated;
 }

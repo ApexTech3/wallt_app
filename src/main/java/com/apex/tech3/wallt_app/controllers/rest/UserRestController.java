@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.controllers.rest;
 
+import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
 import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
@@ -53,7 +54,7 @@ public class UserRestController {
             User requester = helper.tryGetUser(headers);
             User newUser = userMapper.fromUpdateDto(userUpdateDto, id);
             return userMapper.toResponseDto(userService.update(newUser, requester, userUpdateDto, id));
-        } catch (AuthorizationException | AuthenticationException e) {
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

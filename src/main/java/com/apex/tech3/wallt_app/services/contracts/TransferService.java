@@ -5,4 +5,5 @@ import com.apex.tech3.wallt_app.models.User;
 
 public interface TransferService {
     Transfer deposit(Transfer transfer, User user);
+    Transfer withdraw(Transfer transfer, User user);
 }

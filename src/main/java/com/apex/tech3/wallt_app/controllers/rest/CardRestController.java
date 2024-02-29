@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.controllers.rest;
 
+import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
 import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
@@ -69,7 +70,7 @@ public class CardRestController {
             card.setHolder(user);
             cardService.create(card);
             return CardMapper.toDto(card);
-        } catch(AuthorizationException | AuthenticationException e) {
+        } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -87,7 +88,7 @@ public class CardRestController {
             }
             card.setActive(false);
             cardService.update(card);
-        } catch (AuthorizationException | AuthenticationException e) {
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

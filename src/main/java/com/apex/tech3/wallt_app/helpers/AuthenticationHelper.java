@@ -35,7 +35,7 @@ public class AuthenticationHelper {
     }
 
 
-    public User tryGetUser(HttpHeaders headers) throws AuthenticationException {
+    public User tryGetUser(HttpHeaders headers)  {
         if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)) {
             throw new AuthorizationException(INVALID_AUTHENTICATION_ERROR);
         }
@@ -46,14 +46,14 @@ public class AuthenticationHelper {
             String password = getPassword(userInfo);
             User user = userService.get(username);
             if (!user.getPassword().equals(password)) {
-                throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
+                throw new AuthenticationFailureException(INVALID_AUTHENTICATION_ERROR);
             }
             if (user.isBlocked()) {
                 throw new AuthorizationException(INVALID_AUTHORIZATION_ERROR);
             }
             return user;
         } catch (EntityNotFoundException e) {
-            throw new AuthenticationException(INVALID_AUTHENTICATION_ERROR);
+            throw new AuthenticationFailureException(INVALID_AUTHENTICATION_ERROR);
         }
     }
 
