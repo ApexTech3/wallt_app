@@ -20,7 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -34,6 +34,21 @@ public class UserRestController {
         this.userService = userService;
         this.userMapper = userMapper;
         this.helper = helper;
+    }
+
+    @GetMapping("/{id}")
+    public UserResponseDto getUser(@PathVariable int id) {
+        try {
+            return userMapper.toResponseDto(userService.get(id));
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @GetMapping
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAll().stream().map(userMapper::toResponseDto).toList();
     }
 
     @PostMapping
@@ -60,6 +75,39 @@ public class UserRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @PutMapping("/block/{id}")
+    public UserResponseDto blockUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User admin = helper.tryGetUser(headers);
+
+            User userToBeBlocked = userService.get(id);
+            userService.blockUser(userToBeBlocked, admin);
+            return userMapper.toResponseDto(userToBeBlocked);
+        } catch(AuthorizationException | AuthenticationFailureException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @PutMapping("/unblock/{id}")
+    public UserResponseDto unblockUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User admin = helper.tryGetUser(headers);
+
+            User userToBeUnblocked = userService.get(id);
+
+            userService.unblockUser(userToBeUnblocked, admin);
+            return userMapper.toResponseDto(userToBeUnblocked);
+        } catch(AuthorizationException | AuthenticationFailureException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

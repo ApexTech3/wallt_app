@@ -11,4 +11,10 @@ public interface UserService {
     List<User> getAll();
     User register(User user);
     User update(User user, User requester, UserUpdateDto dto, int id);
+
+    boolean isAdmin(User user);
+
+    User blockUser(User user, User requester);
+
+    User unblockUser(User user, User requester);
 }

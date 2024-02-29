@@ -20,8 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -74,6 +72,29 @@ public class CardRestController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @PutMapping("/{id}")
+    public CardDto updateCard(@RequestHeader @NotNull HttpHeaders headers, @Validated(Register.class) @RequestBody CardDto cardDto, @PathVariable int id) {
+        try {
+            User user = authenticationHelper.tryGetUser(headers);
+            if(cardService.get(id).getHolder().getId() != user.getId()) {
+                throw new AuthorizationException("You are not the owner of this card.");
+            }
+            if(cardService.exists(cardDto.getCardNumber())) {
+                throw new EntityDuplicateException("Card with this number already exists.");
+            }
+            Card card = cardMapper.fromDto(cardDto);
+            card.setId(id);
+            card.setHolder(user);
+            cardService.update(card);
+            return CardMapper.toDto(card);
+        } catch(AuthorizationException | AuthenticationFailureException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

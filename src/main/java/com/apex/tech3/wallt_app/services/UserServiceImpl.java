@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user, User requester, UserUpdateDto dto, int id) {
-        User userToUpdate = repository.getById(id);
+        User userToUpdate = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
         tryAuthorizeUser(requester, userToUpdate);
         checkIfUniqueEmail(user);
         User updatedUser = addUneditableAttributes(userToUpdate, user);
@@ -73,11 +73,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User tryAuthorizeUser(User user, User requester) {
+    private void tryAuthorizeUser(User user, User requester) {
         if (!user.getUsername().equals(requester.getUsername()) && !AuthenticationHelper.isBlocked(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
-        return user;
     }
 
     private User addUneditableAttributes(User old, User updated) {
@@ -100,5 +99,28 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordException("Invalid new password. Please ensure it meets the following criteria: "
                     + "at least 8 characters long, contains at least one uppercase letter, one digit, and one special character.");
         }
+    }
+
+    @Override
+    public boolean isAdmin(User admin) {
+        return admin.getRoles().stream().anyMatch(r -> r.getName().equals("ADMIN"));
+    }
+
+    @Override
+    public User blockUser(User user, User requester) {
+        if(!isAdmin(requester)) {
+            throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
+        }
+        user.setBlocked(true);
+        return repository.save(user);
+    }
+
+    @Override
+    public User unblockUser(User user, User requester) {
+        if(!isAdmin(requester)) {
+            throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
+        }
+        user.setBlocked(false);
+        return repository.save(user);
     }
 }

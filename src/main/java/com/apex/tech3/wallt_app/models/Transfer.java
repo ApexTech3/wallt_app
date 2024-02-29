@@ -35,7 +35,7 @@ public class Transfer {
     @Column(name = "direction", nullable = false, length = 20)
     private DirectionEnum direction;
     @CreationTimestamp
-    @Column(name = "stamp_created")
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
 
 

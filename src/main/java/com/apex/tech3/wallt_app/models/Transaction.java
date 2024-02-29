@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -31,6 +30,6 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
     @CreationTimestamp
-    @Column(name = "stamp_created")
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
 }

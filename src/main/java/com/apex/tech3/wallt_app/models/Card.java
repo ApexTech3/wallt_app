@@ -5,7 +5,6 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 @Data
 @Entity
@@ -30,7 +29,7 @@ public class Card {
     @JoinColumn(name = "holder_id")
     private User holder;
     @CreationTimestamp
-    @Column(name = "stamp_created")
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
     @Column(name = "is_active")
     private boolean isActive;

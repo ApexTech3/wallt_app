@@ -44,7 +44,7 @@ public class User {
     @Column(name = "verified")
     private boolean isVerified;
     @CreationTimestamp
-    @Column(name = "stamp_created")
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
     @Column(name = "is_deleted")
     private boolean isDeleted;

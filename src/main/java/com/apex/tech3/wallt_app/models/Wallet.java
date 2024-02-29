@@ -25,7 +25,7 @@ public class Wallet {
     @JoinColumn(name = "currency_id")
     private Currency currency;
     @CreationTimestamp
-    @Column(name = "stamp_created")
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
     @Column(name = "is_active")
     private boolean isActive;
