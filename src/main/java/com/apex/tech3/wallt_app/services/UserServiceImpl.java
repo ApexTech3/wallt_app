@@ -49,10 +49,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user, User requester, int id) {
         User userToUpdate = repository.getById(id);
+        User updatedUser = addUneditableAttributes(userToUpdate, user);
         user.setStampCreated(userToUpdate.getStampCreated());
         tryAuthorizeUser(requester, userToUpdate);
-        checkIfUniqueEmail(user);
-        return repository.save(user);
+        checkIfUniqueEmail(updatedUser);
+        return repository.save(updatedUser);
     }
 
     private void checkIfUniqueEmail(User user) {
@@ -71,5 +72,12 @@ public class UserServiceImpl implements UserService {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         return user;
+    }
+
+    private User addUneditableAttributes(User old, User updated) {
+        updated.setBlocked(old.isBlocked());
+        updated.setVerified(old.isVerified());
+        updated.setStampCreated(old.getStampCreated());
+        return updated;
     }
 }
