@@ -107,20 +107,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User blockUser(User user, User requester) {
+    public User blockUser(int userId, User requester) {
         if(!isAdmin(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
-        user.setBlocked(true);
-        return repository.save(user);
+        User userToBeBlocked = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
+
+        userToBeBlocked.setBlocked(true);
+        return repository.save(userToBeBlocked);
     }
 
     @Override
-    public User unblockUser(User user, User requester) {
+    public User unblockUser(int userId, User requester) {
         if(!isAdmin(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
-        user.setBlocked(false);
-        return repository.save(user);
+        User userToBeUnblocked = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
+        userToBeUnblocked.setBlocked(false);
+        return repository.save(userToBeUnblocked);
     }
 }

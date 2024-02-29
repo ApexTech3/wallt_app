@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.models.dtos.WalletDto;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,7 +35,7 @@ public class WalletRestController {
     }
 
     @GetMapping("/{userId}")
-    public List<WalletDto> getByUserId(int userId) {
+    public List<WalletDto> getByUserId(@PathVariable int userId) {
         return walletService.getByUserId(userId).stream().map(WalletMapper::toDto).toList();
     }
 

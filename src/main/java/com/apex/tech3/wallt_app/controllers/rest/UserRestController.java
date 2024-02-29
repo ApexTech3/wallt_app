@@ -79,14 +79,15 @@ public class UserRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @PutMapping("/block/{id}")
-    public UserResponseDto blockUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    @PutMapping("/block/{userId}")
+    public UserResponseDto blockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
             User admin = helper.tryGetUser(headers);
 
-            User userToBeBlocked = userService.get(id);
-            userService.blockUser(userToBeBlocked, admin);
-            return userMapper.toResponseDto(userToBeBlocked);
+            userService.blockUser(userId, admin);
+
+            return userMapper.toResponseDto(userService.get(userId));
+
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityNotFoundException e) {
@@ -95,15 +96,13 @@ public class UserRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @PutMapping("/unblock/{id}")
-    public UserResponseDto unblockUser(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+    @PutMapping("/unblock/{userId}")
+    public UserResponseDto unblockUser(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
             User admin = helper.tryGetUser(headers);
+            userService.unblockUser(userId, admin);
 
-            User userToBeUnblocked = userService.get(id);
-
-            userService.unblockUser(userToBeUnblocked, admin);
-            return userMapper.toResponseDto(userToBeUnblocked);
+            return userMapper.toResponseDto(userService.get(userId));
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityNotFoundException e) {

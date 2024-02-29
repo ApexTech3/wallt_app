@@ -14,7 +14,7 @@ public interface UserService {
 
     boolean isAdmin(User user);
 
-    User blockUser(User user, User requester);
+    User blockUser(int userId, User requester);
 
-    User unblockUser(User user, User requester);
+    User unblockUser(int userId, User requester);
 }

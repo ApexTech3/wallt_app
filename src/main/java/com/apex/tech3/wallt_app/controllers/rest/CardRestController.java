@@ -62,11 +62,7 @@ public class CardRestController {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             Card card = cardMapper.fromDto(cardDto);
-            if(cardService.exists(card.getNumber())) {
-                throw new EntityDuplicateException("Card with this number already exists.");
-            }
-            card.setHolder(user);
-            cardService.create(card);
+            cardService.create(card, user);
             return CardMapper.toDto(card);
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -80,16 +76,9 @@ public class CardRestController {
     public CardDto updateCard(@RequestHeader @NotNull HttpHeaders headers, @Validated(Register.class) @RequestBody CardDto cardDto, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            if(cardService.get(id).getHolder().getId() != user.getId()) {
-                throw new AuthorizationException("You are not the owner of this card.");
-            }
-            if(cardService.exists(cardDto.getCardNumber())) {
-                throw new EntityDuplicateException("Card with this number already exists.");
-            }
             Card card = cardMapper.fromDto(cardDto);
             card.setId(id);
-            card.setHolder(user);
-            cardService.update(card);
+            cardService.update(card, user);
             return CardMapper.toDto(card);
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -103,19 +92,11 @@ public class CardRestController {
     public void deactivateCard(@RequestHeader @NotNull HttpHeaders headers, @PathVariable int id) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
-            Card card = cardService.get(id);
-            if (card.getHolder().getId() != user.getId()) {
-                throw new AuthorizationException("You are not the owner of this card.");
-            }
-            card.setActive(false);
-            cardService.update(card);
+            cardService.deactivate(id, user);
         } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
-
-
-
 }
