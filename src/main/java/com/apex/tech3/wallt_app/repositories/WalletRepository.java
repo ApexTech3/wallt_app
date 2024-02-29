@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Set;
+
 public interface WalletRepository extends JpaRepository<Wallet, Integer> {
     @Query("from Wallet where (:#{#filterOptions.holderId} is null or holder.id= :#{#filterOptions.holderId}) " +
             "and (:#{#filterOptions.amountGreaterThan} is null or amount >= :#{#filterOptions.amountGreaterThan}) " +
@@ -15,4 +17,6 @@ public interface WalletRepository extends JpaRepository<Wallet, Integer> {
             "and (:#{#filterOptions.currencyId} is null or currency.id = :#{#filterOptions.currencyId})")
     Page<Wallet> findAllFilteredSortedAndPaginated(@Param("filterOptions") WalletFilterOptions filterOptions,
                                                    Pageable pageable);
+
+    Set<Wallet> findByHolderId(int holderId);
 }

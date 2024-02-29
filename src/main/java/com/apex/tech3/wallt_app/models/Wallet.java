@@ -27,4 +27,7 @@ public class Wallet {
     @CreationTimestamp
     @Column(name = "stamp_created")
     private Timestamp stampCreated;
+    @Column(name = "is_active")
+    private boolean isActive;
+
 }

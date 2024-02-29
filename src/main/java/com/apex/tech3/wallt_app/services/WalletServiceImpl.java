@@ -12,9 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class WalletServiceImpl implements WalletService {
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 5;
     private final WalletRepository repository;
 
     @Autowired
@@ -28,7 +30,12 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Page<Wallet> getAll(WalletFilterOptions filterOptions) {
+    public List<Wallet> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Page<Wallet> getAllFilteredSortedAndPaginated(WalletFilterOptions filterOptions) {
         return repository.findAllFilteredSortedAndPaginated(filterOptions, createPageable(filterOptions));
     }
 
@@ -38,6 +45,28 @@ public class WalletServiceImpl implements WalletService {
         Sort sort = Sort.by(filterOptions.getSortBy());
         sort = filterOptions.getSortOrder().equals("desc") ? sort.descending() : sort.ascending();
         return PageRequest.of(filterOptions.getPage(), PAGE_SIZE, sort);
+    }
+
+    @Override
+    public List<Wallet> getByUserId(int userId) {
+        return repository.findByHolderId(userId).stream().toList();
+    }
+
+    @Override
+    public Wallet create(Wallet wallet) {
+        return repository.save(wallet);
+    }
+
+    @Override
+    public Wallet update(Wallet wallet) {
+        return repository.save(wallet);
+    }
+
+    @Override
+    public void delete(int id) {
+        Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
+        wallet.setActive(false);
+        repository.save(wallet);
     }
 
 }
