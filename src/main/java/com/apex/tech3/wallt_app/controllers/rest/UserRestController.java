@@ -52,7 +52,7 @@ public class UserRestController {
         try {
             User requester = helper.tryGetUser(headers);
             User user = userMapper.fromUpdateDto(userUpdateDto, id);
-            return userMapper.toResponseDto(userService.update(user, requester));
+            return userMapper.toResponseDto(userService.update(user, requester, id));
         } catch (AuthorizationException | AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {

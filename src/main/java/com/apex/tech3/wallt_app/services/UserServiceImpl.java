@@ -47,19 +47,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, User requester) {
-        tryAuthorizeUser(user, requester);
+    public User update(User user, User requester, int id) {
+        User userToUpdate = repository.getById(id);
+        user.setStampCreated(userToUpdate.getStampCreated());
+        tryAuthorizeUser(requester, userToUpdate);
         checkIfUniqueEmail(user);
         return repository.save(user);
     }
 
     private void checkIfUniqueEmail(User user) {
         boolean duplicateExists = true;
-        try {
-            User userByEmail = repository.getByEmail(user.getEmail());
-            if (userByEmail.getId() == user.getId())
-                duplicateExists = false;
-        } catch (EntityNotFoundException e) {
+        User userByEmail = repository.getByEmail(user.getEmail());
+        if (userByEmail == null) {
             duplicateExists = false;
         }
         if (duplicateExists) {

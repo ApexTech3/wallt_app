@@ -28,6 +28,6 @@ public class UserUpdateDto {
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phone;
     private String profilePicture;
-    @NotEmpty(message = "Address cannot be null")
+    //@NotEmpty(message = "Address cannot be null")
     private Address address;
 }
