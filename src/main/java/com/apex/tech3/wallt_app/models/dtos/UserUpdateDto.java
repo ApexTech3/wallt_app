@@ -11,8 +11,7 @@ import lombok.Data;
 public class UserUpdateDto {
 
     private String username;
-    private String currentPassword;
-    private String password;
+    private String newPassword;
     private String passwordConfirmation;
     @NotEmpty(message = "First name can't be empty")
     @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols")

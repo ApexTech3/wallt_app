@@ -3,8 +3,10 @@ package com.apex.tech3.wallt_app.services;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
 import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
+import com.apex.tech3.wallt_app.exceptions.InvalidPasswordException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +49,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, User requester, int id) {
+    public User update(User user, User requester, UserUpdateDto dto, int id) {
         User userToUpdate = repository.getById(id);
-        User updatedUser = addUneditableAttributes(userToUpdate, user);
-        user.setStampCreated(userToUpdate.getStampCreated());
         tryAuthorizeUser(requester, userToUpdate);
-        checkIfUniqueEmail(updatedUser);
+        checkIfUniqueEmail(user);
+        User updatedUser = addUneditableAttributes(userToUpdate, user);
+        if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
+            updatedUser = validateNewPassword(dto, updatedUser);
+        } else {
+            updatedUser.setPassword(requester.getPassword());
+        }
         return repository.save(updatedUser);
     }
 
@@ -79,5 +85,20 @@ public class UserServiceImpl implements UserService {
         updated.setVerified(old.isVerified());
         updated.setStampCreated(old.getStampCreated());
         return updated;
+    }
+
+    private User validateNewPassword(UserUpdateDto toUpdate, User updated) {
+        String newPassword = toUpdate.getNewPassword();
+        String passwordConfirmation = toUpdate.getPasswordConfirmation();
+
+        // Check if the new password meets complexity requirements and matches the confirmation
+        if (newPassword.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^]).{8,}$")
+                && newPassword.equals(passwordConfirmation)) {
+            updated.setPassword(newPassword);
+            return updated;
+        } else {
+            throw new InvalidPasswordException("Invalid new password. Please ensure it meets the following criteria: "
+                    + "at least 8 characters long, contains at least one uppercase letter, one digit, and one special character.");
+        }
     }
 }
