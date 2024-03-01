@@ -18,7 +18,7 @@ public class EmailSender {
         message.setTo(email);
         message.setSubject("Email Confirmation");
         message.setText("Please click the link below to confirm your email:\n\n"
-                + "http://yourwebsite.com/confirm?token=" + confirmationToken);
+                + "http://localhost:8080/api/users/confirm?token=" + confirmationToken); // Assuming your application runs on localhost:8080
         javaMailSender.send(message);
     }
 }

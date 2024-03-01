@@ -12,8 +12,8 @@ import java.util.Set;
 @Table(name = "users", schema = "wallt_db")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    @SequenceGenerator(name = "user_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+//    @SequenceGenerator(name = "user_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
     @Column(name = "user_id")
     private int id;
     @Column(name = "username", unique = true, nullable = false)
@@ -43,6 +43,8 @@ public class User {
     private boolean isBlocked;
     @Column(name = "verified")
     private boolean isVerified;
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
     @CreationTimestamp
     @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
