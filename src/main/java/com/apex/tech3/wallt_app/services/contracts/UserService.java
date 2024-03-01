@@ -10,6 +10,8 @@ public interface UserService {
     User get(String username);
     List<User> getAll();
     User register(User user);
+    public void sendConfirmationEmail(User user);
+    public void confirmUser(String token);
     User update(User user, User requester, UserUpdateDto dto, int id);
 
     boolean isAdmin(User user);

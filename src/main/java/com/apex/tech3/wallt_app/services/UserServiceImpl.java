@@ -1,9 +1,6 @@
 package com.apex.tech3.wallt_app.services;
 
-import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
-import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
-import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
-import com.apex.tech3.wallt_app.exceptions.InvalidPasswordException;
+import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
@@ -19,10 +16,14 @@ public class UserServiceImpl implements UserService {
 
     private static final String UNAUTHORIZED_USER_ERROR = "You are not authorized to perform this operation";
     private final UserRepository repository;
+    private final TokenService tokenService;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository) {
+    public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailService emailService) {
         this.repository = repository;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -45,7 +46,28 @@ public class UserServiceImpl implements UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityDuplicateException("User", "username", user.getUsername());
         }
+        sendConfirmationEmail(user);
         return repository.save(user);
+    }
+    @Override
+    public void sendConfirmationEmail(User user) {
+        String confirmationToken = tokenService.generateToken();
+        user.setConfirmationToken(confirmationToken);
+        emailService.sendConfirmationEmail(user.getEmail(), confirmationToken);
+    }
+    @Override
+    public void confirmUser(String token) {
+        User user = repository.findByConfirmationToken(token);
+        if (user == null || user.isVerified()) {
+            throw new EntityNotFoundException("User", "confirmation token", token);
+        }
+        if (tokenService.isValidToken(token)) {
+            user.setVerified(true);
+            user.setConfirmationToken(null); // Invalidate the token
+            repository.save(user);
+        } else {
+            throw new InvalidTokenException("Invalid confirmation token");
+        }
     }
 
     @Override
