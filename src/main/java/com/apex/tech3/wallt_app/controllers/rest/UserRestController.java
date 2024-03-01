@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
@@ -103,6 +104,33 @@ public class UserRestController {
             userService.unblockUser(userId, admin);
 
             return userMapper.toResponseDto(userService.get(userId));
+        } catch(AuthorizationException | AuthenticationFailureException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @PutMapping("/delete/{userId}")
+    public HttpStatus delete(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+        try {
+            User requester = helper.tryGetUser(headers);
+            userService.deleteUser(userId, requester);
+            return HttpStatus.OK;
+        } catch(AuthorizationException | AuthenticationFailureException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch(EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @PutMapping("/restore/{userId}")
+    public UserResponseDto restore(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
+        try {
+            User requester = helper.tryGetUser(headers);
+            return userMapper.toResponseDto(userService.restoreUser(userId, requester));
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityNotFoundException e) {

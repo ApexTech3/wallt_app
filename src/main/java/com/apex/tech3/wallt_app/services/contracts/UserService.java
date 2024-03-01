@@ -17,4 +17,7 @@ public interface UserService {
     User blockUser(int userId, User requester);
 
     User unblockUser(int userId, User requester);
+
+    void deleteUser(int userId, User requester);
+    User restoreUser(int userId, User requester);
 }
