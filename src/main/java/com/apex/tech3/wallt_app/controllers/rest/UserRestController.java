@@ -19,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
@@ -124,7 +123,7 @@ public class UserRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @PutMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public HttpStatus delete(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
             User requester = helper.tryGetUser(headers);

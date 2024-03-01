@@ -18,7 +18,6 @@ public class WalletDto {
 
     @JsonAnyGetter
     public Map<String, String> getProperties() {
-        return Map.of("amount", amount.toString(), "currency", currency.getSymbol());
+        return Map.of("currency", currency.getSymbol());
     }
-
 }

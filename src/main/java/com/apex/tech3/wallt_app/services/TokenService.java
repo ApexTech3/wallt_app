@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
-public class TokenService {
+public class TokenService implements com.apex.tech3.wallt_app.services.contracts.TokenService {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}");
 
