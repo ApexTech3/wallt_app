@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name = "dummy-service",url = "localhost")
 public interface DummyCardClient {
-    @RequestMapping(method = RequestMethod.POST, value = "/api/dummy/try_pay")
+    @RequestMapping(method = RequestMethod.POST, value = "/dummy/payments")
     boolean tryPay(CardDetails cardDetails);
 }

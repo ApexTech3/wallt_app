@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/api/dummy")
+@RequestMapping("/dummy")
 public class DummyCardController {
-    @PostMapping("/try_pay")
+    @PostMapping("/payments")
     public boolean tryPay(@RequestBody CardDetails cardDetails) {
         String dateStr = cardDetails.getExpirationMonth() + "/" + cardDetails.getExpirationYear();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");

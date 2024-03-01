@@ -10,6 +10,7 @@ import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.TransferDto;
 import com.apex.tech3.wallt_app.models.dtos.TransferResponse;
 import com.apex.tech3.wallt_app.services.contracts.TransferService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,10 +30,9 @@ public class TransferController {
         this.transferService = transferService;
         this.transferMapper = transferMapper;
         this.helper = helper;
-
     }
-
-    @PostMapping("/deposits")
+    @SecurityRequirement(name = "Authorization")
+    @PostMapping("/deposit")
     public TransferResponse deposit(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = helper.tryGetUser(headers);
@@ -46,8 +46,8 @@ public class TransferController {
         }
         //todo implement separate authorization and authentication exceptions
     }
-
-    @PostMapping("/withdrawals")
+    @SecurityRequirement(name = "Authorization")
+    @PostMapping("/withdrawal")
     public TransferResponse withdraw(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = helper.tryGetUser(headers);

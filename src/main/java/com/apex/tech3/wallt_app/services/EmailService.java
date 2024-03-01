@@ -6,10 +6,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailSender {
+public class EmailService {
     private final JavaMailSender javaMailSender;
 
-    public EmailSender(JavaMailSender javaMailSender) {
+    @Autowired
+    public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
@@ -18,7 +19,7 @@ public class EmailSender {
         message.setTo(email);
         message.setSubject("Email Confirmation");
         message.setText("Please click the link below to confirm your email:\n\n"
-                + "http://localhost:8080/api/users/confirm?token=" + confirmationToken); // Assuming your application runs on localhost:8080
+                + "http://localhost/api/users/confirm?token=" + confirmationToken); // Assuming your application runs on localhost:8080
         javaMailSender.send(message);
     }
 }
