@@ -8,7 +8,6 @@ import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
-import com.apex.tech3.wallt_app.services.UserConfirmationService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -29,13 +28,11 @@ public class UserRestController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final AuthenticationHelper helper;
-    private final UserConfirmationService userConfirmationService;
 
-    public UserRestController(UserService userService, UserMapper userMapper, AuthenticationHelper helper, UserConfirmationService userConfirmationService) {
+    public UserRestController(UserService userService, UserMapper userMapper, AuthenticationHelper helper) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.helper = helper;
-        this.userConfirmationService = userConfirmationService;
     }
 
     @GetMapping("/{id}")
@@ -54,11 +51,11 @@ public class UserRestController {
     }
 
     @PostMapping
-    public UserResponseDto register(@Validated(Register.class) @RequestBody UserRegisterDto registerDto) {
+    public HttpStatus register(@Validated(Register.class) @RequestBody UserRegisterDto registerDto) {
         try {
             User user = userMapper.fromRegisterDto(registerDto);
-            userConfirmationService.sendConfirmationEmail(user);
-            return userMapper.toResponseDto(userService.register(user));
+            userService.register(user);
+            return HttpStatus.CONTINUE;
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
@@ -67,7 +64,7 @@ public class UserRestController {
     @GetMapping("/confirm")
     public ResponseEntity<String> confirmEmail(@RequestParam("token") String token) {
         try {
-            userConfirmationService.confirmUser(token);
+            userService.confirmUser(token);
             return ResponseEntity.ok("Email confirmed successfully.");
         } catch (EntityNotFoundException | InvalidTokenException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
