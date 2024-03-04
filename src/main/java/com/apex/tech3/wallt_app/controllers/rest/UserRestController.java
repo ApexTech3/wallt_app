@@ -2,10 +2,8 @@ package com.apex.tech3.wallt_app.controllers.rest;
 
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
-import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.User;
-import com.apex.tech3.wallt_app.models.dtos.TransactionDto;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
@@ -23,8 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Timestamp;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -43,32 +39,26 @@ public class UserRestController {
     @GetMapping("/{id}")
     public UserResponseDto getUser(@PathVariable int id) {
         try {
-            return userMapper.toResponseDto(userService.get(id));
-        } catch(EntityNotFoundException e) {
+            return UserMapper.toResponseDto(userService.get(id));
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
     @GetMapping
     public Page<UserResponseDto> getAll(@RequestParam(required = false) Pageable pageable,
-                                       @RequestParam(required = false) String username,
-                                       @RequestParam(required = false) Integer id,
-                                       @RequestParam(required = false) String firstName,
-                                       @RequestParam(required = false) String middleName,
-                                       @RequestParam(required = false) String lastName,
-                                       @RequestParam(required = false) String email,
-                                       @RequestParam(required = false) String phone) {
+                                        @RequestParam(required = false) String username,
+                                        @RequestParam(required = false) Integer id,
+                                        @RequestParam(required = false) String firstName,
+                                        @RequestParam(required = false) String middleName,
+                                        @RequestParam(required = false) String lastName,
+                                        @RequestParam(required = false) String email,
+                                        @RequestParam(required = false) String phone) {
         return new PageImpl<>(userService.getAll(pageable, id, username, firstName, middleName, lastName, email, phone)
                 .stream()
                 .map(UserMapper::toResponseDto)
                 .toList());
     }
-
-//    @SecurityRequirement(name = "Authorization")
-//    @GetMapping
-//    public List<UserResponseDto> getAllUsers() {
-//        return userService.getAll().stream().map(userMapper::toResponseDto).toList();
-//    }
 
     @PostMapping
     public HttpStatus register(@Validated(Register.class) @RequestBody UserRegisterDto registerDto) {
@@ -98,7 +88,7 @@ public class UserRestController {
         try {
             User requester = helper.tryGetUser(headers);
             User newUser = userMapper.fromUpdateDto(userUpdateDto, id);
-            return userMapper.toResponseDto(userService.update(newUser, requester, userUpdateDto, id));
+            return UserMapper.toResponseDto(userService.update(newUser, requester, userUpdateDto, id));
         } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
@@ -116,11 +106,11 @@ public class UserRestController {
 
             userService.blockUser(userId, admin);
 
-            return userMapper.toResponseDto(userService.get(userId));
+            return UserMapper.toResponseDto(userService.get(userId));
 
-        } catch(AuthorizationException | AuthenticationFailureException e) {
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -132,10 +122,10 @@ public class UserRestController {
             User admin = helper.tryGetUser(headers);
             userService.unblockUser(userId, admin);
 
-            return userMapper.toResponseDto(userService.get(userId));
-        } catch(AuthorizationException | AuthenticationFailureException e) {
+            return UserMapper.toResponseDto(userService.get(userId));
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -147,9 +137,9 @@ public class UserRestController {
             User requester = helper.tryGetUser(headers);
             userService.deleteUser(userId, requester);
             return HttpStatus.OK;
-        } catch(AuthorizationException | AuthenticationFailureException e) {
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
@@ -159,10 +149,10 @@ public class UserRestController {
     public UserResponseDto restore(@RequestHeader HttpHeaders headers, @PathVariable int userId) {
         try {
             User requester = helper.tryGetUser(headers);
-            return userMapper.toResponseDto(userService.restoreUser(userId, requester));
-        } catch(AuthorizationException | AuthenticationFailureException e) {
+            return UserMapper.toResponseDto(userService.restoreUser(userId, requester));
+        } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch(EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
