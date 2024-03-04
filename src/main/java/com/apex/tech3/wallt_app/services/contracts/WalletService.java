@@ -1,9 +1,11 @@
 package com.apex.tech3.wallt_app.services.contracts;
 
+import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface WalletService {
@@ -20,4 +22,12 @@ public interface WalletService {
     Wallet update(Wallet wallet);
 
     void delete(int id);
+
+    boolean checkIfFundsAreAvailable(Wallet wallet, BigDecimal amount);
+
+    void CreditAmount(Wallet wallet, BigDecimal amount);
+
+    void DebitAmount(Wallet wallet, BigDecimal amount);
+
+    void checkOwnership(Wallet wallet, User user);
 }

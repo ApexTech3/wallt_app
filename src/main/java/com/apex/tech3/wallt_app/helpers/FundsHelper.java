@@ -10,5 +10,5 @@ public class FundsHelper {
     public static void validateWalletHasEnoughFunds(BigDecimal amount, BigDecimal walletAmount) {
         if (amount.compareTo(walletAmount) > 0)
             throw new InsufficientFundsException(INSUFFICIENT_FUNDS_ERROR);
-    }
+    }//TODO makes sense to be part of the WalletService
 }
