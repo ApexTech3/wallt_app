@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
-    private final CurrencyRepository repository;
+    private CurrencyRepository repository;
 
     @Autowired
     public CurrencyServiceImpl(CurrencyRepository repository) {
@@ -19,5 +19,10 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public Currency get(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Currency", id));
+    }
+
+    @Override
+    public Currency get(String ticker) {
+        return repository.findByTicker(ticker);
     }
 }
