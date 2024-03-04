@@ -2,8 +2,10 @@ package com.apex.tech3.wallt_app.controllers.rest;
 
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
+import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.dtos.TransactionDto;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
@@ -11,6 +13,9 @@ import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -43,11 +49,26 @@ public class UserRestController {
         }
     }
 
-    @SecurityRequirement(name = "Authorization")
     @GetMapping
-    public List<UserResponseDto> getAllUsers() {
-        return userService.getAll().stream().map(userMapper::toResponseDto).toList();
+    public Page<UserResponseDto> getAll(@RequestParam(required = false) Pageable pageable,
+                                       @RequestParam(required = false) String username,
+                                       @RequestParam(required = false) Integer id,
+                                       @RequestParam(required = false) String firstName,
+                                       @RequestParam(required = false) String middleName,
+                                       @RequestParam(required = false) String lastName,
+                                       @RequestParam(required = false) String email,
+                                       @RequestParam(required = false) String phone) {
+        return new PageImpl<>(userService.getAll(pageable, id, username, firstName, middleName, lastName, email, phone)
+                .stream()
+                .map(UserMapper::toResponseDto)
+                .toList());
     }
+
+//    @SecurityRequirement(name = "Authorization")
+//    @GetMapping
+//    public List<UserResponseDto> getAllUsers() {
+//        return userService.getAll().stream().map(userMapper::toResponseDto).toList();
+//    }
 
     @PostMapping
     public HttpStatus register(@Validated(Register.class) @RequestBody UserRegisterDto registerDto) {

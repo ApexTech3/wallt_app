@@ -2,11 +2,17 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
+import com.apex.tech3.wallt_app.models.Transaction;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
+import com.apex.tech3.wallt_app.models.filters.TransactionSpecification;
+import com.apex.tech3.wallt_app.models.filters.UserSpecification;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,8 +43,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return repository.findAll();
+    public Page<User> getAll(Pageable pageable, Integer id, String username, String firstName,
+                                    String middleName, String lastName, String email,
+                                    String phone) {
+        if(pageable == null) {
+            List<User> users = repository.findAll(UserSpecification.filterByAllColumns(id, username, firstName, middleName, lastName, email, phone));
+            return new PageImpl<>(users);
+        } else {
+            return repository.findAll(UserSpecification.filterByAllColumns(id, username, firstName, middleName, lastName, email, phone), pageable);
+        }
     }
 
     @Override
@@ -63,7 +76,7 @@ public class UserServiceImpl implements UserService {
         }
         if (tokenService.isValidToken(token)) {
             user.setVerified(true);
-            user.setConfirmationToken(null); // Invalidate the token
+            user.setConfirmationToken(null);
             repository.save(user);
         } else {
             throw new InvalidTokenException("Invalid confirmation token");
