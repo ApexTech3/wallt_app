@@ -1,7 +1,12 @@
 package com.apex.tech3.wallt_app.services;
 
+import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
+import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
 import com.apex.tech3.wallt_app.models.Transaction;
+import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.Wallet;
+import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import com.apex.tech3.wallt_app.models.filters.TransactionSpecification;
 import com.apex.tech3.wallt_app.repositories.TransactionRepository;
 import com.apex.tech3.wallt_app.services.contracts.TransactionService;
@@ -13,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -59,8 +65,27 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction create(Transaction transaction) {
-        return null;
+    public Transaction create(Transaction transaction, User user) {
+
+        Wallet senderWallet = transaction.getSenderWallet();
+
+        Wallet receiverWallet = transaction.getReceiverWallet();
+        BigDecimal amount = transaction.getAmount();
+        try {
+            walletService.checkOwnership(senderWallet, user);
+            walletService.DebitAmount(receiverWallet, amount);
+            walletService.CreditAmount(senderWallet, transaction.getAmount());
+            transaction.setStatus(StatusEnum.SUCCESSFUL);
+            return repository.save(transaction);
+        } catch(AuthorizationException e) {
+            transaction.setStatus(StatusEnum.FAILED);
+            repository.save(transaction);
+            throw new AuthorizationException("You are not authorized to perform this operation");
+        } catch(InsufficientFundsException e) {
+            transaction.setStatus(StatusEnum.FAILED);
+            repository.save(transaction);
+            throw new InsufficientFundsException("Insufficient funds in the sender's wallet");
+        }
     }
 
     @Override
