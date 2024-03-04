@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User update(User user, User requester, UserUpdateDto dto, int id) {
         User userToUpdate = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
         tryAuthorizeUser(requester, userToUpdate);
-        checkIfUniqueEmail(user);
+        checkIfUniqueEmail(user, requester);
         User updatedUser = addUneditableAttributes(userToUpdate, user);
         if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
             updatedUser = validateNewPassword(dto, updatedUser);
@@ -97,7 +98,10 @@ public class UserServiceImpl implements UserService {
         return repository.save(updatedUser);
     }
 
-    private void checkIfUniqueEmail(User user) {
+    private void checkIfUniqueEmail(User user, User requester) {
+        if (Objects.equals(user.getEmail(), requester.getEmail())) {
+            return;
+        }
         boolean duplicateExists = true;
         User userByEmail = repository.getByEmail(user.getEmail());
         if (userByEmail == null) {
@@ -109,7 +113,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void tryAuthorizeUser(User user, User requester) {
-        if (!user.getUsername().equals(requester.getUsername()) && !AuthenticationHelper.isBlocked(requester)) {
+        if (!user.getUsername().equals(requester.getUsername()) && AuthenticationHelper.isBlocked(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
     }

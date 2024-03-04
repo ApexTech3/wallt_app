@@ -28,7 +28,7 @@ public class HomeController {
 
     @GetMapping
     public String getAll(Model model) {
-        //model.addAttribute("users", userService.getAll());
+        model.addAttribute("users", userService.get(4));
         model.addAttribute("wallet", walletService.get(4));
         return "html/index";
     }
