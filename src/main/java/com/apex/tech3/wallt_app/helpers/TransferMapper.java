@@ -22,8 +22,8 @@ public class TransferMapper {
     public Transfer fromDto(TransferDto transferDto) {
         Transfer transfer = new Transfer();
         transfer.setAmount(transferDto.getAmount());
-        transfer.setCard(cardService.get(transferDto.getCardId()));
-        transfer.setWallet(walletService.get(transferDto.getWalletId()));
+        transfer.setCard(cardService.getById(transferDto.getCardId()));
+        transfer.setWallet(walletService.getById(transferDto.getWalletId()));
         return transfer;
     }
 

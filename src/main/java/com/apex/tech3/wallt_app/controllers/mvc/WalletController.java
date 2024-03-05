@@ -28,7 +28,7 @@ public class WalletController {
     }
     @GetMapping("/{id}")
     public String getSingleWallet(@PathVariable int id, Model model) {
-        model.addAttribute("wallet", walletService.get(id));
+        model.addAttribute("wallet", walletService.getById(id));
         return "wallet";
     }
 

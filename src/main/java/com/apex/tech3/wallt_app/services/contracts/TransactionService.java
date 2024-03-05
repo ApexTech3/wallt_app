@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public interface TransactionService {
 
-    Transaction get(int id);
+    Transaction getById(int id);
 
     Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date);
 

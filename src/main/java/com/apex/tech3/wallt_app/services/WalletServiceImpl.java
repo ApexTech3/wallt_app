@@ -29,7 +29,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Wallet get(int id) {
+    public Wallet getById(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
     }
 
@@ -81,14 +81,14 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void CreditAmount(Wallet wallet, BigDecimal amount) {
+    public void creditAmount(Wallet wallet, BigDecimal amount) {
         checkIfFundsAreAvailable(wallet, amount);
         wallet.setAmount(wallet.getAmount().subtract(amount));
         repository.save(wallet);
     }
 
     @Override
-    public void DebitAmount(Wallet wallet, BigDecimal amount) {
+    public void debitAmount(Wallet wallet, BigDecimal amount) {
         wallet.setAmount(wallet.getAmount().add(amount));
         repository.save(wallet);
     }

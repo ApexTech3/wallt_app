@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface WalletService {
-    Wallet get(int id);
+    Wallet getById(int id);
 
     List<Wallet> getAll();
 
@@ -25,9 +25,9 @@ public interface WalletService {
 
     boolean checkIfFundsAreAvailable(Wallet wallet, BigDecimal amount);
 
-    void CreditAmount(Wallet wallet, BigDecimal amount);
+    void creditAmount(Wallet wallet, BigDecimal amount);
 
-    void DebitAmount(Wallet wallet, BigDecimal amount);
+    void debitAmount(Wallet wallet, BigDecimal amount);
 
     void checkOwnership(Wallet wallet, User user);
 }

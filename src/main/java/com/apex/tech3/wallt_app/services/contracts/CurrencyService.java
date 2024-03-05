@@ -3,9 +3,9 @@ package com.apex.tech3.wallt_app.services.contracts;
 import com.apex.tech3.wallt_app.models.Currency;
 
 public interface CurrencyService {
-    Currency get(int id);
+    Currency getById(int id);
 
-    Currency get(String ticker);
+    Currency getByTicker(String ticker);
 
     double getRateToUsd(String ticker);
 

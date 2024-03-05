@@ -25,8 +25,8 @@ public class TransactionMapper {
     public Transaction fromDto(TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setSenderWallet(walletService.get(transactionDto.getSenderWalletId()));
-        transaction.setReceiverWallet(walletService.get(transactionDto.getReceiverWalletId()));
+        transaction.setSenderWallet(walletService.getById(transactionDto.getSenderWalletId()));
+        transaction.setReceiverWallet(walletService.getById(transactionDto.getReceiverWalletId()));
         return transaction;
     }
 

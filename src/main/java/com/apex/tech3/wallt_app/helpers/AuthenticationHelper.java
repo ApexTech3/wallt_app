@@ -42,7 +42,7 @@ public class AuthenticationHelper {
             String userInfo = headers.getFirst(AUTHORIZATION_HEADER_NAME);
             String username = getUsername(userInfo);
             String password = getPassword(userInfo);
-            User user = userService.get(username);
+            User user = userService.getByUsername(username);
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationFailureException(INVALID_AUTHENTICATION_ERROR);
             }
@@ -60,7 +60,7 @@ public class AuthenticationHelper {
 
         if (currentUser == null) throw new AuthenticationFailureException("no user logged in");
 
-        return userService.get(currentUser);
+        return userService.getByUsername(currentUser);
     }
 
     private String getUsername(String userInfo) {
@@ -83,7 +83,7 @@ public class AuthenticationHelper {
 
     public User verifyAuthentication(String username, String password) {
         try {
-            User user = userService.get(username);
+            User user = userService.getByUsername(username);
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
             }
@@ -100,6 +100,6 @@ public class AuthenticationHelper {
             throw new AuthenticationFailureException(INVALID_AUTHENTICATION_ERROR);
         }
 
-        return userService.get(currentUsername);
+        return userService.getByUsername(currentUsername);
     }
 }

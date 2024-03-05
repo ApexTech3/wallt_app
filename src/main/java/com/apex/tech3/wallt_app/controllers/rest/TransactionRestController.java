@@ -69,9 +69,9 @@ public class TransactionRestController {
 
     @SecurityRequirement(name = "Authorization")
     @GetMapping("/{id}")
-    public TransactionResponse get(@PathVariable int id) {
+    public TransactionResponse getById(@PathVariable int id) {
         try {
-            return transactionMapper.toResponse(transactionService.get(id));
+            return transactionMapper.toResponse(transactionService.getById(id));
         } catch(EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

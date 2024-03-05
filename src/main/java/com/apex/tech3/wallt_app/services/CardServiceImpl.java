@@ -23,7 +23,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card get(int id) {
+    public Card getById(int id) {
         if (repository.findByIdAndIsActiveTrue(id) == null) {
             throw new EntityNotFoundException("Card", id);
         }

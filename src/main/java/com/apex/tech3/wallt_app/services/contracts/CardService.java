@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface CardService {
-    Card get(int id);
+    Card getById(int id);
 
     Set<Card> getByHolderId(int userId);
 

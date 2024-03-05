@@ -17,18 +17,18 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Currency get(int id) {
+    public Currency getById(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Currency", id));
     }
 
     @Override
-    public Currency get(String ticker) {
+    public Currency getByTicker(String ticker) {
         return repository.findByTicker(ticker);
     }
 
     @Override
     public double getRateToUsd(String ticker) {
-        return get(ticker).getRateToUsd();
+        return getByTicker(ticker).getRateToUsd();
     }
 
     @Override

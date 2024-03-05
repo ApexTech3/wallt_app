@@ -2,10 +2,8 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
-import com.apex.tech3.wallt_app.models.Transaction;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
-import com.apex.tech3.wallt_app.models.filters.TransactionSpecification;
 import com.apex.tech3.wallt_app.models.filters.UserSpecification;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
@@ -34,12 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(int id) {
+    public User getById(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
     }
 
     @Override
-    public User get(String username) {
+    public User getByUsername(String username) {
         return repository.findByUsername(username);
     }
 

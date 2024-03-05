@@ -28,14 +28,14 @@ public class HomeController {
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("users", userService.get(4));
-        model.addAttribute("wallet", walletService.get(4));
+        model.addAttribute("users", userService.getById(4));
+        model.addAttribute("wallet", walletService.getById(4));
         return "html/index";
     }
 
     @GetMapping("/{id}")
     public String getSingleUser(@PathVariable int id, Model model) {
-        model.addAttribute("user", userService.get(id));
+        model.addAttribute("user", userService.getById(id));
         return "user";
     }
 

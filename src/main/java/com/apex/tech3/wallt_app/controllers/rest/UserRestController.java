@@ -39,7 +39,7 @@ public class UserRestController {
     @GetMapping("/{id}")
     public UserResponseDto getUser(@PathVariable int id) {
         try {
-            return userMapper.toResponseDto(userService.get(id));
+            return userMapper.toResponseDto(userService.getById(id));
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -106,7 +106,7 @@ public class UserRestController {
 
             userService.blockUser(userId, admin);
 
-            return userMapper.toResponseDto(userService.get(userId));
+            return userMapper.toResponseDto(userService.getById(userId));
 
         } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -122,7 +122,7 @@ public class UserRestController {
             User admin = helper.tryGetUser(headers);
             userService.unblockUser(userId, admin);
 
-            return userMapper.toResponseDto(userService.get(userId));
+            return userMapper.toResponseDto(userService.getById(userId));
         } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
