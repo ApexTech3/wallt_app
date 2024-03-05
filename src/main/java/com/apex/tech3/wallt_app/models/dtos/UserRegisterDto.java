@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.models.dtos;
 
 import com.apex.tech3.wallt_app.models.Address;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
+import com.apex.tech3.wallt_app.models.dtos.interfaces.UserRequestDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserRegisterDto implements Register {
+public class UserRegisterDto implements Register, UserRequestDto {
     @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols")
     private String username;
     @NotEmpty(message = "Password cannot be empty")
@@ -34,7 +35,7 @@ public class UserRegisterDto implements Register {
     @NotEmpty(message = "City cannot be null")
     private String city;
     @NotEmpty(message = "Country cannot be null")
-    private String county;
+    private String country;
     @NotEmpty(message = "Number cannot be null")
     private int number;
 }

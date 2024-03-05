@@ -7,6 +7,7 @@ import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
+import com.apex.tech3.wallt_app.models.dtos.interfaces.UserRequestDto;
 import com.apex.tech3.wallt_app.repositories.AddressRepository;
 import com.apex.tech3.wallt_app.repositories.CityRepository;
 import com.apex.tech3.wallt_app.repositories.CountryRepository;
@@ -65,15 +66,15 @@ public class UserMapper {
         user.setEmail(userUpdateDto.getEmail());
         user.setPhone(userUpdateDto.getPhone());
         user.setProfilePicture(userUpdateDto.getProfilePicture());
-        user.setAddress(userUpdateDto.getAddress());
+        user.setAddress(addressExtract(userUpdateDto));
         return user;
     }
 
-    Address addressExtract(UserRegisterDto userRegisterDto) {
-        String street = userRegisterDto.getStreet();
-        int number = userRegisterDto.getNumber();
-        City city = cityRepository.getByName(userRegisterDto.getCity());
-        Country country = countryRepository.getByName(userRegisterDto.getCounty());
+    Address addressExtract(UserRequestDto userRequestDto) {
+        String street = userRequestDto.getStreet();
+        int number = userRequestDto.getNumber();
+        City city = cityRepository.getByName(userRequestDto.getCity());
+        Country country = countryRepository.getByName(userRequestDto.getCountry());
         city.setCountry(country);
         cityRepository.save(city);
         countryRepository.save(country);
