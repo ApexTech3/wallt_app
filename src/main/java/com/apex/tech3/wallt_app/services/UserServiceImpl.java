@@ -22,10 +22,10 @@ public class UserServiceImpl implements UserService {
     private static final String UNAUTHORIZED_USER_ERROR = "You are not authorized to perform this operation";
     private final UserRepository repository;
     private final TokenService tokenService;
-    private final EmailService emailService;
+    private final EmailServiceImpl emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailService emailService) {
+    public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailServiceImpl emailService) {
         this.repository = repository;
         this.tokenService = tokenService;
         this.emailService = emailService;
