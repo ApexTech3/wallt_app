@@ -35,7 +35,7 @@ public class TransactionRestController {
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
-    public TransactionRestController(TransactionService transactionService, TransactionMapper transactionMapper, AuthenticationHelper authenticationHelper) {
+    public TransactionRestController(TransactionService transactionService, AuthenticationHelper authenticationHelper, TransactionMapper transactionMapper) {
         this.transactionService = transactionService;
         this.transactionMapper = transactionMapper;
         this.authenticationHelper = authenticationHelper;
@@ -61,7 +61,7 @@ public class TransactionRestController {
             }
             return transactionService.getAll(PageRequest.of(pageNumber, pageSize, sortDirection.equals("DESC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()),
                                              id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)
-                    .map(TransactionMapper::toResponse);
+                    .map(transactionMapper::toResponse);
         } catch(IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -71,7 +71,7 @@ public class TransactionRestController {
     @GetMapping("/{id}")
     public TransactionResponse get(@PathVariable int id) {
         try {
-            return TransactionMapper.toResponse(transactionService.get(id));
+            return transactionMapper.toResponse(transactionService.get(id));
         } catch(EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -80,11 +80,11 @@ public class TransactionRestController {
     @SecurityRequirement(name = "Authorization")
     @PostMapping()
     public TransactionResponse create(@RequestHeader @NotNull HttpHeaders headers, @RequestBody TransactionDto transactionDto) {
-        Transaction transaction = TransactionMapper.fromDto(transactionDto);
+        Transaction transaction = transactionMapper.fromDto(transactionDto);
         try {
             User user = authenticationHelper.tryGetUser(headers);
             transactionService.create(transaction, user);
-            return TransactionMapper.toResponse(transaction);
+            return transactionMapper.toResponse(transaction);
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(InsufficientFundsException e) {

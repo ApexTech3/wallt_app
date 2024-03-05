@@ -22,7 +22,8 @@ public class UserMapper {
         user.setAddress(userRegisterDto.getAddress());
         return user;
     }
-    public static UserResponseDto toResponseDto(User user) {
+
+    public UserResponseDto toResponseDto(User user) {
         UserResponseDto userResponse = new UserResponseDto();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());

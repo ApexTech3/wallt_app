@@ -16,7 +16,7 @@ public class CardMapper {
         return newCard;
     }
 
-    public static CardDto toDto(Card card) {
+    public CardDto toDto(Card card) {
         CardDto newCardDto = new CardDto();
         newCardDto.setCardHolderName(card.getCardHolderName());
         newCardDto.setCardNumber(card.getNumber());

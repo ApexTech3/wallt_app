@@ -11,18 +11,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionMapper {
 
-    private static CurrencyService currencyService;
-    private static WalletService walletService;
+    private final CurrencyService currencyService;
+    private final WalletService walletService;
 
     @Autowired
     public TransactionMapper(CurrencyService currencyService, WalletService walletService) {
         this.currencyService = currencyService;
         this.walletService = walletService;
-
-
     }
 
-    public static Transaction fromDto(TransactionDto transactionDto) {
+    public Transaction fromDto(TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
         transaction.setAmount(transactionDto.getAmount());
         transaction.setCurrency(currencyService.get(transactionDto.getCurrency()));
@@ -31,7 +29,7 @@ public class TransactionMapper {
         return transaction;
     }
 
-    public static TransactionResponse toResponse(Transaction transaction) {
+    public TransactionResponse toResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setAmount(transaction.getAmount());
         transactionResponse.setCurrency(transaction.getCurrency());

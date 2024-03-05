@@ -41,13 +41,13 @@ public class CardRestController {
     @SecurityRequirement(name = "Authorization")
     @GetMapping
     public List<CardDto> getAll() {
-        return cardService.getAll().stream().map(CardMapper::toDto).toList();
+        return cardService.getAll().stream().map(cardMapper::toDto).toList();
     }
 
     @SecurityRequirement(name = "Authorization")
     @GetMapping("/{userId}")
     public List<CardDto> getByUserId(@PathVariable int userId) {
-        List<CardDto> cards = cardService.getByHolderId(userId).stream().map(CardMapper::toDto).toList();
+        List<CardDto> cards = cardService.getByHolderId(userId).stream().map(cardMapper::toDto).toList();
         if(cards.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No cards found for this user.");
         }
@@ -63,7 +63,7 @@ public class CardRestController {
             User user = authenticationHelper.tryGetUser(headers);
             Card card = cardMapper.fromDto(cardDto);
             cardService.create(card, user);
-            return CardMapper.toDto(card);
+            return cardMapper.toDto(card);
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityDuplicateException e) {
@@ -79,7 +79,7 @@ public class CardRestController {
             Card card = cardMapper.fromDto(cardDto);
             card.setId(id);
             cardService.update(card, user);
-            return CardMapper.toDto(card);
+            return cardMapper.toDto(card);
         } catch(AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch(EntityNotFoundException e) {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
-    private CurrencyRepository repository;
+    private final CurrencyRepository repository;
 
     @Autowired
     public CurrencyServiceImpl(CurrencyRepository repository) {

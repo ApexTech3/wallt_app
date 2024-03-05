@@ -31,12 +31,12 @@ public class WalletRestController {
 
     @GetMapping
     public List<WalletDto> getAll() {
-        return walletService.getAll().stream().map(WalletMapper::toDto).toList();
+        return walletService.getAll().stream().map(walletMapper::toDto).toList();
     }
 
     @GetMapping("/{userId}")
     public List<WalletDto> getByUserId(@PathVariable int userId) {
-        return walletService.getByUserId(userId).stream().map(WalletMapper::toDto).toList();
+        return walletService.getByUserId(userId).stream().map(walletMapper::toDto).toList();
     }
 
 

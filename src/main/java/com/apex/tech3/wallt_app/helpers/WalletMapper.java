@@ -12,7 +12,7 @@ public class WalletMapper {
         return newWallet;
     }
 
-    public static WalletDto toDto(Wallet wallet) {
+    public WalletDto toDto(Wallet wallet) {
         WalletDto newWalletDto = new WalletDto();
         newWalletDto.setCurrency(wallet.getCurrency());
         newWalletDto.setAmount(wallet.getAmount());
