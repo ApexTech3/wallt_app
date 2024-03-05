@@ -77,15 +77,23 @@ create table users_roles
 
 create table cards
 (
-    card_id         serial      not null primary key,
-    number          varchar(16) not null
+    card_id          serial
+        primary key,
+    number           varchar(16) not null
         constraint cards2_pk_2
             unique,
-    expiration_date date        not null,
-    cvv             varchar(3)  not null,
-    holder_id       integer     not null
+    cvv              varchar(3)  not null,
+    holder_id        integer     not null
         constraint cards2_users_id_fk
-            references users
+            references users,
+    first_last_name  varchar(30),
+    stamp_created    timestamp default CURRENT_TIMESTAMP,
+    expiration_month varchar(2),
+    expiration_year  varchar(2),
+    is_active        boolean   default true,
+    wallet_id        integer     not null
+        constraint cards_wallets_wallet_id_fk
+            references wallets
 );
 
 create table currencies
