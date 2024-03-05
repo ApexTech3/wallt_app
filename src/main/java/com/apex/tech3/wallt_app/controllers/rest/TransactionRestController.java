@@ -15,8 +15,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,10 @@ public class TransactionRestController {
     }
 
     @GetMapping("/all")
-    public Page<TransactionResponse> getAll(@RequestParam(required = false) Pageable pageable,
+    public Page<TransactionResponse> getAll(@RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                            @RequestParam(required = false, defaultValue = "30") int pageSize,
+                                            @RequestParam(required = false, defaultValue = "stampCreated") String sortBy,
+                                            @RequestParam(required = false, defaultValue = "ASC") String sortDirection,
                                             @RequestParam(required = false) Integer id,
                                             @RequestParam(required = false) Integer receiverWalletId,
                                             @RequestParam(required = false) Integer senderWalletId,
@@ -50,10 +53,18 @@ public class TransactionRestController {
                                             @RequestParam(required = false) String currencySymbol,
                                             @RequestParam(required = false) String status,
                                             @RequestParam(required = false) String date) {
-        return new PageImpl<>(transactionService.getAll(pageable, id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date == null ? null : Timestamp.valueOf(date))
-                                      .stream()
-                                      .map(TransactionMapper::toResponse)
-                                      .toList());
+
+
+        try {
+            if(pageNumber < 0 || pageSize < 1) {
+                throw new IllegalArgumentException("Invalid page number or page size");
+            }
+            return transactionService.getAll(PageRequest.of(pageNumber, pageSize, sortDirection.equals("DESC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()),
+                                             id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date == null ? null : Timestamp.valueOf(date))
+                    .map(TransactionMapper::toResponse);
+        } catch(IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @SecurityRequirement(name = "Authorization")

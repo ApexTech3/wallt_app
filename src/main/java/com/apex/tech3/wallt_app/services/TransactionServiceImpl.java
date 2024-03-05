@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -48,19 +47,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, Timestamp date) {
         if(pageable == null) {
-            List<Transaction> transactions = repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date));
-            return new PageImpl<>(transactions);
+            repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date));
+            return new PageImpl<>(repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)));
         } else {
             return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date), pageable);
-        }
-    }
-
-    public Page<Transaction> getAll2(Pageable pageable) {
-        if(pageable == null) {
-            List<Transaction> transactions = repository.findAll();
-            return new PageImpl<>(transactions);
-        } else {
-            return repository.findAll(pageable);
         }
     }
 
@@ -80,21 +70,12 @@ public class TransactionServiceImpl implements TransactionService {
         } catch(AuthorizationException e) {
             transaction.setStatus(StatusEnum.FAILED);
             repository.save(transaction);
-            throw new AuthorizationException("You are not authorized to perform this operation");
+            throw new AuthorizationException(e.getMessage());
         } catch(InsufficientFundsException e) {
             transaction.setStatus(StatusEnum.FAILED);
             repository.save(transaction);
-            throw new InsufficientFundsException("Insufficient funds in the sender's wallet");
+            throw new InsufficientFundsException(e.getMessage());
         }
     }
 
-    @Override
-    public Transaction update(Transaction transaction) {
-        return null;
-    }
-
-    @Override
-    public void delete(int id) {
-
-    }
 }

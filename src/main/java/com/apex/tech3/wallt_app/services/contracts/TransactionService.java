@@ -14,8 +14,4 @@ public interface TransactionService {
     Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, Timestamp date);
 
     Transaction create(Transaction transaction, User user);
-
-    Transaction update(Transaction transaction);
-
-    void delete(int id); //todo: check if this is needed
 }
