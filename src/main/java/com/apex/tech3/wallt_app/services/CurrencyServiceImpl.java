@@ -25,4 +25,19 @@ public class CurrencyServiceImpl implements CurrencyService {
     public Currency get(String ticker) {
         return repository.findByTicker(ticker);
     }
+
+    @Override
+    public double getRateToUsd(String ticker) {
+        return get(ticker).getRateToUsd();
+    }
+
+    @Override
+    public double getRate(String baseCurrencyTicker, String quotedCurrencyTicker) {
+        return getRateToUsd(baseCurrencyTicker) / getRateToUsd(quotedCurrencyTicker);
+    }
+
+    @Override
+    public double getRate(Currency baseCurrency, Currency quotedCurrency) {
+        return getRateToUsd(baseCurrency.getTicker()) / getRateToUsd(quotedCurrency.getTicker());
+    }
 }

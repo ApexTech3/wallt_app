@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @RestController
@@ -50,7 +51,6 @@ public class TransactionRestController {
                                             @RequestParam(required = false) Integer receiverWalletId,
                                             @RequestParam(required = false) Integer senderWalletId,
                                             @RequestParam(required = false) Double amount,
-                                            @RequestParam(required = false) String currencySymbol,
                                             @RequestParam(required = false, defaultValue = "SUCCESSFUL") String status,
                                             @RequestParam(required = false) LocalDate date) {
 
@@ -60,7 +60,7 @@ public class TransactionRestController {
                 throw new IllegalArgumentException("Invalid page number or page size");
             }
             return transactionService.getAll(PageRequest.of(pageNumber, pageSize, sortDirection.equals("DESC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()),
-                                             id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)
+                                             id, receiverWalletId, senderWalletId, amount, status, date)
                     .map(transactionMapper::toResponse);
         } catch(IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -79,7 +79,13 @@ public class TransactionRestController {
 
     @SecurityRequirement(name = "Authorization")
     @PostMapping()
-    public TransactionResponse create(@RequestHeader @NotNull HttpHeaders headers, @RequestBody TransactionDto transactionDto) {
+    public TransactionResponse create(@RequestHeader @NotNull HttpHeaders headers, @RequestParam BigDecimal amount,
+                                      @RequestParam int senderWalletId, @RequestParam int receiverWalletId) {
+
+        TransactionDto transactionDto = new TransactionDto();
+        transactionDto.setAmount(amount);
+        transactionDto.setSenderWalletId(senderWalletId);
+        transactionDto.setReceiverWalletId(receiverWalletId);
         Transaction transaction = transactionMapper.fromDto(transactionDto);
         try {
             User user = authenticationHelper.tryGetUser(headers);

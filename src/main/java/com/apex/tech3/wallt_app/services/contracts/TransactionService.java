@@ -11,7 +11,7 @@ public interface TransactionService {
 
     Transaction get(int id);
 
-    Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, LocalDate date);
+    Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date);
 
     Transaction create(Transaction transaction, User user);
 }

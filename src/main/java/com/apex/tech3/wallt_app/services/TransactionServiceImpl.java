@@ -9,6 +9,7 @@ import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import com.apex.tech3.wallt_app.models.filters.TransactionSpecification;
 import com.apex.tech3.wallt_app.repositories.TransactionRepository;
+import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
 import com.apex.tech3.wallt_app.services.contracts.TransactionService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
@@ -28,12 +29,15 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final WalletService walletService;
 
+    private final CurrencyService currencyService;
+
     private final UserService userService;
 
 
     @Autowired
-    public TransactionServiceImpl(TransactionRepository repository, WalletService walletService, UserService userService) {
+    public TransactionServiceImpl(TransactionRepository repository, WalletService walletService, UserService userService, CurrencyService currencyService) {
         this.repository = repository;
+        this.currencyService = currencyService;
         this.walletService = walletService;
         this.userService = userService;
     }
@@ -45,12 +49,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, LocalDate date) {
+    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date) {
         if(pageable == null) {
-            repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date));
-            return new PageImpl<>(repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)));
+            repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date));
+            return new PageImpl<>(repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date)));
         } else {
-            return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date), pageable);
+            return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date), pageable);
         }
     }
 
@@ -58,13 +62,16 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction create(Transaction transaction, User user) {
 
         Wallet senderWallet = transaction.getSenderWallet();
-
         Wallet receiverWallet = transaction.getReceiverWallet();
         BigDecimal amount = transaction.getAmount();
+        double exchangeRate = currencyService.getRate(senderWallet.getCurrency(), receiverWallet.getCurrency());
+        BigDecimal amountInReceiverCurrency = amount.multiply(BigDecimal.valueOf(exchangeRate));
+        transaction.setExchangeRate(exchangeRate);
+        transaction.setAmount(amountInReceiverCurrency);
         try {
             walletService.checkOwnership(senderWallet, user);
             walletService.DebitAmount(receiverWallet, amount);
-            walletService.CreditAmount(senderWallet, transaction.getAmount());
+            walletService.CreditAmount(senderWallet, amountInReceiverCurrency);
             transaction.setStatus(StatusEnum.SUCCESSFUL);
             return repository.save(transaction);
         } catch(AuthorizationException e) {

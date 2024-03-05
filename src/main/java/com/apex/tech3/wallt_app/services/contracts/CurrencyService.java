@@ -6,4 +6,10 @@ public interface CurrencyService {
     Currency get(int id);
 
     Currency get(String ticker);
+
+    double getRateToUsd(String ticker);
+
+    double getRate(String baseCurrencyTicker, String quotedCurrencyTicker);
+
+    double getRate(Currency baseCurrency, Currency quotedCurrency);
 }

@@ -1,6 +1,5 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
-import com.apex.tech3.wallt_app.models.Currency;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import lombok.Data;
@@ -13,7 +12,7 @@ public class TransactionResponse {
 
     private BigDecimal amount;
 
-    private Currency currency;
+    private double exchangeRate;
 
     private Wallet receiverWallet;
 
@@ -25,8 +24,7 @@ public class TransactionResponse {
 
     @JsonAnyGetter
     public Map<String, String> getProperties() {
-        return Map.of("currency", currency.getSymbol(),
-                      "receiverWallet", receiverWallet.getHolder().getUsername(),
+        return Map.of("receiverWallet", receiverWallet.getHolder().getUsername(),
                       "senderWallet", senderWallet.getHolder().getUsername());
     }
 }

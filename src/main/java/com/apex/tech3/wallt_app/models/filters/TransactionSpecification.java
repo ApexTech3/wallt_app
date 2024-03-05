@@ -10,9 +10,9 @@ import java.util.List;
 
 public class TransactionSpecification {
 
-    public static Specification<Transaction> filterByAllColumns(Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, LocalDate date) {
+    public static Specification<Transaction> filterByAllColumns(Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date) {
         return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>(7);
+            List<Predicate> predicates = new ArrayList<>(6);
 
             if(id != null) {
                 predicates.add(criteriaBuilder.equal(root.get("id"), id));
@@ -25,9 +25,6 @@ public class TransactionSpecification {
             }
             if(amount != null) {
                 predicates.add(criteriaBuilder.equal(root.get("amount"), amount));
-            }
-            if(currencySymbol != null) {
-                predicates.add(criteriaBuilder.equal(root.get("currency").get("symbol"), currencySymbol));
             }
             if(status != null) {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));

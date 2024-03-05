@@ -23,7 +23,6 @@ public class TransactionMapper {
     public Transaction fromDto(TransactionDto transactionDto) {
         Transaction transaction = new Transaction();
         transaction.setAmount(transactionDto.getAmount());
-        transaction.setCurrency(currencyService.get(transactionDto.getCurrency()));
         transaction.setSenderWallet(walletService.get(transactionDto.getSenderWalletId()));
         transaction.setReceiverWallet(walletService.get(transactionDto.getReceiverWalletId()));
         return transaction;
@@ -32,7 +31,7 @@ public class TransactionMapper {
     public TransactionResponse toResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setAmount(transaction.getAmount());
-        transactionResponse.setCurrency(transaction.getCurrency());
+        transactionResponse.setExchangeRate(transaction.getExchangeRate());
         transactionResponse.setSenderWallet(transaction.getSenderWallet());
         transactionResponse.setReceiverWallet(transaction.getReceiverWallet());
         transactionResponse.setStatus(transaction.getStatus().toString());

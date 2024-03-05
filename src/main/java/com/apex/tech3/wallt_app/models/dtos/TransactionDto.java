@@ -9,8 +9,6 @@ public class TransactionDto {
 
     private BigDecimal amount;
 
-    private String currency;
-
     private int senderWalletId;
 
     private int receiverWalletId;

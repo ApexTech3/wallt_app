@@ -23,10 +23,10 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "sender_wallet")
     private Wallet senderWallet;
+    @Column(name = "amount")
     private BigDecimal amount;
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
+    @Column(name = "exchange_rate")
+    private double exchangeRate;
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
     @CreationTimestamp
