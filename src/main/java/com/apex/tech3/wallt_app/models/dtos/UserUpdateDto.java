@@ -1,6 +1,5 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
-import com.apex.tech3.wallt_app.models.Address;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -27,6 +26,10 @@ public class UserUpdateDto {
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phone;
     private String profilePicture;
-    //@NotEmpty(message = "Address cannot be null")
-    private Address address;
+    @NotEmpty(message = "City cannot be null")
+    private String city;
+    @NotEmpty(message = "Country cannot be null")
+    private String county;
+    @NotEmpty(message = "Number cannot be null")
+    private int number;
 }
