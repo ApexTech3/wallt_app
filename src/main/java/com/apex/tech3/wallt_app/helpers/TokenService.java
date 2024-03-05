@@ -1,4 +1,4 @@
-package com.apex.tech3.wallt_app.services;
+package com.apex.tech3.wallt_app.helpers;
 
 import org.springframework.stereotype.Service;
 
@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
-public class TokenService implements com.apex.tech3.wallt_app.services.contracts.TokenService {
+public class TokenService {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}");
 
