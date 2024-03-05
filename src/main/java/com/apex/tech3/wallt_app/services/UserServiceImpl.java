@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(int userId, User requester) {
-        if (!isAdmin(requester) || userId != requester.getId()) {
+        if (!isAdmin(requester) && userId != requester.getId()) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         User userToBeDeleted = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User restoreUser(int userId, User requester) {
-        if (!isAdmin(requester) || userId != requester.getId()) {
+        if (!isAdmin(requester) && userId != requester.getId()) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         User userToBeRestored = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
