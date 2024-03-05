@@ -1,13 +1,29 @@
 package com.apex.tech3.wallt_app.helpers;
 
+import com.apex.tech3.wallt_app.models.Address;
+import com.apex.tech3.wallt_app.models.City;
+import com.apex.tech3.wallt_app.models.Country;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
+import com.apex.tech3.wallt_app.repositories.AddressRepository;
+import com.apex.tech3.wallt_app.repositories.CityRepository;
+import com.apex.tech3.wallt_app.repositories.CountryRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
+
+    private final CountryRepository countryRepository;
+    private final CityRepository cityRepository;
+    private final AddressRepository addressRepository;
+
+    public UserMapper(CountryRepository countryRepository, CityRepository cityRepository, AddressRepository addressRepository) {
+        this.countryRepository = countryRepository;
+        this.cityRepository = cityRepository;
+        this.addressRepository = addressRepository;
+    }
 
     public User fromRegisterDto(UserRegisterDto userRegisterDto) {
         User user = new User();
@@ -19,7 +35,7 @@ public class UserMapper {
         user.setEmail(userRegisterDto.getEmail());
         user.setPhone(userRegisterDto.getPhone());
         user.setProfilePicture(userRegisterDto.getProfilePicture());
-        user.setAddress(userRegisterDto.getAddress());
+        user.setAddress(addressExtract(userRegisterDto));
         return user;
     }
 
@@ -53,6 +69,20 @@ public class UserMapper {
         return user;
     }
 
-
+    Address addressExtract(UserRegisterDto userRegisterDto) {
+        String street = userRegisterDto.getStreet();
+        int number = userRegisterDto.getNumber();
+        City city = cityRepository.getByName(userRegisterDto.getCity());
+        Country country = countryRepository.getByName(userRegisterDto.getCounty());
+        city.setCountry(country);
+        cityRepository.save(city);
+        countryRepository.save(country);
+        Address address = new Address();
+        address.setNumber(number);
+        address.setStreet(street);
+        address.setCity(city);
+        addressRepository.save(address);
+        return address;
+    }
 
 }

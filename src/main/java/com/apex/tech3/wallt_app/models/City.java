@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Setter;
 
 @Data
 @Entity

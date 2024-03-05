@@ -30,5 +30,11 @@ public class UserRegisterDto implements Register {
     private String phone;
     private String profilePicture;
     @NotEmpty(message = "Address cannot be null")
-    private Address address;
+    private String street;
+    @NotEmpty(message = "City cannot be null")
+    private String city;
+    @NotEmpty(message = "Country cannot be null")
+    private String county;
+    @NotEmpty(message = "Number cannot be null")
+    private int number;
 }

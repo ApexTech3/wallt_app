@@ -9,7 +9,7 @@ import lombok.Data;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "address_sequence")
-    @SequenceGenerator(name = "address_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "address_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
     @Column(name = "address_id")
     private int id;
     @Column(name = "street")

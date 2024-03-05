@@ -82,7 +82,7 @@ public class UserRestController {
     }
 
     @SecurityRequirement(name = "Authorization")
-    @PutMapping("/{id}")//todo
+    @PutMapping("/{id}")
     public UserResponseDto updateInfo(@RequestHeader HttpHeaders headers, @Valid @RequestBody UserUpdateDto userUpdateDto,
                                       @PathVariable int id) {
         try {
