@@ -8,6 +8,8 @@ import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class TransactionMapper {
 
@@ -30,8 +32,9 @@ public class TransactionMapper {
 
     public TransactionResponse toResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setAmount(transaction.getAmount());
+        transactionResponse.setAmountSent(transaction.getAmount().divide(BigDecimal.valueOf(transaction.getExchangeRate())));
         transactionResponse.setExchangeRate(transaction.getExchangeRate());
+        transactionResponse.setAmountReceived(transaction.getAmount());
         transactionResponse.setSenderWallet(transaction.getSenderWallet());
         transactionResponse.setReceiverWallet(transaction.getReceiverWallet());
         transactionResponse.setStatus(transaction.getStatus().toString());
