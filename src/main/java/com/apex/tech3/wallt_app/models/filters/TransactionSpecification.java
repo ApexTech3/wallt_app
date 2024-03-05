@@ -4,13 +4,13 @@ import com.apex.tech3.wallt_app.models.Transaction;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionSpecification {
 
-    public static Specification<Transaction> filterByAllColumns(Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, Timestamp date) {
+    public static Specification<Transaction> filterByAllColumns(Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, LocalDate date) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>(7);
 
@@ -33,7 +33,7 @@ public class TransactionSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("status"), status));
             }
             if(date != null) {
-                predicates.add(criteriaBuilder.equal(root.get("stampCreated"), date));
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.function("DATE", java.sql.Date.class, root.get("stampCreated")), java.sql.Date.valueOf(date)));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

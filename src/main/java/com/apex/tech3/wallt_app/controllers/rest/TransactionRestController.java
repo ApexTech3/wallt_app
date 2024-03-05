@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -51,8 +51,8 @@ public class TransactionRestController {
                                             @RequestParam(required = false) Integer senderWalletId,
                                             @RequestParam(required = false) Double amount,
                                             @RequestParam(required = false) String currencySymbol,
-                                            @RequestParam(required = false) String status,
-                                            @RequestParam(required = false) String date) {
+                                            @RequestParam(required = false, defaultValue = "SUCCESSFUL") String status,
+                                            @RequestParam(required = false) LocalDate date) {
 
 
         try {
@@ -60,7 +60,7 @@ public class TransactionRestController {
                 throw new IllegalArgumentException("Invalid page number or page size");
             }
             return transactionService.getAll(PageRequest.of(pageNumber, pageSize, sortDirection.equals("DESC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()),
-                                             id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date == null ? null : Timestamp.valueOf(date))
+                                             id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)
                     .map(TransactionMapper::toResponse);
         } catch(IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

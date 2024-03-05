@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -45,7 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, Timestamp date) {
+    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String currencySymbol, String status, LocalDate date) {
         if(pageable == null) {
             repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date));
             return new PageImpl<>(repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, currencySymbol, status, date)));
