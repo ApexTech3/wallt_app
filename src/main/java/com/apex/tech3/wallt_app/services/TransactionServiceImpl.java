@@ -44,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
-    public Transaction get(int id) {
+    public Transaction getById(int id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Transaction", id));
     }
 
@@ -63,15 +63,16 @@ public class TransactionServiceImpl implements TransactionService {
 
         Wallet senderWallet = transaction.getSenderWallet();
         Wallet receiverWallet = transaction.getReceiverWallet();
-        BigDecimal amount = transaction.getAmount();
+        BigDecimal amountInSenderCurrency = transaction.getAmount();
         double exchangeRate = currencyService.getRate(senderWallet.getCurrency(), receiverWallet.getCurrency());
-        BigDecimal amountInReceiverCurrency = amount.multiply(BigDecimal.valueOf(exchangeRate));
+        BigDecimal amountInReceiverCurrency = amountInSenderCurrency.multiply(BigDecimal.valueOf(exchangeRate));
+
         transaction.setExchangeRate(exchangeRate);
         transaction.setAmount(amountInReceiverCurrency);
         try {
             walletService.checkOwnership(senderWallet, user);
-            walletService.DebitAmount(receiverWallet, amount);
-            walletService.CreditAmount(senderWallet, amountInReceiverCurrency);
+            walletService.creditAmount(senderWallet, amountInSenderCurrency);
+            walletService.debitAmount(receiverWallet, amountInReceiverCurrency);
             transaction.setStatus(StatusEnum.SUCCESSFUL);
             return repository.save(transaction);
         } catch(AuthorizationException e) {

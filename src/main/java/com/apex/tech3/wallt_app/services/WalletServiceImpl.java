@@ -84,13 +84,11 @@ public class WalletServiceImpl implements WalletService {
     public void creditAmount(Wallet wallet, BigDecimal amount) {
         checkIfFundsAreAvailable(wallet, amount);
         wallet.setAmount(wallet.getAmount().subtract(amount));
-        repository.save(wallet);
     }
 
     @Override
     public void debitAmount(Wallet wallet, BigDecimal amount) {
         wallet.setAmount(wallet.getAmount().add(amount));
-        repository.save(wallet);
     }
 
     @Override
