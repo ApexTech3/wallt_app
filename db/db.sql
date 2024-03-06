@@ -4,59 +4,35 @@ create schema wallt_db;
 SET search_path TO wallt_db;
 CREATE SEQUENCE increment_SEQ START 1;
 
-create table countries
-(
-    country_id serial      not null primary key,
-    name       varchar(50) not null
-        constraint countries_pk_2
-            unique
-);
 
-create table cities
-(
-    city_id    serial primary key,
-    name       varchar(50) not null
-        constraint cities_pk_2
-            unique,
-    country_id integer     not null
-        constraint cities_countries_country_id_fk
-            references countries
-);
-
-create table addresses
-(
-    address_id serial      not null primary key,
-    street     varchar(50) not null,
-    number     integer     not null,
-    city_id    integer     not null
-        constraint addresses_cities_city_id_fk
-            references cities
-);
 
 create table users
 (
-    user_id     serial
+    user_id            serial
         primary key,
-    username    varchar(50)           not null
+    username           varchar(50)                         not null
         constraint users_pk_2
             unique,
-    password    varchar(32)           not null,
-    first_name  varchar(50)           not null,
-    middle_name varchar(50)           not null,
-    last_name   varchar(50)           not null,
-    email       varchar(100)          not null
+    password           varchar(32)                         not null,
+    first_name         varchar(50)                         not null,
+    middle_name        varchar(50)                         not null,
+    last_name          varchar(50)                         not null,
+    email              varchar(100)                        not null
         constraint users_pk_3
             unique,
-    phone       varchar(10)           not null
+    phone              varchar(10)                         not null
         constraint users_pk_4
             unique,
-    photo       varchar(255)          not null,
-    address_id  integer
-        constraint users_addresses_address_id_fk
-            references addresses,
-    verified    boolean default false not null,
-    blocked     boolean default false not null,
-    is_deleted     boolean default false not null
+    photo              varchar(255)                        not null,
+    verified           boolean   default false             not null,
+    blocked            boolean   default false             not null,
+    stamp_created      timestamp default CURRENT_TIMESTAMP not null,
+    is_deleted         boolean   default false             not null,
+    confirmation_token varchar(100),
+    street             varchar(50),
+    number             integer,
+    city               varchar(20),
+    country            varchar(20)
 );
 
 create table roles

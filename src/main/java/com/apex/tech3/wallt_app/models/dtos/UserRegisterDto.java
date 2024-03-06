@@ -1,6 +1,5 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
-import com.apex.tech3.wallt_app.models.Address;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.UserRequestDto;
 import jakarta.validation.constraints.Email;
@@ -32,10 +31,11 @@ public class UserRegisterDto implements Register, UserRequestDto {
     private String profilePicture;
     @NotEmpty(message = "Address cannot be null")
     private String street;
+    @NotEmpty(message = "Number cannot be null")
+    private int number;
     @NotEmpty(message = "City cannot be null")
     private String city;
     @NotEmpty(message = "Country cannot be null")
     private String country;
-    @NotEmpty(message = "Number cannot be null")
-    private int number;
+
 }

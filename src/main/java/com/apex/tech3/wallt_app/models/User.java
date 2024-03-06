@@ -32,9 +32,14 @@ public class User {
     private String phone;
     @Column(name = "photo")
     private String profilePicture;
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(name = "street")
+    private String street;
+    @Column(name = "number")
+    private int number;
+    @Column(name = "city")
+    private String city;
+    @Column(name = "country")
+    private String country;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", schema = "wallt_db",
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
