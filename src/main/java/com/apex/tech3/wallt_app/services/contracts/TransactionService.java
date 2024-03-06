@@ -11,7 +11,13 @@ public interface TransactionService {
 
     Transaction getById(int id);
 
-    Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date);
+    Page<Transaction> getBySender(Pageable pageable, int senderId, String status);
+
+    Page<Transaction> getByReceiver(Pageable pageable, int receiverId, String status);
+
+    Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId,
+                             Double amount, Double amountGreaterThan, Double amountLesserThan,
+                             String status, LocalDate date, LocalDate laterThan, LocalDate earlierThan);
 
     Transaction create(Transaction transaction, User user);
 }

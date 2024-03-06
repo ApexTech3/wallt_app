@@ -31,7 +31,11 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet getById(int id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
+        Wallet wallet = repository.findByIdAndIsActiveTrue(id);
+        if(wallet == null) {
+            throw new EntityNotFoundException("Wallet", id);
+        }
+        return wallet;
     }
 
     @Override

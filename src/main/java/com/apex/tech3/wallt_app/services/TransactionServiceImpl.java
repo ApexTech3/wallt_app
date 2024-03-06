@@ -15,8 +15,9 @@ import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -49,14 +50,30 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId, Double amount, String status, LocalDate date) {
-        if(pageable == null) {
-            repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date));
-            return new PageImpl<>(repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date)));
-        } else {
-            return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount, status, date), pageable);
-        }
+    public Page<Transaction> getBySender(Pageable pageable, int senderId, String status) {
+        return repository.findAll(TransactionSpecification.filterBySenderAndStatus(senderId, status), pageable);
     }
+
+    @Override
+    public Page<Transaction> getByReceiver(Pageable pageable, int receiverId, String status) {
+        return repository.findAll(TransactionSpecification.filterByReceiverAndStatus(receiverId, status), pageable);
+    }
+
+
+
+    @Override
+    public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId,
+                                    Double amount, Double amountGreaterThan, Double amountLesserThan, String status,
+                                    LocalDate date, LocalDate laterThan, LocalDate earlierThan) {
+
+        if(pageable == null || pageable.isUnpaged()) {
+            pageable = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.DESC, "stampCreated"));
+        }
+
+        return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount,
+                                                                              amountGreaterThan, amountLesserThan, status,
+                                                                              date, laterThan, earlierThan), pageable);
+        }
 
     @Override
     public Transaction create(Transaction transaction, User user) {

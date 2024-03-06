@@ -44,23 +44,27 @@ public class TransactionRestController {
 
     @GetMapping("/all")
     public Page<TransactionResponse> getAll(@RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                            @RequestParam(required = false, defaultValue = "30") int pageSize,
+                                            @RequestParam(required = false, defaultValue = "100") int pageSize,
                                             @RequestParam(required = false, defaultValue = "stampCreated") String sortBy,
-                                            @RequestParam(required = false, defaultValue = "ASC") String sortDirection,
+                                            @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
                                             @RequestParam(required = false) Integer id,
                                             @RequestParam(required = false) Integer receiverWalletId,
                                             @RequestParam(required = false) Integer senderWalletId,
                                             @RequestParam(required = false) Double amount,
+                                            @RequestParam(required = false) Double amountGreaterThan,
+                                            @RequestParam(required = false) Double amountLesserThan,
                                             @RequestParam(required = false, defaultValue = "SUCCESSFUL") String status,
-                                            @RequestParam(required = false) LocalDate date) {
+                                            @RequestParam(required = false) LocalDate date,
+                                            @RequestParam(required = false) LocalDate laterThan,
+                                            @RequestParam(required = false) LocalDate earlierThan) {
 
 
         try {
             if(pageNumber < 0 || pageSize < 1) {
                 throw new IllegalArgumentException("Invalid page number or page size");
             }
-            return transactionService.getAll(PageRequest.of(pageNumber, pageSize, sortDirection.equals("DESC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()),
-                                             id, receiverWalletId, senderWalletId, amount, status, date)
+            return transactionService.getAll(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy)),
+                                             id, receiverWalletId, senderWalletId, amount, amountGreaterThan, amountLesserThan, status, date, laterThan, earlierThan)
                     .map(transactionMapper::toResponse);
         } catch(IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -74,6 +78,46 @@ public class TransactionRestController {
             return transactionMapper.toResponse(transactionService.getById(id));
         } catch(EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @GetMapping("/sender/{senderId}")
+    public Page<TransactionResponse> getBySender(@PathVariable int senderId,
+                                                 @RequestParam(required = false, defaultValue = "SUCCESSFUL") String status,
+                                                 @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                 @RequestParam(required = false, defaultValue = "100") int pageSize,
+                                                 @RequestParam(required = false, defaultValue = "stampCreated") String sortBy,
+                                                 @RequestParam(required = false, defaultValue = "DESC") String sortDirection) {
+        try {
+            if(pageNumber < 0 || pageSize < 1) {
+                throw new IllegalArgumentException("Invalid page number or page size");
+            }
+            return transactionService.getBySender(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy)),
+                                                  senderId, status)
+                    .map(transactionMapper::toResponse);
+        } catch(IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @GetMapping("/receiver/{receiverId}")
+    public Page<TransactionResponse> getByReceiver(@PathVariable int receiverId,
+                                                   @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                   @RequestParam(required = false, defaultValue = "SUCCESSFUL") String status,
+                                                   @RequestParam(required = false, defaultValue = "100") int pageSize,
+                                                   @RequestParam(required = false, defaultValue = "stampCreated") String sortBy,
+                                                   @RequestParam(required = false, defaultValue = "DESC") String sortDirection) {
+        try {
+            if(pageNumber < 0 || pageSize < 1) {
+                throw new IllegalArgumentException("Invalid page number or page size");
+            }
+            return transactionService.getByReceiver(PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy)),
+                                                    receiverId, status)
+                    .map(transactionMapper::toResponse);
+        } catch(IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
