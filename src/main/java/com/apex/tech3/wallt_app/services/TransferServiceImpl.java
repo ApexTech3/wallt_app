@@ -2,7 +2,6 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.clients.DummyCardClient;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
-import com.apex.tech3.wallt_app.helpers.FundsHelper;
 import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.CardDetails;
@@ -12,6 +11,8 @@ import com.apex.tech3.wallt_app.repositories.TransferRepository;
 import com.apex.tech3.wallt_app.services.contracts.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.apex.tech3.wallt_app.helpers.AuthenticationHelper.isAdmin;
 
 @Service
 public class TransferServiceImpl implements TransferService {
@@ -35,7 +36,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Transfer withdraw(Transfer transfer, User user) {
-        FundsHelper.validateWalletHasEnoughFunds(transfer.getAmount(),transfer.getWallet().getAmount());
+        WalletServiceImpl.checkIfFundsAreAvailable(transfer.getWallet(), transfer.getAmount());
         transfer.setDirection(DirectionEnum.WITHDRAW);
         buildDepositOrWithdrawal(transfer, user);
         return repository.save(transfer);
@@ -43,7 +44,7 @@ public class TransferServiceImpl implements TransferService {
 
     private void buildDepositOrWithdrawal(Transfer transfer, User user) {
         checkModifyPermissions(transfer, user);
-        verifyCardOwner(transfer, user);
+        verifyCardOwner(transfer);
         CardDetails cardDetails = buildCardDetails(transfer);
         transfer.setStatus(dummyCardClient.tryPay(cardDetails)
                 ? StatusEnum.SUCCESSFUL : StatusEnum.FAILED);
@@ -61,14 +62,13 @@ public class TransferServiceImpl implements TransferService {
     }
 
     private void checkModifyPermissions(Transfer transfer, User user) {
-        //todo when user admin is done  !user.isAdmin() &&
-        if (!transfer.getWallet().getHolder().equals(user)) {
+        if (isAdmin(user) && !transfer.getWallet().getHolder().equals(user)) {
             throw new AuthorizationException(TRANSFER_ERROR_MESSAGE);
         }
     }
 
-    private void verifyCardOwner(Transfer transfer, User user) {
-        if (!transfer.getCard().getHolder().equals(user)) {
+    private void verifyCardOwner(Transfer transfer) {
+        if (!transfer.getCard().getHolder().equals(transfer.getWallet().getHolder())) {
             throw new AuthorizationException(CARD_ERROR_MESSAGE);
         }
     }

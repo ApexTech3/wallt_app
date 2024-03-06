@@ -20,13 +20,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/transfers")
-public class TransferController {
+public class TransferRestController {
     private final TransferService transferService;
     private final TransferMapper transferMapper;
     private final AuthenticationHelper helper;
 
     @Autowired
-    public TransferController(TransferService transferService, TransferMapper transferMapper, AuthenticationHelper helper) {
+    public TransferRestController(TransferService transferService, TransferMapper transferMapper, AuthenticationHelper helper) {
         this.transferService = transferService;
         this.transferMapper = transferMapper;
         this.helper = helper;

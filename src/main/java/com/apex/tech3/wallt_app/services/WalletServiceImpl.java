@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
+import com.apex.tech3.wallt_app.models.filters.WalletSpecification;
 import com.apex.tech3.wallt_app.repositories.WalletRepository;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,22 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public List<Wallet> getAll() {
-        return repository.findAll();
+    public List<Wallet> getAll(Integer holderId, BigDecimal amountGreaterThan, BigDecimal amountLessThan, Integer currencyId) {
+        WalletFilterOptions filterOptions = new WalletFilterOptions();
+        filterOptions.setHolderId(holderId);
+        filterOptions.setAmountGreaterThan(amountGreaterThan);
+        filterOptions.setAmountLessThan(amountLessThan);
+        filterOptions.setCurrencyId(currencyId);
+        return repository.findAll(WalletSpecification.filterByAllColumns(null, amountGreaterThan, amountLessThan, currencyId),
+                createPageable(filterOptions)).stream().toList();
     }
 
     @Override
-    public Page<Wallet> getAllFilteredSortedAndPaginated(WalletFilterOptions filterOptions) {
-        return repository.findAllFilteredSortedAndPaginated(filterOptions, createPageable(filterOptions));
+    public Page<Wallet> getAll(WalletFilterOptions filterOptions) {
+        return repository.findAll(WalletSpecification.filterByAllColumns(filterOptions.getHolderId(),
+                        filterOptions.getAmountGreaterThan(), filterOptions.getAmountLessThan(),
+                        filterOptions.getCurrencyId()),
+                createPageable(filterOptions));
     }
 
     private Pageable createPageable(WalletFilterOptions filterOptions) {
@@ -73,11 +83,8 @@ public class WalletServiceImpl implements WalletService {
         repository.save(wallet);
     }
 
-
-    @Override
-    public boolean checkIfFundsAreAvailable(Wallet wallet, BigDecimal amount) {
-        if(wallet.getAmount().compareTo(amount) < 0) throw new InsufficientFundsException("Insufficient funds");
-        return true;
+    public static void checkIfFundsAreAvailable(Wallet wallet, BigDecimal amount) {
+        if (wallet.getAmount().compareTo(amount) < 0) throw new InsufficientFundsException("Insufficient funds");
     }
 
     @Override
@@ -93,9 +100,8 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void checkOwnership(Wallet wallet, User user) {
-        if(wallet.getHolder() != user) throw new AuthorizationException("You are not the owner of this wallet");
+        if (wallet.getHolder() != user) throw new AuthorizationException("You are not the owner of this wallet");
     }
-
 
 
 }

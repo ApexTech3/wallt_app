@@ -34,7 +34,7 @@ public class WalletController {
 
     @GetMapping
     public String getAll(@ModelAttribute("filterOptions") WalletFilterOptions filterOptions, Model model) {
-        Page<Wallet> wallets = walletService.getAllFilteredSortedAndPaginated(filterOptions);
+        Page<Wallet> wallets = walletService.getAll(filterOptions);
         model.addAttribute("wallets", wallets.getContent());
         model.addAttribute("currentPage", filterOptions.getPage());
         model.addAttribute("totalPages", wallets.getTotalPages());
