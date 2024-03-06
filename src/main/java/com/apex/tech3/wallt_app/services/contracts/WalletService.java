@@ -11,9 +11,9 @@ import java.util.List;
 public interface WalletService {
     Wallet getById(int id);
 
-    List<Wallet> getAll();
+    List<Wallet> getAll(Integer holderId, BigDecimal amountGreaterThan, BigDecimal amountLessThan, Integer currencyId);
 
-    Page<Wallet> getAllFilteredSortedAndPaginated(WalletFilterOptions filterOptions);
+    Page<Wallet> getAll(WalletFilterOptions filterOptions);
 
     List<Wallet> getByUserId(int userId);
 
@@ -22,8 +22,6 @@ public interface WalletService {
     Wallet update(Wallet wallet);
 
     void delete(int id);
-
-    boolean checkIfFundsAreAvailable(Wallet wallet, BigDecimal amount);
 
     void creditAmount(Wallet wallet, BigDecimal amount);
 
