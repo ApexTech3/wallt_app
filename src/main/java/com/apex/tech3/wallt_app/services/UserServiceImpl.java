@@ -3,10 +3,16 @@ package com.apex.tech3.wallt_app.services;
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.TokenService;
+import com.apex.tech3.wallt_app.helpers.TransactionMapper;
+import com.apex.tech3.wallt_app.helpers.TransferMapper;
+import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
+import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import com.apex.tech3.wallt_app.models.filters.UserSpecification;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
+import com.apex.tech3.wallt_app.services.contracts.TransactionService;
+import com.apex.tech3.wallt_app.services.contracts.TransferService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,12 +33,26 @@ public class UserServiceImpl implements UserService {
     private final TokenService tokenService;
     private final EmailServiceImpl emailService;
 
+    private final TransactionService transactionService;
+
+    private final TransferService transferService;
+
+    private final TransactionMapper transactionMapper;
+
+    private final TransferMapper transferMapper;
+
     @Autowired
-    public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailServiceImpl emailService) {
+    public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailServiceImpl emailService,
+                           TransactionService transactionService, TransferService transferService, TransactionMapper transactionMapper, TransferMapper transferMapper) {
         this.repository = repository;
         this.tokenService = tokenService;
         this.emailService = emailService;
+        this.transactionService = transactionService;
+        this.transferService = transferService;
+        this.transactionMapper = transactionMapper;
+        this.transferMapper = transferMapper;
     }
+
 
     @Override
     public User getById(int id) {
@@ -185,5 +207,17 @@ public class UserServiceImpl implements UserService {
         return repository.save(userToBeRestored);
     }
 
+
+    @Override
+    public List<FinancialActivity> collectActivity(User user) {
+        List<FinancialActivity> activities = new ArrayList<>();
+        transactionService.getBySenderId(user.getId()).stream().map(transactionMapper::moneySentToActivity).forEach(activities::add);
+        transactionService.getByReceiverId(user.getId()).stream().map(transactionMapper::moneyReceivedToActivity).forEach(activities::add);
+        transferService.getUserTransfers(user).stream()
+                .map(t -> t.getDirection() == DirectionEnum.DEPOSIT ?
+                        transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).forEach(activities::add);
+        activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
+        return activities;
+    }
 
 }

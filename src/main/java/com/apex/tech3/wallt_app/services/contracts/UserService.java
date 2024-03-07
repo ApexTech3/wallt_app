@@ -1,9 +1,12 @@
 package com.apex.tech3.wallt_app.services.contracts;
 
+import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface UserService {
     User getById(int id);
@@ -15,7 +18,6 @@ public interface UserService {
     User register(User user);
 
     void sendConfirmationEmail(User user);
-
     void confirmUser(String token);
     User update(User user, User requester, UserUpdateDto dto, int id);
 
@@ -27,4 +29,6 @@ public interface UserService {
 
     void deleteUser(int userId, User requester);
     User restoreUser(int userId, User requester);
+
+    List<FinancialActivity> collectActivity(User user);
 }

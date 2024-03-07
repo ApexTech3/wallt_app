@@ -7,10 +7,13 @@ import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.CardDetails;
 import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
+import com.apex.tech3.wallt_app.models.filters.TransferSpecification;
 import com.apex.tech3.wallt_app.repositories.TransferRepository;
 import com.apex.tech3.wallt_app.services.contracts.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.apex.tech3.wallt_app.helpers.AuthenticationHelper.isAdmin;
 
@@ -71,5 +74,10 @@ public class TransferServiceImpl implements TransferService {
         if (!transfer.getCard().getHolder().equals(transfer.getWallet().getHolder())) {
             throw new AuthorizationException(CARD_ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public List<Transfer> getUserTransfers(User user) {
+        return repository.findAll(TransferSpecification.filterByWalletOwner(user.getId()));
     }
 }

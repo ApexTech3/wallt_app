@@ -11,7 +11,6 @@ import com.apex.tech3.wallt_app.models.filters.TransactionSpecification;
 import com.apex.tech3.wallt_app.repositories.TransactionRepository;
 import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
 import com.apex.tech3.wallt_app.services.contracts.TransactionService;
-import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -32,17 +32,25 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final CurrencyService currencyService;
 
-    private final UserService userService;
 
 
     @Autowired
-    public TransactionServiceImpl(TransactionRepository repository, WalletService walletService, UserService userService, CurrencyService currencyService) {
+    public TransactionServiceImpl(TransactionRepository repository, WalletService walletService, CurrencyService currencyService) {
         this.repository = repository;
         this.currencyService = currencyService;
         this.walletService = walletService;
-        this.userService = userService;
     }
 
+
+    @Override
+    public List<Transaction> getBySenderId(int senderId) {
+        return repository.findAll(TransactionSpecification.filterBySenderId(senderId));
+    }
+
+    @Override
+    public List<Transaction> getByReceiverId(int receiverId) {
+        return repository.findAll(TransactionSpecification.filterByReceiverId(receiverId));
+    }
 
     @Override
     public Transaction getById(int id) {

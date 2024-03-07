@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.helpers;
 
+import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.dtos.TransferDto;
 import com.apex.tech3.wallt_app.models.dtos.TransferResponse;
@@ -33,5 +34,33 @@ public class TransferMapper {
         transferResponse.setAmount(transfer.getAmount());
         transferResponse.setStatus(transfer.getStatus());
         return transferResponse;
+    }
+
+    public FinancialActivity depositToActivity(Transfer transfer) {
+        FinancialActivity activity = new FinancialActivity();
+        String cardNumber = transfer.getCard().getNumber();
+        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        activity.setDescription("Deposited through ****" + lastFour);
+        activity.setAmount(transfer.getAmount());
+        activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
+        activity.setTimestamp(transfer.getStampCreated());
+        activity.setWalletId(transfer.getWallet().getId());
+        activity.setStatus(transfer.getStatus());
+        activity.setType("DEPOSIT");
+        return activity;
+    }
+
+    public FinancialActivity withdrawalToActivity(Transfer transfer) {
+        FinancialActivity activity = new FinancialActivity();
+        String cardNumber = transfer.getCard().getNumber();
+        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        activity.setDescription("Withdrawn through ****" + lastFour);
+        activity.setAmount(transfer.getAmount().negate());
+        activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
+        activity.setTimestamp(transfer.getStampCreated());
+        activity.setWalletId(transfer.getWallet().getId());
+        activity.setStatus(transfer.getStatus());
+        activity.setType("WITHDRAW");
+        return activity;
     }
 }

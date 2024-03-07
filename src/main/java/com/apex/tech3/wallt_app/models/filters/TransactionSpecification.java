@@ -10,16 +10,26 @@ import java.util.List;
 
 public class TransactionSpecification {
 
+    public static Specification<Transaction> filterBySenderId(Integer senderId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("senderWallet").get("holder").get("id"), senderId);
+    }
+
+    public static Specification<Transaction> filterByReceiverId(Integer receiverId) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("senderWallet").get("holder").get("id"), receiverId);
+    }
+
 
     public static Specification<Transaction> filterBySenderAndStatus(Integer senderId, String status) {
         return (root, query, criteriaBuilder) -> {
-            Predicate senderPredicate = criteriaBuilder.equal(root.get("senderWallet").get("id"), senderId);
+            Predicate senderPredicate = criteriaBuilder.equal(root.get("senderWallet").get("holder").get("id"), senderId);
             Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), status);
             return criteriaBuilder.and(senderPredicate, statusPredicate);
         };
     }
 
-    public static Specification<Transaction> filterByReceiverAndStatus(Integer receiverId, String status) {
+    public static Specification<Transaction> filterByReceiverAndStatus(int receiverId, String status) {
         return (root, query, criteriaBuilder) -> {
             Predicate receiverPredicate = criteriaBuilder.equal(root.get("receiverWallet").get("id"), receiverId);
             Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), status);
