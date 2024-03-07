@@ -160,10 +160,10 @@ public class UserRestController {
         }
     }
 
-    @GetMapping("/activity/{userId}")
+    @GetMapping("{userId}/activity/")
     public List<FinancialActivity> collectActivity(@PathVariable int userId) {
         try {
-            return userService.collectActivity(userService.getById(userId));
+            return userService.collectActivity(userId);
         } catch(EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

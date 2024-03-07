@@ -80,4 +80,9 @@ public class TransferServiceImpl implements TransferService {
     public List<Transfer> getUserTransfers(User user) {
         return repository.findAll(TransferSpecification.filterByWalletOwner(user.getId()));
     }
+
+    @Override
+    public List<Transfer> getUserTransfers(int userId) {
+        return repository.findAll(TransferSpecification.filterByWalletOwner(userId));
+    }
 }

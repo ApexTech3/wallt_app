@@ -10,4 +10,6 @@ public interface TransferService {
     Transfer withdraw(Transfer transfer, User user);
 
     List<Transfer> getUserTransfers(User user);
+
+    List<Transfer> getUserTransfers(int userId);
 }

@@ -30,5 +30,5 @@ public interface UserService {
     void deleteUser(int userId, User requester);
     User restoreUser(int userId, User requester);
 
-    List<FinancialActivity> collectActivity(User user);
+    List<FinancialActivity> collectActivity(int userId);
 }

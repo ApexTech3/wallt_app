@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface TransactionService {
 
+    List<Transaction> getByUserId(int userId);
+
     List<Transaction> getBySenderId(int senderId);
 
     List<Transaction> getByReceiverId(int receiverId);

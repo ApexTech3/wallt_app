@@ -209,13 +209,19 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<FinancialActivity> collectActivity(User user) {
-        List<FinancialActivity> activities = new ArrayList<>();
-        transactionService.getBySenderId(user.getId()).stream().map(transactionMapper::moneySentToActivity).forEach(activities::add);
-        transactionService.getByReceiverId(user.getId()).stream().map(transactionMapper::moneyReceivedToActivity).forEach(activities::add);
-        transferService.getUserTransfers(user).stream()
+    public List<FinancialActivity> collectActivity(int userId) {
+
+        List<FinancialActivity> transactions = transactionService.getByUserId(userId).stream().map(t -> t.getSenderWallet().getHolder().getId() == userId ?
+                transactionMapper.moneySentToActivity(t) : transactionMapper.moneyReceivedToActivity(t)).toList();
+
+        List<FinancialActivity> transfers = transferService.getUserTransfers(userId).stream()
                 .map(t -> t.getDirection() == DirectionEnum.DEPOSIT ?
-                        transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).forEach(activities::add);
+                        transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).toList();
+
+        List<FinancialActivity> activities = new ArrayList<>(transactions.size() + transfers.size());
+        activities.addAll(transactions);
+        activities.addAll(transfers);
+
         activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
         return activities;
     }

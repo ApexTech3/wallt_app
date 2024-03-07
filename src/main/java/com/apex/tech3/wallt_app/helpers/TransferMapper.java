@@ -60,7 +60,7 @@ public class TransferMapper {
         activity.setTimestamp(transfer.getStampCreated());
         activity.setWalletId(transfer.getWallet().getId());
         activity.setStatus(transfer.getStatus());
-        activity.setType("WITHDRAW");
+        activity.setType("WITHDRAWAL");
         return activity;
     }
 }

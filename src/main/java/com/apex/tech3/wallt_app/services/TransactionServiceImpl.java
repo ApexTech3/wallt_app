@@ -43,6 +43,11 @@ public class TransactionServiceImpl implements TransactionService {
 
 
     @Override
+    public List<Transaction> getByUserId(int userId) {
+        return repository.findAll(TransactionSpecification.filterByUserId(userId));
+    }
+
+    @Override
     public List<Transaction> getBySenderId(int senderId) {
         return repository.findAll(TransactionSpecification.filterBySenderId(senderId));
     }

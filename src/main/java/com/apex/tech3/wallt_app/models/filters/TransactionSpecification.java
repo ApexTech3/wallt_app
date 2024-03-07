@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app.models.filters;
 
 import com.apex.tech3.wallt_app.models.Transaction;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -9,6 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionSpecification {
+
+    public static Specification<Transaction> filterByUserId(Integer userId) {
+        return (root, query, criteriaBuilder) -> {
+            root.fetch("senderWallet", JoinType.LEFT).fetch("currency", JoinType.LEFT);
+            root.fetch("receiverWallet", JoinType.LEFT).fetch("currency", JoinType.LEFT);
+            query.distinct(true);  // to avoid duplicate results from fetch joins
+
+            return criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get("senderWallet").get("holder").get("id"), userId),
+                    criteriaBuilder.equal(root.get("receiverWallet").get("holder").get("id"), userId)
+            );
+        };
+    }
 
     public static Specification<Transaction> filterBySenderId(Integer senderId) {
         return (root, query, criteriaBuilder) ->
