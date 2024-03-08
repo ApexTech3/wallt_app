@@ -39,16 +39,16 @@ public class HomeController {
         return "user";
     }
 
-    @GetMapping("/login")
-    public String loginBasic(Model model) {
-        model.addAttribute("user", new User());
-        return "html/signin";
-    }
-
-    @PostMapping("/login")
-    public String loginBasic(@Valid @ModelAttribute("user") User user, Model model) {
-        return "user";
-    }
+//    @GetMapping("/login")
+//    public String loginBasic(Model model) {
+//        model.addAttribute("user", new User());
+//        return "html/signin";
+//    }
+//
+//    @PostMapping("/login")
+//    public String loginBasic(@Valid @ModelAttribute("user") User user, Model model) {
+//        return "user";
+//    }
 }
 
 

@@ -12,14 +12,8 @@
 =========================================================
  -->
 <!-- beautify ignore:start -->
-<html
-  lang="en"
-  class="light-style customizer-hide"
-  dir="ltr"
-  data-theme="theme-default"
-  data-assets-path="../assets/"
-  data-template="vertical-menu-template-free"
-  xmlns:th="http://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
 
 >
   <head>
@@ -140,9 +134,9 @@
               <h4 class="mb-2">Welcome to Sneat! 👋</h4>
               <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST" th:object="${user}">
+              <form id="formAuthentication" class="mb-3" action="index.html" method="POST" th:object="${login}">
                 <div class="mb-3">
-                  <label for="email" class="form-label">Email or Username</label>
+                  <label th:text="#{user.label.email}"></label>
                   <input
                     type="text"
                     class="form-control"
