@@ -37,13 +37,13 @@ public class AuthenticationController {
     @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("login", new UserRegisterDto());
-        return "auth-login-basic";
+        return "authentication-login";
     }
 
     @PostMapping("/login")
     public String handleLogin(@Validated(UserRegisterDto.class) @ModelAttribute("login") UserRegisterDto dto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors()) {
-            return "auth-login-basic";
+            return "authentication-login";
         }
 
         try {
@@ -55,7 +55,7 @@ public class AuthenticationController {
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
-            return "auth-login-basic";
+            return "authentication-login";
         }
     }
 }
