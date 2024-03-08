@@ -1,13 +1,13 @@
 package com.apex.tech3.wallt_app.controllers.mvc;
 
-import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
@@ -30,7 +30,7 @@ public class HomeController {
     public String getAll(Model model) {
         model.addAttribute("users", userService.getById(4));
         model.addAttribute("wallet", walletService.getById(4));
-        return "html/index";
+        return "index";
     }
 
     @GetMapping("/{id}")
