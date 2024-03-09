@@ -45,7 +45,7 @@ public class WalletServiceImpl implements WalletService {
         filterOptions.setAmountGreaterThan(amountGreaterThan);
         filterOptions.setAmountLessThan(amountLessThan);
         filterOptions.setCurrencyId(currencyId);
-        return repository.findAll(WalletSpecification.filterByAllColumns(null, amountGreaterThan, amountLessThan, currencyId),
+        return repository.findAll(WalletSpecification.filterByAllColumns(holderId, amountGreaterThan, amountLessThan, currencyId),
                 createPageable(filterOptions)).stream().toList();
     }
 
