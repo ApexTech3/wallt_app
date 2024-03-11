@@ -34,7 +34,6 @@ public class UserRegisterDto implements Register, UserRequestDto {
     private MultipartFile profilePicture;
     @NotEmpty(message = "Address cannot be null")
     private String street;
-    @NotEmpty(message = "Number cannot be null")
     private int number;
     @NotEmpty(message = "City cannot be null")
     private String city;
