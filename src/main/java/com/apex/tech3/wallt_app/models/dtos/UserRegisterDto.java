@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UserRegisterDto implements Register, UserRequestDto {
@@ -16,6 +17,7 @@ public class UserRegisterDto implements Register, UserRequestDto {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^])", message = "Password must contain at least one capital letter, one digit, and one special symbol")
     private String password;
+    private String passwordConfirmation;
     @NotEmpty(message = "First name cannot be empty")
     private String firstName;
     @NotEmpty(message = "Middle name cannot be empty")
@@ -28,10 +30,10 @@ public class UserRegisterDto implements Register, UserRequestDto {
     @NotEmpty(message = "Phone number cannot be empty")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phone;
-    private String profilePicture;
+    private String profilePictureURL;
+    private MultipartFile profilePicture;
     @NotEmpty(message = "Address cannot be null")
     private String street;
-    @NotEmpty(message = "Number cannot be null")
     private int number;
     @NotEmpty(message = "City cannot be null")
     private String city;
