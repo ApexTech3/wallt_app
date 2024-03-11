@@ -9,6 +9,8 @@ import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.RoundingMode;
+
 @Component
 public class TransferMapper {
     private final CardService cardService;
@@ -41,7 +43,7 @@ public class TransferMapper {
         String cardNumber = transfer.getCard().getNumber();
         String lastFour = cardNumber.substring(cardNumber.length() - 4);
         activity.setDescription("Deposited through ****" + lastFour);
-        activity.setAmount(transfer.getAmount());
+        activity.setAmount(transfer.getAmount().setScale(2, RoundingMode.HALF_UP));
         activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
         activity.setTimestamp(transfer.getStampCreated());
         activity.setWalletId(transfer.getWallet().getId());
@@ -55,7 +57,7 @@ public class TransferMapper {
         String cardNumber = transfer.getCard().getNumber();
         String lastFour = cardNumber.substring(cardNumber.length() - 4);
         activity.setDescription("Withdrawn through ****" + lastFour);
-        activity.setAmount(transfer.getAmount().negate());
+        activity.setAmount(transfer.getAmount().negate().setScale(2, RoundingMode.HALF_UP));
         activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
         activity.setTimestamp(transfer.getStampCreated());
         activity.setWalletId(transfer.getWallet().getId());
