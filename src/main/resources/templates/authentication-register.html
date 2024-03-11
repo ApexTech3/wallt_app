@@ -24,9 +24,9 @@
                   <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
                 </a>
                 <p class="text-center">Your Social Campaigns</p>
-                <form>
+                <form action="#" th:action="@{/auth/register}" th:object="${register}" method="post" enctype="multipart/form-data">
                   <div class="mb-3">
-                    <label for="exampleInputtext1" class="form-label">Name</label>
+                    <label for="exampleInputtext1" class="form-label">Username</label>
                     <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
                   </div>
                   <div class="mb-3">
@@ -34,15 +34,70 @@
                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                   </div>
                   <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password">
                   </div>
+                  <div class="mb-4">
+                    <label for="passwordConfirmation" class="form-label">Password confirmation</label>
+                    <input type="password"  class="form-control" id="passwordConfirmation">
+                    <span id="passwordMatch"></span>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext2" class="form-label">First name</label>
+                    <input type="text" class="form-control" id="exampleInputtext2" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext3" class="form-label">Middle name</label>
+                    <input type="text" class="form-control" id="exampleInputtext3" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext4" class="form-label">Last name</label>
+                    <input type="text" class="form-control" id="exampleInputtext4" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext5" class="form-label">Street</label>
+                    <input type="text" class="form-control" id="exampleInputtext5" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext7" class="form-label">Number</label>
+                    <input type="text" class="form-control" id="exampleInputtext7" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext8" class="form-label">City</label>
+                    <input type="text" class="form-control" id="exampleInputtext8" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputtext9" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="exampleInputtext9" aria-describedby="textHelp">
+                  </div>
+                  <label for="profilePicture">Profile Picture</label>
+                  <br/>
+                  <input type="file" id="profilePicture" th:field="*{profilePicture}" name="profilePicture" class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                  <label class="error" th:errors="*{profilePicture}">Profile Picture error placeholder</label>
+                  <br/>
                   <a href="html/index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</a>
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
-                    <a class="text-primary fw-bold ms-2" href="authentication-login.html">Sign In</a>
+                    <a class="text-primary fw-bold ms-2" th:href="@{/auth/login}">Sign In</a>
                   </div>
                 </form>
+
+                <script>
+                  document.getElementById('passwordConfirmation').addEventListener('input', function () {
+                    var password = document.getElementById('password').value;
+                    var passwordConfirmation = document.getElementById('passwordConfirmation').value;
+                    var passwordMatchSpan = document.getElementById('passwordMatch');
+
+                    if (password === passwordConfirmation) {
+                      passwordMatchSpan.innerText = 'Passwords match';
+                      passwordMatchSpan.style.color = 'green';
+                    } else {
+                      passwordMatchSpan.innerText = 'Passwords do not match';
+                      passwordMatchSpan.style.color = 'red';
+                    }
+                  });
+                </script>
+
               </div>
             </div>
           </div>
