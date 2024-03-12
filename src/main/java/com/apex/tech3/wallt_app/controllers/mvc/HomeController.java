@@ -1,11 +1,14 @@
 package com.apex.tech3.wallt_app.controllers.mvc;
 
+import com.apex.tech3.wallt_app.models.dtos.CardDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,6 +28,15 @@ public class HomeController {
         this.walletService = walletService;
     }
 
+    @ModelAttribute
+    public void populateAttributes(HttpSession httpSession, Model model) {
+        boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+
+        model.addAttribute("isAdmin", isAuthenticated ? httpSession.getAttribute("isAdmin") : false);
+        model.addAttribute("isBlocked", isAuthenticated ? httpSession.getAttribute("isBlocked") : false);
+        model.addAttribute("cardDto", new CardDto());
+    }
 
     @GetMapping
     public String getAll(Model model) {

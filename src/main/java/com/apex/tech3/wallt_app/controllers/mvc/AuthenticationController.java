@@ -54,7 +54,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@Validated(UserRegisterDto.class) @ModelAttribute("login") UserRegisterDto dto, BindingResult bindingResult, HttpSession session) {
+    public String handleLogin(/*todo validate userDto (@Valid)*/ @ModelAttribute("login") UserRegisterDto dto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors()) {
             return "authentication-login";
         }
