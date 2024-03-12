@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
     User getByEmail(String email);
     User findByConfirmationToken(String confirmationToken);
 
+
 }

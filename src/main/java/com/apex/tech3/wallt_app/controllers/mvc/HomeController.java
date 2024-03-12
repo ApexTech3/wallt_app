@@ -30,7 +30,8 @@ public class HomeController {
     public String getAll(Model model) {
         model.addAttribute("users", userService.getById(4));
         model.addAttribute("wallet", walletService.getById(4));
-        model.addAttribute("demoActivity", userService.collectActivity(3)); //TODO Pick a user for demonstration
+        model.addAttribute("demoActivity", userService.collectActivity(1)); //TODO Pick a user for demonstration
+        model.addAttribute("stats", userService.collectStats(1)); //TODO Pick a user for demonstration
         return "index";
     }
 

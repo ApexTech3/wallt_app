@@ -72,6 +72,16 @@ public class TransactionServiceImpl implements TransactionService {
         return repository.findAll(TransactionSpecification.filterByReceiverAndStatus(receiverId, status), pageable);
     }
 
+    @Override
+    public BigDecimal getSentAmountByUserId(int userId) {
+        return repository.getSentAmountByUserId(userId);
+    }
+
+    @Override
+    public BigDecimal getReceivedAmountByUserId(int userId) {
+        return repository.getReceivedAmountByUserId(userId);
+    }
+
 
 
     @Override

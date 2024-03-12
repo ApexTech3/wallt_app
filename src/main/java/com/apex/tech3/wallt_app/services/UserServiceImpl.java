@@ -20,10 +20,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -224,6 +222,19 @@ public class UserServiceImpl implements UserService {
 
         activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
         return activities;
+    }
+
+    @Override
+    public Map<String, BigDecimal> collectStats(int userId) {
+        List<FinancialActivity> activities = collectActivity(userId);
+        BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
+        BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
+        Map<String, BigDecimal> stats = new HashMap<>();
+        stats.put("totalSent", totalSent);
+        stats.put("totalReceived", totalReceived);
+//        stats.put("totalDeposited", totalDeposited);
+//        stats.put("totalWithdrawn", totalWithdrawn);
+        return stats;
     }
 
 
