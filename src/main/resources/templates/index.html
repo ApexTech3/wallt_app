@@ -55,14 +55,19 @@
                         <div class="form-group">
                           <label for="CardNumber">Card Number</label>
                           <input type="text" class="form-control" id="CardNumber" placeholder="Enter Card Number" th:field="*{cardNumber}" autofocus="" />
+                          <label class="form-error text-danger" th:errors="*{cardNumber}">CardNumber error placeholder</label><br/>
                           <label for="Name">Cardholder Name</label>
                           <input type="text" class="form-control" id="Name" placeholder="Enter Cardholder Name" th:field="*{cardHolderName}" autofocus="" />
+                          <label class="form-error text-danger" th:errors="*{cardHolderName}">Cardholder error placeholder</label><br/>
                           <label for="ExpirationMonth">Expiration Month</label>
                           <input type="text" class="form-control" id="ExpirationMonth" placeholder="MM" th:field="*{expirationMonth}" autofocus="" />
+                          <label class="form-error text-danger" th:errors="*{expirationMonth}">ExpirationMonth error placeholder</label><br/>
                           <label for="ExpirationYear">Expiraton Year</label>
                           <input type="text" class="form-control" id="ExpirationYear" placeholder="YY" th:field="*{expirationYear}" autofocus="" />
+                          <label class="form-error text-danger" th:errors="*{expirationYear}">ExpirationYear error placeholder</label><br/>
                           <label for="cvv">CVV</label>
                           <input type="text" class="form-control" id="cvv" placeholder="CVV" th:field="*{cvv}" autofocus="" />
+                          <label class="form-error text-danger" th:errors="*{cvv}">CVV error placeholder</label><br/>
                         </div>
                       </div>
                       <div class="modal-footer">
