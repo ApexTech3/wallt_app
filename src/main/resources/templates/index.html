@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wallt App</title>
-  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/logo.jpg">
-  <link rel="stylesheet" href="../assets/css/styles.min.css">
-</head>
+<head th:replace="~{fragments/head.html :: head}"></head>
 
 <body>
 <!--  Body Wrapper -->
@@ -112,7 +106,7 @@
         <div class="col-lg-4">
           <div class="row">
             <div class="col-lg-12">
-              <!-- Yearly Breakup -->
+              <!-- Sent/Received donut -->
               <div class="card overflow-hidden">
                 <div class="card-body p-4">
                   <h5 class="card-title mb-9 fw-semibold">Funds Sent/Received(Demo)</h5>
@@ -154,18 +148,22 @@
               <!-- Monthly Earnings -->
               <div class="card">
                 <div class="card-body">
-                  <div class="row alig n-items-start">
+                  <div class="row align-items-start">
                     <div class="col-8">
-                      <h5 class="card-title mb-9 fw-semibold"> Funds Deposited/Withdrawn </h5>
-                      <h4 class="fw-semibold mb-3">$6,820</h4>
-                      <div class="d-flex align-items-center pb-1">
-                          <span class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-arrow-down-right text-danger"></i>
-                          </span>
-                        <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                        <p class="fs-3 mb-0">last year</p>
+                      <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
+                      <div class="row" th:each="wallet : ${wallets}">
+                        <div class="d-flex justify-content-between">
+                          <h6 class="fw-semibold mb-0" th:text="${wallet.currency.symbol}">EUR</h6>
+                          <h6 class="fw-semibold mb-0" th:text="${wallet.amount}">€ 3,820</h6>
                         </div>
-                    </div>
+                      </div>
+                      <!--                      <div class="d-flex align-items-center pb-1">-->
+                      <!--                          <span class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">-->
+                      <!--                            <i class="ti ti-arrow-down-right text-danger"></i>-->
+                      <!--                          </span>-->
+                      <!--                        <p class="text-dark me-1 fs-3 mb-0">+9%</p>-->
+                      <!--                        <p class="fs-3 mb-0">last year</p>-->
+                      <!--                        </div>-->
                     <div class="col-4">
                       <div class="d-flex justify-content-end">
                         <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
@@ -175,7 +173,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="earning"></div>
+                  <!--                <div id="earning"></div>-->
               </div>
             </div>
           </div>
@@ -190,9 +188,6 @@
                 <table class="table text-nowrap mb-0 align-middle">
                   <thead class="text-dark fs-4" style="position: sticky;top: 0;z-index: 100;background-color: white;">
                   <tr>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Wallet(ID)</h6>
-                    </th>
                     <th class="border-bottom-0">
                       <h6 class="fw-semibold mb-0">Description/TimeStamp</h6>
                     </th>
@@ -212,8 +207,6 @@
                   </thead>
                   <tbody>
                   <tr th:each="activity : ${demoActivity}">
-                    <td class="border-bottom-0"><h6 class="fw-semibold mb-0" th:text="${activity.walletId}">Wallet
-                      1</h6></td>
                     <td class="border-bottom-0">
                       <h6 class="fw-semibold mb-1" th:text="${activity.description}">Money sent to pesho</h6>
                       <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>
@@ -261,7 +254,7 @@
   <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
-<script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
