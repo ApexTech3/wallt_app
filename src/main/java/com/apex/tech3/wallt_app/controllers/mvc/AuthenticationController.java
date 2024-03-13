@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
+import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -84,7 +85,7 @@ public class AuthenticationController {
         return "authentication-register";
     }
     @PostMapping("/register")
-    public String handleRegister(@Validated @ModelAttribute("register") UserRegisterDto dto, BindingResult bindingResult) {
+    public String handleRegister(@Validated(Register.class)  @ModelAttribute("register") UserRegisterDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "authentication-register";
         }

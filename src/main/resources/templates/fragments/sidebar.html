@@ -40,11 +40,11 @@
                         <span class="hide-menu">Login</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="authentication-register.html" aria-expanded="false">
-                <span>
+                <li class="sidebar-item" th:unless="${isAuthenticated}">
+                    <a class="sidebar-link" href="#" th:href="@{/auth/register}" aria-expanded="false">
+        <span>
                   <i class="ti ti-user-plus"></i>
-                </span>
+        </span>
                         <span class="hide-menu">Register</span>
                     </a>
                 </li>

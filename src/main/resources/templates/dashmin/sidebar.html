@@ -88,14 +88,16 @@
                         <span class="hide-menu">Login</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="authentication-register.html" aria-expanded="false">
-                <span>
+                <!-- Replaced the existing Register link with Thymeleaf link -->
+                <li class="sidebar-item" th:unless="${isAuthenticated}">
+                    <a class="sidebar-link" href="#" th:href="@{/auth/register}" aria-expanded="false">
+        <span>
                   <i class="ti ti-user-plus"></i>
-                </span>
+        </span>
                         <span class="hide-menu">Register</span>
                     </a>
                 </li>
+                <!-- End of modification -->
                 <li class="nav-small-cap">
                     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                     <span class="hide-menu">EXTRA</span>
