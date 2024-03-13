@@ -116,7 +116,7 @@ $(function () {
     series: seriesData,
     labels: ["Sent", "Received"],
     chart: {
-      width: 180,
+      width: 175,
       type: "donut",
       fontFamily: "Plus Jakarta Sans', sans-serif",
       foreColor: "#adb0bb",

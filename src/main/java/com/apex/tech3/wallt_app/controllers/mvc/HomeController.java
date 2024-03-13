@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.controllers.mvc;
 
+import com.apex.tech3.wallt_app.helpers.WalletMapper;
 import com.apex.tech3.wallt_app.models.dtos.CardDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
@@ -19,13 +20,15 @@ public class HomeController {
 
     private final CardService cardService;
 
-
     private final WalletService walletService;
 
-    public HomeController(UserService userService, CardService cardService, WalletService walletService) {
+    private final WalletMapper walletMapper;
+
+    public HomeController(UserService userService, CardService cardService, WalletService walletService, WalletMapper walletMapper) {
         this.userService = userService;
         this.cardService = cardService;
         this.walletService = walletService;
+        this.walletMapper = walletMapper;
     }
 
     @ModelAttribute
@@ -42,8 +45,10 @@ public class HomeController {
     public String getAll(Model model) {
         model.addAttribute("users", userService.getById(4));
         model.addAttribute("wallet", walletService.getById(4));
-        model.addAttribute("demoActivity", userService.collectActivity(1)); //TODO Pick a user for demonstration
-        model.addAttribute("stats", userService.collectStats(1)); //TODO Pick a user for demonstration
+        model.addAttribute("demoActivity", userService.collectActivity(3));
+        model.addAttribute("cards", cardService.getByHolderId(3));
+        model.addAttribute("stats", userService.collectStats(3));
+        model.addAttribute("wallets", walletService.getByUserId(3).stream().map(walletMapper::toDto));
         return "index";
     }
 
