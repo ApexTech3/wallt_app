@@ -34,6 +34,7 @@
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
                   <input type="password" class="form-control" id="password">
+                  <span id="passwordError" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                   <label for="passwordConfirmation" class="form-label">Confirm Password</label>
@@ -89,6 +90,19 @@
               </form>
 
               <script>
+                document.getElementById('password').addEventListener('input', function () {
+                  var password = document.getElementById('password').value;
+                  var passwordError = document.getElementById('passwordError');
+                  var pattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+]).{8,}$/;
+
+                  if (!pattern.test(password)) {
+                    passwordError.innerText = 'Password must be at least 8 characters long and contain at least one capital letter, one digit, and one special symbol (+, -, *, &, ^, …)';
+                    passwordError.style.color = 'red';
+                  } else {
+                    passwordError.innerText = '';
+                  }
+                });
+
                 document.getElementById('passwordConfirmation').addEventListener('input', function () {
                   var password = document.getElementById('password').value;
                   var passwordConfirmation = document.getElementById('passwordConfirmation').value;
