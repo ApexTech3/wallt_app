@@ -5,13 +5,14 @@
     <title>$Title$</title>
 </head>
 <body>
-<div th:fragment="newCardModal" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div th:fragment="newCardModal" class="modal fade" id="createNewCardModal" tabindex="-1"
+     aria-labelledby="createNewCardModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form th:object="${cardDto}" th:action="@{/cards}" method="post">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add a New Card</h1>
+                    <h1 class="modal-title fs-5" id="createNewCardModalLabel">Add a New Card</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

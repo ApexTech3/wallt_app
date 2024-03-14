@@ -33,7 +33,7 @@
                 <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>
             </td>
             <td class="border-bottom-0">
-                <p class="mb-0 fw-normal" th:text="${activity.amount}">-39</p>
+                <p class="mb-0 fw-normal" data-blur-toggle th:text="${activity.amount}">-39</p>
             </td>
             <td class="border-bottom-0">
                 <h6 class="fw-semibold mb-0 fs-4" th:text="${activity.currencySymbol}">EUR</h6>

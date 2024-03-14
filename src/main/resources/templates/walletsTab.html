@@ -14,8 +14,9 @@
                     <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
                     <div class="row" th:each="wallet : ${wallets}">
                         <div class="d-flex justify-content-between">
-                            <h6 class="fw-semibold mb-0" th:text="${wallet.currency.symbol}">EUR</h6>
-                            <h6 class="fw-semibold mb-0" th:text="${wallet.amount}">€ 3,820</h6>
+                            <h6 class="fw-semibold mb-0" th:text="${wallet.currency.name}">EUR</h6>
+                            <h6 class="fw-semibold mb-0" th:text="${wallet.currency.symbol}+${wallet.amount}">€
+                                3,820</h6>
                         </div>
                     </div>
                     <!--                      <div class="d-flex align-items-center pb-1">-->
@@ -25,14 +26,15 @@
                     <!--                        <p class="text-dark me-1 fs-3 mb-0">+9%</p>-->
                     <!--                        <p class="fs-3 mb-0">last year</p>-->
                     <!--                        </div>-->
-                    <div class="col-4">
-                        <div class="d-flex justify-content-end">
-                            <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                                <i class="ti ti-currency-dollar fs-6"></i>
-                            </div>
+                </div>
+                <div class="col-4">
+                    <div class="d-flex justify-content-end">
+                        <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                            <i class="ti ti-currency-dollar fs-6"></i>
                         </div>
                     </div>
                 </div>
+
             </div>
             <!--                <div id="earning"></div>-->
         </div>
