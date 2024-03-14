@@ -21,7 +21,7 @@
                     <span class="hide-menu">Home</span>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                    <a class="sidebar-link" href="#" th:href="@{/home}" aria-expanded="false">
                 <span>
                   <i class="ti ti-layout-dashboard"></i>
                 </span>
@@ -48,94 +48,28 @@
                         <span class="hide-menu">Register</span>
                     </a>
                 </li>
-                <div th:if="${isAuthenticated}">
-                    <li class="nav-small-cap">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">UI COMPONENTS</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/ui-buttons.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-article"></i>
-                </span>
-                            <span class="hide-menu">Buttons</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/ui-alerts.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-alert-circle"></i>
-                </span>
-                            <span class="hide-menu">Alerts</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/ui-card.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-cards"></i>
-                </span>
-                            <span class="hide-menu">Card</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/ui-forms.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-file-description"></i>
-                </span>
-                            <span class="hide-menu">Forms</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/ui-typography.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-typography"></i>
-                </span>
-                            <span class="hide-menu">Typography</span>
-                        </a>
-                    </li>
-                    <li class="nav-small-cap">
-                        <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">EXTRA</span>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/icon-tabler.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-mood-happy"></i>
-                </span>
-                            <span class="hide-menu">Icons</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="html/sample-page.html" aria-expanded="false">
-                <span>
-                  <i class="ti ti-aperture"></i>
-                </span>
-                            <span class="hide-menu">Sample Page</span>
-                        </a>
-                    </li>
-                </div>
+
                 <!-- Button trigger modal -->
                 <li  th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#createNewCardModal"
                        aria-expanded="false">
-                        <span><i class="ti ti-plus"></i></span>
+                        <span><i class="fa-solid fa-credit-card fa-2xl"></i></span>
                         <span class="hide-menu">Add Card</span>
                     </a>
                 </li> <li  th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#createNewWalletModal"
                        aria-expanded="false">
-                        <span><i class="ti ti-plus"></i></span>
+                        <span><i class="fa-solid fa-wallet fa-2xl"></i></span>
                         <span class="hide-menu">Add Wallet</span>
                     </a>
                 </li></li> <li  th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#depositModal"
                        aria-expanded="false">
-                        <span><i class="ti ti-plus"></i></span>
+                        <span><i class="fa-solid fa-sack-dollar fa-2xl"></i></span>
                         <span class="hide-menu">Deposit</span>
                     </a>
                 </li>
             </ul>
-
             <!--            <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">-->
             <!--                <div class="d-flex">-->
             <!--                    <div class="unlimited-access-title me-3">-->

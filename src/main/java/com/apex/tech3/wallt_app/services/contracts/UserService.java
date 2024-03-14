@@ -6,7 +6,6 @@ import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -34,5 +33,5 @@ public interface UserService {
 
     List<FinancialActivity> collectActivity(int userId);
 
-    Map<String, BigDecimal> collectStats(int userId);
+    Map<String, Object> collectActivityAndStats(int userId);
 }

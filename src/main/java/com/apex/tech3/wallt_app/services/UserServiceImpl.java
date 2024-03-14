@@ -205,7 +205,6 @@ public class UserServiceImpl implements UserService {
         return repository.save(userToBeRestored);
     }
 
-
     @Override
     public List<FinancialActivity> collectActivity(int userId) {
 
@@ -219,22 +218,25 @@ public class UserServiceImpl implements UserService {
         List<FinancialActivity> activities = new ArrayList<>(transactions.size() + transfers.size());
         activities.addAll(transactions);
         activities.addAll(transfers);
-
         activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
         return activities;
     }
 
-    @Override
     public Map<String, BigDecimal> collectStats(int userId) {
-        List<FinancialActivity> activities = collectActivity(userId);
         BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
         BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
         Map<String, BigDecimal> stats = new HashMap<>();
         stats.put("totalSent", totalSent);
         stats.put("totalReceived", totalReceived);
-//        stats.put("totalDeposited", totalDeposited);
-//        stats.put("totalWithdrawn", totalWithdrawn);
         return stats;
+    }
+
+    @Override
+    public Map<String, Object> collectActivityAndStats(int userId) {
+        Map<String, Object> activityAndStats = new HashMap<>();
+        activityAndStats.put("activities", collectActivity(userId));
+        activityAndStats.put("stats", collectStats(userId));
+        return activityAndStats;
     }
 
 

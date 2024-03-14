@@ -75,7 +75,7 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String handleLogout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/home";
     }
 
     @GetMapping("/register")
@@ -120,7 +120,7 @@ public class AuthenticationController {
 
         // Redirect back to the login page with a success message
         //redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent successfully.");
-        return "redirect:/";
+        return "redirect:/home";
     }
 
 }

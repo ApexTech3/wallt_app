@@ -27,7 +27,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="activity : ${demoActivity}">
+        <tr th:each="activity : ${activities}">
             <td class="border-bottom-0">
                 <h6 class="fw-semibold mb-1" th:text="${activity.description}">Money sent to pesho</h6>
                 <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>

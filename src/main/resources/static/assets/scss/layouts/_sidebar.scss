@@ -57,7 +57,7 @@
       .sidebar-link {
         color: $sidebar-text;
         display: flex;
-        font-size: 14px;
+        font-size: 16px;
         white-space: nowrap;
         align-items: center;
         line-height: 25px;
@@ -102,7 +102,7 @@
       &.selected>.sidebar-link.active,
       &.selected>.sidebar-link,
       >.sidebar-link.active {
-        background-color: $primary;
+        background-color: $white;
         color: $white;
       }
 
