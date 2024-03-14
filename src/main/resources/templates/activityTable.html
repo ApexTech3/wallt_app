@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<div th:fragment="activityTable" class="table-responsive" style="max-height: 350px;overflow-y: auto;display: block;">
+    <table class="table text-nowrap mb-0 align-middle">
+        <thead class="text-dark fs-4" style="position: sticky;top: 0;z-index: 100;background-color: white;">
+        <tr>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Description/TimeStamp</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Amount</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Currency</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Type</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Status</h6>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="activity : ${demoActivity}">
+            <td class="border-bottom-0">
+                <h6 class="fw-semibold mb-1" th:text="${activity.description}">Money sent to pesho</h6>
+                <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>
+            </td>
+            <td class="border-bottom-0">
+                <p class="mb-0 fw-normal" data-blur-toggle th:text="${activity.amount}">-39</p>
+            </td>
+            <td class="border-bottom-0">
+                <h6 class="fw-semibold mb-0 fs-4" th:text="${activity.currencySymbol}">EUR</h6>
+            </td>
+            <td class="border-bottom-0">
+                <div class="d-flex align-items-center gap-2" th:switch="${activity.type}">
+                        <span class="badge rounded-3 fw-semibold" th:case="'RECEIVED'" th:classappend="bg-success"
+                              th:text="${activity.type}">RECEIVED</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'SENT'"
+                          th:classappend="bg-warning">SENT</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'DEPOSIT'"
+                          th:classappend="bg-primary">DEPOSIT</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'WITHDRAWAL'"
+                          th:classappend="bg-dark">WITHDRAWAL</span>
+                </div>
+
+            </td>
+            <td class="border-bottom-0">
+                <div class="d-flex align-items-center gap-2">
+                        <span class="badge rounded-3 fw-semibold"
+                              th:classappend="${activity.status.toString() == 'SUCCESSFUL'} ? 'bg-success' : 'bg-danger'"
+                              th:text="${activity.status}">SUCCESSFUL</span>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

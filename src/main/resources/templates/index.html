@@ -16,6 +16,10 @@
     <header th:replace="~{fragments/header.html :: inner-main-header}"></header>
     <!--  Header End -->
     <div class="container-fluid">
+      <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
+              style="position: fixed;top: 100px;right: 0;z-index:9999">
+        <i class="fa-regular fa-eye-slash fa-2xl"></i>
+      </button>
       <!--  Row 1 -->
       <div class="row">
         <div class="col-lg-8  flex-column align-items-stretch">
@@ -36,214 +40,50 @@
                 <a th:href="@{/auth/login}" class="btn btn-primary btn-lg">Log in</a>
 
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <form th:object="${cardDto}" th:action="@{/cards}" method="post">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add a New Card</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="form-group">
-                          <label class="form-label" for="CardNumber">Card Number</label>
-                          <div class="input-group">
-                            <div class="input-group-text"><i class="fa-regular fa-credit-card"></i></div>
-                            <input type="text" class="form-control" id="CardNumber" placeholder="Enter Card Number"
-                                   th:field="*{cardNumber}" autofocus=""/>
-                          </div>
-                          <label class="form-error text-danger" th:errors="*{cardNumber}">CardNumber error
-                            placeholder</label><br/>
-                          <label for="Name">Cardholder Name</label>
-                          <div class="input-group">
-                            <div class="input-group-text"><i class="fa-regular fa-circle-user"></i></div>
-                            <input type="text" class="form-control" id="Name" placeholder="Enter Cardholder Name"
-                                   th:field="*{cardHolderName}" autofocus=""/>
-                          </div>
-                          <label class="form-error text-danger" th:errors="*{cardHolderName}">Cardholder error
-                            placeholder</label><br/>
-                          <div class="row align-items-start">
-                            <div class="col-auto">
-                              <label for="ExpirationMonth">Expiration Month</label>
-                              <div class="input-group">
-                                <div class="input-group-text"><i class="fa-regular fa-calendar-days"></i></div>
-                                <input type="text" class="form-control" id="ExpirationMonth" placeholder="MM"
-                                       th:field="*{expirationMonth}" autofocus=""/>
-                              </div>
-                              <label class="form-error text-danger" th:errors="*{expirationMonth}">ExpirationMonth error
-                                placeholder</label><br/>
-                            </div>
-                            <div class="col-auto">
-                              <label for="ExpirationYear">Expiraton Year</label>
-                              <input type="text" class="form-control" id="ExpirationYear" placeholder="YY"
-                                     th:field="*{expirationYear}" autofocus=""/>
-                              <label class="form-error text-danger" th:errors="*{expirationYear}">ExpirationYear error
-                                placeholder</label><br/>
-                            </div>
-                          </div>
-                          <label for="cvv">CVV</label>
-                          <div class="input-group">
-                            <div class="input-group-text"><i class="fa-solid fa-lock"></i></div>
-                            <input type="text" class="form-control" id="cvv" placeholder="CVV" th:field="*{cvv}"
-                                   autofocus=""/>
-                            <label class="form-error text-danger" th:errors="*{cvv}">CVV error placeholder</label><br/>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                      </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
+                <!-- New Card Modal -->
+                <div th:replace="~{newCard.html :: newCardModal}"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="row">
-            <div class="col-lg-12">
-              <!-- Sent/Received donut -->
-              <div class="card overflow-hidden">
-                <div class="card-body p-4">
-                  <h5 class="card-title mb-9 fw-semibold">Funds Sent/Received(Demo)</h5>
-                  <div class="row align-items-center">
-                    <div class="col-8">
-                      <h4 class="fw-semibold mb-3"
-                          th:text="'$'+${stats.get('totalSent')}+'/$'+${stats.get('totalReceived')}">$36,358</h4>
-                      <!--                      <div class="d-flex align-items-center mb-3">-->
-                      <!--                          <span class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">-->
-                      <!--                            <i class="ti ti-arrow-up-left text-success"></i>-->
-                      <!--                          </span>-->
-                      <!--                        <p class="text-dark me-1 fs-3 mb-0">+9%</p>-->
-                      <!--                        <p class="fs-3 mb-0">last year</p>-->
-                      <!--                        </div>-->
-                      <div class="d-flex align-items-center">
-                        <div class="me-4">
-                          <span class="round-8 rounded-circle me-2 d-inline-block"
-                                style="background-color: #FAD10BEA"></span>
-                          <span class="fs-2">Sent</span>
-                        </div>
-                        <div>
-                          <span class="round-8 rounded-circle me-2 d-inline-block"
-                                style="background-color: #68ff5d"></span>
-                          <span class="fs-2">Received</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-4">
-                      <div class="d-flex justify-content-center">
-                        <div id="breakup"
-                             th:attr="data-series='[' + ${stats.get('totalSent')} + ',' + ${stats.get('totalReceived')} + ']'"></div>
-                      </div>
-                    </div>
+          <!-- Sent/Received donut -->
+          <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
+          <!--          <div th:replace="~{walletsTab.html :: walletsVisual}"></div>-->
+          <div th:fragment="walletsVisual" class="col-lg-12">
+            <!-- Monthly Earnings -->
+            <div class="card">
+              <div class="card-body">
+                <div class="row justify-content-between">
+                  <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
+                </div>
+                <div class="row" th:each="wallet : ${wallets}">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="fw-semibold mb-0" th:text="${wallet.currency.name}">US Dollar</h6>
+                    <h6 class="sensitiveContent mb-0" data-blur-toggle
+                        th:text="${wallet.amount}+${wallet.currency.symbol}">€ 3,820</h6>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-12">
-              <!-- Monthly Earnings -->
-              <div class="card">
-                <div class="card-body">
-                  <div class="row align-items-start">
-                    <div class="col-8">
-                      <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
-                      <div class="row" th:each="wallet : ${wallets}">
-                        <div class="d-flex justify-content-between">
-                          <h6 class="fw-semibold mb-0" th:text="${wallet.currency.symbol}">EUR</h6>
-                          <h6 class="fw-semibold mb-0" th:text="${wallet.amount}">€ 3,820</h6>
-                        </div>
-                      </div>
-                      <!--                      <div class="d-flex align-items-center pb-1">-->
-                      <!--                          <span class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">-->
-                      <!--                            <i class="ti ti-arrow-down-right text-danger"></i>-->
-                      <!--                          </span>-->
-                      <!--                        <p class="text-dark me-1 fs-3 mb-0">+9%</p>-->
-                      <!--                        <p class="fs-3 mb-0">last year</p>-->
-                      <!--                        </div>-->
-                    <div class="col-4">
-                      <div class="d-flex justify-content-end">
-                        <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                          <i class="ti ti-currency-dollar fs-6"></i>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="d-flex justify-content-between mt-3">
+                  <h5 class="fw-semibold"> Total </h5>
+                  <h5 class="sensitiveContent fw-semibold" data-blur-toggle th:text="${walletsTotal}+'$'">€ 3,820</h5>
                 </div>
-                  <!--                <div id="earning"></div>-->
               </div>
             </div>
           </div>
-        </div>
       </div>
       <div class="row">
         <div class="d-flex align-items-stretch">
           <div class="card w-100">
             <div class="card-body p-4">
               <h5 class="card-title fw-semibold mb-4">Recent Activity(Demo)</h5>
-              <div class="table-responsive" style="max-height: 350px;overflow-y: auto;display: block;">
-                <table class="table text-nowrap mb-0 align-middle">
-                  <thead class="text-dark fs-4" style="position: sticky;top: 0;z-index: 100;background-color: white;">
-                  <tr>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Description/TimeStamp</h6>
-                    </th>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Amount</h6>
-                    </th>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Currency</h6>
-                    </th>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Type</h6>
-                    </th>
-                    <th class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0">Status</h6>
-                    </th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr th:each="activity : ${demoActivity}">
-                    <td class="border-bottom-0">
-                      <h6 class="fw-semibold mb-1" th:text="${activity.description}">Money sent to pesho</h6>
-                      <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>
-                    </td>
-                    <td class="border-bottom-0">
-                      <p class="mb-0 fw-normal" th:text="${activity.amount}">-39</p>
-                    </td>
-                    <td class="border-bottom-0">
-                      <h6 class="fw-semibold mb-0 fs-4" th:text="${activity.currencySymbol}">EUR</h6>
-                    </td>
-                    <td class="border-bottom-0">
-                      <div class="d-flex align-items-center gap-2" th:switch="${activity.type}">
-                        <span class="badge rounded-3 fw-semibold" th:case="'RECEIVED'" th:classappend="bg-success"
-                              th:text="${activity.type}">RECEIVED</span>
-                        <span class="badge rounded-3 fw-semibold" th:case="'SENT'"
-                              th:classappend="bg-warning">SENT</span>
-                        <span class="badge rounded-3 fw-semibold" th:case="'DEPOSIT'" th:classappend="bg-primary">DEPOSIT</span>
-                        <span class="badge rounded-3 fw-semibold" th:case="'WITHDRAWAL'" th:classappend="bg-dark">WITHDRAWAL</span>
-                      </div>
-
-                    </td>
-                    <td class="border-bottom-0">
-                      <div class="d-flex align-items-center gap-2">
-                        <span class="badge rounded-3 fw-semibold"
-                              th:classappend="${activity.status.toString() == 'SUCCESSFUL'} ? 'bg-success' : 'bg-danger'"
-                              th:text="${activity.status}">SUCCESSFUL</span>
-                      </div>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
+              <div th:replace="~{activityTable.html :: activityTable}"></div>
             </div>
           </div>
         </div>
       </div>
       <div th:replace="~{fragments/footer.html :: footer}"></div>
+    </div>
     </div>
   </div>
 </div>
@@ -255,6 +95,7 @@
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
   <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
+<script src="../assets/js/index.js"></script>
 </body>
 
 </html>

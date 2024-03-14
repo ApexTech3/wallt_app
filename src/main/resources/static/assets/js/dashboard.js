@@ -116,7 +116,7 @@ $(function () {
     series: seriesData,
     labels: ["Sent", "Received"],
     chart: {
-      width: 180,
+      width: 175,
       type: "donut",
       fontFamily: "Plus Jakarta Sans', sans-serif",
       foreColor: "#adb0bb",
@@ -213,6 +213,47 @@ $(function () {
   // var chart = new ApexCharts(document.querySelector("#breakup"), breakup);
   // chart.render();
 
+  // 5r custom charts
+
+  // Gauge-Stack chart for Wallets //TODO implement for wallets
+  var walletsVisualizerElement = document.getElementById("walletsVisualizer");
+  var walletsData = JSON.parse(walletsVisualizerElement.dataset.series);
+
+  var options = {
+    chart: {
+      height: 280,
+      type: "gaugeBar",
+    },
+    series: walletsData,
+    colors: ["#5D87FF", "#49BEFF", "#FAD10BEA", "#68ff5d"],
+    plotOptions: {
+      gauge: {
+        startAngle: 0,
+        endAngle: 360,
+        track: {
+          background: '#333',
+          startAngle: 0,
+          endAngle: 360,
+        },
+        dataLabels: {
+          name: {
+            show: false,
+          },
+          value: {
+            fontSize: "30px",
+            show: false
+          }
+        }
+      }
+    },
+    stroke: {
+      lineCap: "butt"
+    },
+    labels: [1, 2, 3, 4]
+  };
+
+  var chart = new ApexCharts(document.querySelector("#walletsVisualizer"), options);
+  chart.render();
   // =====================================
   // Earning
   // =====================================

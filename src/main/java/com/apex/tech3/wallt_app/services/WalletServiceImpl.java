@@ -71,6 +71,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public BigDecimal getTotalBalance(int userId) {
+        return repository.getTotalBalance(userId);
+    }
+    @Override
     public Wallet create(Wallet wallet) {
         return repository.save(wallet);
     }
