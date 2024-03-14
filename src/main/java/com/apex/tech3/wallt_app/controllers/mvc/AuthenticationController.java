@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
+import com.apex.tech3.wallt_app.models.dtos.interfaces.Login;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
@@ -55,7 +56,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(/*todo validate userDto (@Valid)*/ @ModelAttribute("login") UserRegisterDto dto, BindingResult bindingResult, HttpSession session) {
+    public String handleLogin(@Validated(Login.class) @ModelAttribute("login") UserRegisterDto dto, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors()) {
             return "authentication-login";
         }

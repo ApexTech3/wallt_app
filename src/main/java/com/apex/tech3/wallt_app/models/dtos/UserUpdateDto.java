@@ -1,6 +1,5 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
-import com.apex.tech3.wallt_app.models.dtos.interfaces.UserRequestDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -8,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserUpdateDto implements UserRequestDto {
+public class UserUpdateDto {
 
     private String username;
     private String newPassword;

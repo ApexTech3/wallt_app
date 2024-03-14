@@ -1,7 +1,7 @@
 package com.apex.tech3.wallt_app.models.dtos;
 
+import com.apex.tech3.wallt_app.models.dtos.interfaces.Login;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
-import com.apex.tech3.wallt_app.models.dtos.interfaces.UserRequestDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -10,11 +10,11 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class UserRegisterDto implements Register, UserRequestDto {
-    @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols")
+public class UserRegisterDto {
+    @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols", groups = {Register.class, Login.class})
     private String username;
     @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Size(min = 8, message = "Password must be at least 8 characters long", groups = {Register.class, Login.class})
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^])", message = "Password must contain at least one capital letter, one digit, and one special symbol")
     private String password;
     private String passwordConfirmation;
