@@ -1,58 +1,81 @@
 <!doctype html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 
 <head th:replace="~{fragments/head.html :: head}"></head>
 
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <div
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-      <div class="d-flex align-items-center justify-content-center w-100">
-        <div class="row justify-content-center w-100">
-          <div class="col-md-8 col-lg-6 col-xxl-3">
-            <div class="card mb-0">
-              <div class="card-body">
-                <div class="brand-logo d-flex align-items-center justify-content-center">
-                  <a th:href="@{/}" href="" class="text-nowrap logo-img"><img src="../assets/images/logos/logo.jpg"
-                                                                              width="80" alt=""></a>
-                  <h2 style="margin-left: 10px">WALLT</h2>
-                </div>
-                <p class="text-center">Your Wallet, Freed</p>
-                <form action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="text" th:field="*{username}" class="form-control" id="exampleInputEmail1">
-                  </div>
-                  <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1">
-                  </div>
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="form-check">
-                      <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
-                      <label class="form-check-label text-dark" for="flexCheckChecked">
-                        Remeber this Device
-                      </label>
-                    </div>
-                      <a class="text-primary fw-bold" href="index.html">Forgot Password ?</a>
-                  </div>
-                  <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
-                  <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
-                    <a class="text-primary fw-bold ms-2" href="authentication-register.html">Create an account</a>
-                  </div>
-                </form>
+<!-- Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+  <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-xxl-3">
+          <div class="card mb-0">
+            <div class="card-body">
+              <div class="brand-logo d-flex align-items-center justify-content-center">
+                <a th:href="@{/}" href="" class="text-nowrap logo-img"><img src="../assets/images/logos/logo.jpg"
+                                                                            width="80" alt=""></a>
+                <h2 style="margin-left: 10px">WALLT</h2>
               </div>
+              <p class="text-center">Your Wallet, Freed</p>
+              <form action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Username</label>
+                  <input type="text" th:field="*{username}" class="form-control" id="exampleInputEmail1">
+                </div>
+                <div class="mb-4">
+                  <label for="exampleInputPassword1" class="form-label">Password</label>
+                  <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <label class="form-check-label text-dark" for="flexCheckChecked">
+                      Remember this Device
+                    </label>
+                  </div>
+                  <!-- Open the Forgot Password modal -->
+                  <a class="text-primary fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password ?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>
+                <div class="d-flex align-items-center justify-content-center">
+                  <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
+                  <a class="text-primary fw-bold ms-2" href="authentication-register.html">Create an account</a>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="forgotPasswordForm" action="/auth/forgotten" method="post">
+          <div class="mb-3">
+            <label for="forgotEmail" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="forgotEmail" aria-describedby="emailHelp">
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Send Email</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

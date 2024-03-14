@@ -11,11 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UserRegisterDto {
-    @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols", groups = {Register.class, Login.class})
+    @NotEmpty(message = "Username can't be empty", groups = {Register.class, Login.class})
+    @Size(min = 2, max = 20, message = "Username should be between 2 and 20 symbols", groups = {Register.class})
     private String username;
-    @NotEmpty(message = "Password cannot be empty")
-    @Size(min = 8, message = "Password must be at least 8 characters long", groups = {Register.class, Login.class})
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^])", message = "Password must contain at least one capital letter, one digit, and one special symbol")
+    @NotEmpty(message = "Password can't be empty", groups = {Register.class, Login.class})
+    //@Size(min = 8, message = "Password must be at least 8 characters long", groups = {Register.class})
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[+\\-*&^])", message = "Password must contain at least one capital letter, one digit, and one special symbol", groups = {Register.class})
     private String password;
     private String passwordConfirmation;
     @NotEmpty(message = "First name cannot be empty")
