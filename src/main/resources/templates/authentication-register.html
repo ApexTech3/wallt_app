@@ -24,55 +24,71 @@
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="exampleInputtext1" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                    <input type="text" th:field="*{username}" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{username}">Username error placeholder.</label>
                   </div>
                   <div class="col-md-6">
                     <label for="exampleInputEmail1" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <input type="email" th:field="*{email}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label class="error" th:errors="*{email}">Email error placeholder</label>
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password">
+                  <input type="password" th:field="*{password}" class="form-control" id="password">
                   <span id="passwordError" class="text-danger"></span>
+                  <label class="error" th:errors="*{password}">Password error placeholder</label>
                 </div>
                 <div class="mb-3">
                   <label for="passwordConfirmation" class="form-label">Confirm Password</label>
-                  <input type="password"  class="form-control" id="passwordConfirmation">
+                  <input type="password" th:field="*{passwordConfirmation}" class="form-control" id="passwordConfirmation">
                   <span id="passwordMatch"></span>
+                  <label class="error" th:errors="*{passwordConfirmation}">Password confirmation error placeholder</label>
                 </div>
                 <div class="row mb-3">
                   <div class="col-md-4">
                     <label for="exampleInputtext2" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="exampleInputtext2" aria-describedby="textHelp">
+                    <input type="text" th:field="*{firstName}" class="form-control" id="exampleInputtext2" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{firstName}">First name error placeholder</label>
                   </div>
                   <div class="col-md-4">
                     <label for="exampleInputtext3" class="form-label">Middle Name</label>
-                    <input type="text" class="form-control" id="exampleInputtext3" aria-describedby="textHelp">
+                    <input type="text" th:field="*{middleName}" class="form-control" id="exampleInputtext3" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{middleName}">Middle name error placeholder</label>
                   </div>
                   <div class="col-md-4">
                     <label for="exampleInputtext4" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="exampleInputtext4" aria-describedby="textHelp">
+                    <input type="text" th:field="*{lastName}" class="form-control" id="exampleInputtext4" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{lastName}">Last name error placeholder</label>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="exampleInputtext5" class="form-label">Street</label>
-                    <input type="text" class="form-control" id="exampleInputtext5" aria-describedby="textHelp">
+                    <input type="text" th:field="*{street}" class="form-control" id="exampleInputtext5" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{street}">Street error placeholder</label>
                   </div>
                   <div class="col-md-2">
                     <label for="exampleInputtext7" class="form-label">Number</label>
-                    <input type="text" class="form-control" id="exampleInputtext7" aria-describedby="textHelp">
+                    <input type="text" th:field="*{number}" class="form-control" id="exampleInputtext7" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{number}">Number error placeholder</label>
                   </div>
                   <div class="col-md-4">
                     <label for="exampleInputtext8" class="form-label">City</label>
-                    <input type="text" class="form-control" id="exampleInputtext8" aria-describedby="textHelp">
+                    <input type="text" th:field="*{city}" class="form-control" id="exampleInputtext8" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{city}">City error placeholder</label>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-md-6">
                     <label for="exampleInputtext9" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="exampleInputtext9" aria-describedby="textHelp">
+                    <input type="text" th:field="*{country}" class="form-control" id="exampleInputtext9" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{country}">Country error placeholder</label>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="exampleInputphone" class="form-label">Phone</label>
+                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone" aria-describedby="phoneHelp">
+                    <label class="error" th:errors="*{phone}">Phone error placeholder</label>
                   </div>
                 </div>
                 <div class="mb-3 text-center">

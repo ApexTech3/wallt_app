@@ -29,11 +29,13 @@ public class UserRegisterDto implements Register, UserRequestDto {
     private String email;
     @NotEmpty(message = "Phone number cannot be empty")
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
+    @NotEmpty
     private String phone;
     private String profilePictureURL;
     private MultipartFile profilePicture;
     @NotEmpty(message = "Address cannot be null")
     private String street;
+    @NotEmpty
     private int number;
     @NotEmpty(message = "City cannot be null")
     private String city;
