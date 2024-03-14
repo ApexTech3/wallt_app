@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_sequence")
-    @SequenceGenerator(name = "wallet_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "wallet_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
     @Column(name = "wallet_id")
     private int id;
     @ManyToOne

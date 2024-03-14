@@ -46,7 +46,7 @@ public class CardController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             System.out.println("Validation errors: " + bindingResult.getAllErrors());
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         try {
             Card card = cardMapper.fromDto(cardDto);
@@ -55,6 +55,6 @@ public class CardController {
         } catch (Exception e) {
             System.out.println("Error adding card: " + e.getMessage());
         }
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 }

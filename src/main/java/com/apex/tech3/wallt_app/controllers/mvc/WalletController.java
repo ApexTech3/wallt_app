@@ -9,7 +9,6 @@ import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,12 +50,12 @@ public class WalletController {
     }
 
     @PostMapping
-    public String addWallet(@Valid @ModelAttribute("walletDto") WalletDto walletDto, BindingResult bindingResult,
+    public String addWallet(@ModelAttribute("walletDto") WalletDto walletDto, BindingResult bindingResult,
                             Model model, HttpSession httpSession) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             System.out.println("Validation errors: " + bindingResult.getAllErrors());
-            return "redirect:/";
+            return "redirect:/dashboard";
         }
         try {
             Wallet wallet = walletMapper.fromDto(walletDto);
@@ -65,6 +64,6 @@ public class WalletController {
         } catch (Exception e) {
             System.out.println("Error adding card: " + e.getMessage());
         }
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 }
