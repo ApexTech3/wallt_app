@@ -21,7 +21,7 @@
                         <div class="input-group">
                             <div class="input-group-text"><i class="fa-regular fa-credit-card"></i></div>
                             <input type="text" class="form-control" id="CardNumber" placeholder="Enter Card Number"
-                                   th:field="*{cardNumber}" autofocus=""/>
+                                   th:field="*{cardNumber}" minlength="16" maxlength="16" autofocus=""/>
                         </div>
                         <label class="form-error text-danger" th:errors="*{cardNumber}">CardNumber error
                             placeholder</label><br/>
@@ -29,7 +29,7 @@
                         <div class="input-group">
                             <div class="input-group-text"><i class="fa-regular fa-circle-user"></i></div>
                             <input type="text" class="form-control" id="Name" placeholder="Enter Cardholder Name"
-                                   th:field="*{cardHolderName}" autofocus=""/>
+                                   th:field="*{cardHolderName}"  minlength="2" maxlength="30" autofocus=""/>
                         </div>
                         <label class="form-error text-danger" th:errors="*{cardHolderName}">Cardholder error
                             placeholder</label><br/>
@@ -39,7 +39,7 @@
                                 <div class="input-group">
                                     <div class="input-group-text"><i class="fa-regular fa-calendar-days"></i></div>
                                     <input type="text" class="form-control" id="ExpirationMonth" placeholder="MM"
-                                           th:field="*{expirationMonth}" autofocus=""/>
+                                           th:field="*{expirationMonth}"  minlength="2" maxlength="2" autofocus=""/>
                                 </div>
                                 <label class="form-error text-danger" th:errors="*{expirationMonth}">ExpirationMonth
                                     error
@@ -48,7 +48,7 @@
                             <div class="col-auto">
                                 <label for="ExpirationYear">Expiraton Year</label>
                                 <input type="text" class="form-control" id="ExpirationYear" placeholder="YY"
-                                       th:field="*{expirationYear}" autofocus=""/>
+                                       th:field="*{expirationYear}" minlength="2" maxlength="2" autofocus=""/>
                                 <label class="form-error text-danger" th:errors="*{expirationYear}">ExpirationYear error
                                     placeholder</label><br/>
                             </div>
@@ -56,7 +56,7 @@
                         <label for="cvv">CVV</label>
                         <div class="input-group">
                             <div class="input-group-text"><i class="fa-solid fa-lock"></i></div>
-                            <input type="text" class="form-control" id="cvv" placeholder="CVV" th:field="*{cvv}"
+                            <input type="text" class="form-control" id="cvv" placeholder="CVV" th:field="*{cvv}"  minlength="3" maxlength="3"
                                    autofocus=""/>
                             <label class="form-error text-danger" th:errors="*{cvv}">CVV error placeholder</label><br/>
                         </div>

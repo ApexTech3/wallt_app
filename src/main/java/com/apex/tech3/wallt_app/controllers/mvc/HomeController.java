@@ -1,7 +1,10 @@
 package com.apex.tech3.wallt_app.controllers.mvc;
 
+import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
+import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.WalletMapper;
 import com.apex.tech3.wallt_app.models.Currency;
+import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.dtos.CardDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
@@ -28,12 +31,14 @@ public class HomeController {
     private final WalletService walletService;
 
     private final WalletMapper walletMapper;
+    private final AuthenticationHelper authenticationHelper;
 
-    public HomeController(UserService userService, CardService cardService, WalletService walletService, WalletMapper walletMapper) {
+    public HomeController(UserService userService, CardService cardService, WalletService walletService, WalletMapper walletMapper, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
         this.cardService = cardService;
         this.walletService = walletService;
         this.walletMapper = walletMapper;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @ModelAttribute
@@ -47,7 +52,10 @@ public class HomeController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
+        if (session.getAttribute("currentUser") != null)
+            return "redirect:/dashboard";
+
         int userId = 3; //toDO remove hardcoded value for dashboard
         int userId2 = 4; //toDO remove hardcoded value for dashboard
         model.addAttribute("users", userService.getById(userId2));
@@ -69,6 +77,25 @@ public class HomeController {
         return "user";
     }
 
+    @GetMapping("/dashboard")
+    public String getLoggedInPage(Model model, HttpSession session) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(session);
+            model.addAttribute("users", userService.getById(user.getId()));
+            model.addAttribute("wallet", walletService.getById(user.getId()));
+            model.addAttribute("demoActivity", userService.collectActivity(user.getId()));
+            model.addAttribute("cards", cardService.getByHolderId(user.getId()));
+            model.addAttribute("stats", userService.collectStats(user.getId()));
+            List<Wallet> wallets = walletService.getByUserId(user.getId());
+            model.addAttribute("wallets", wallets.stream().map(walletMapper::toDto));
+            model.addAttribute("walletAmounts", wallets.stream().map(Wallet::getAmount).collect(Collectors.toList()));
+            model.addAttribute("walletSymbols", wallets.stream().map(Wallet::getCurrency).map(Currency::getTicker).collect(Collectors.toList()));
+            model.addAttribute("walletsTotal", walletService.getTotalBalance(user.getId()));
+            return "dashboard";
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        }
+    }
 //    @GetMapping("/login")
 //    public String loginBasic(Model model) {
 //        model.addAttribute("user", new User());

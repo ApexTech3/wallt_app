@@ -19,7 +19,7 @@ public interface WalletService {
 
     BigDecimal getTotalBalance(int userId);
 
-    Wallet create(Wallet wallet);
+    Wallet create(Wallet wallet, User user);
 
     Wallet update(Wallet wallet);
 

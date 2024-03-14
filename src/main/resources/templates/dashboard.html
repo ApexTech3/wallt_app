@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head th:replace="~{fragments/head.html :: head}"></head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+  <!-- Sidebar Start -->
+  <aside th:replace="~{fragments/sidebar.html :: sidebar}"></aside>
+  <!--  Sidebar End -->
+  <!--  Main wrapper -->
+  <div class="body-wrapper">
+    <!--  Header Start -->
+    <header th:replace="~{fragments/header.html :: inner-main-header}"></header>
+    <!--  Header End -->
+    <div class="container-fluid">
+      <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
+              style="position: fixed;top: 100px;right: 0;z-index:9999">
+        <i class="fa-regular fa-eye-slash fa-2xl"></i>
+      </button>
+      <!--  Row 1 -->
+      <div class="row">
+        <div class="col-lg-8  flex-column align-items-stretch">
+          <div class="card w-100">
+            <div class="card-body">
+              <h2 class="mb-15"> Exchange Smiles Across Currencies with Wallt.</h2>
+              <ul class="list mb-15">
+                <li style="list-style-type: disc"><h4> Send money effortlessly to your friends, using only a mobile
+                  number.</h4></li>
+                <li style="list-style-type: disc"><h4> Receive and send money in multiple currencies.</h4></li>
+                <li style="list-style-type: disc"><h4> Get the best exchange rates for your currency.</h4></li>
+                <li style="list-style-type: disc"><h4> Create separate wallets for your specific needs in a currency of
+                  your choice.</h4></li>
+                <li style="list-style-type: disc"><h4>Track your spending activities, all in one place.</h4></li>
+              </ul>
+              <div class="justify-content-start mt-auto">
+                <a th:href="@{/auth/register}" class="btn btn-primary btn-lg mr-5">Register</a>
+                <a th:href="@{/auth/login}" class="btn btn-primary btn-lg">Log in</a>
+
+
+                <!-- New Card Modal -->
+                <div th:replace="~{newCard.html :: newCardModal}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <!-- Sent/Received donut -->
+          <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
+          <!--          <div th:replace="~{walletsTab.html :: walletsVisual}"></div>-->
+          <div th:fragment="walletsVisual" class="col-lg-12">
+            <!-- Monthly Earnings -->
+            <div class="card">
+              <div class="card-body">
+                <div class="row justify-content-between">
+                  <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
+                </div>
+                <div class="row" th:each="wallet : ${wallets}">
+                  <div class="d-flex justify-content-between">
+                    <h6 class="fw-semibold mb-0" th:text="${wallet.currency.name}">US Dollar</h6>
+                    <h6 class="sensitiveContent mb-0" data-blur-toggle
+                        th:text="${wallet.amount}+${wallet.currency.symbol}">€ 3,820</h6>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                  <h5 class="fw-semibold"> Total </h5>
+                  <h5 class="sensitiveContent fw-semibold" data-blur-toggle th:text="${walletsTotal}+'$'">€ 3,820</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="d-flex align-items-stretch">
+          <div class="card w-100">
+            <div class="card-body p-4">
+              <h5 class="card-title fw-semibold mb-4">Recent Activity(Demo)</h5>
+              <div th:replace="~{activityTable.html :: activityTable}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div th:replace="~{fragments/footer.html :: footer}"></div>
+    </div>
+    </div>
+  </div>
+</div>
+  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/sidebarmenu.js"></script>
+  <script src="../assets/js/app.min.js"></script>
+  <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
+<script src="../assets/js/index.js"></script>
+</body>
+
+</html>

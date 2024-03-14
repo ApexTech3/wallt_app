@@ -65,7 +65,7 @@ public class AuthenticationController {
             session.setAttribute("isAdmin", AuthenticationHelper.isAdmin(user));
             session.setAttribute("isBlocked", AuthenticationHelper.isBlocked(user));
             session.setAttribute("userId", user.getId());
-            return "redirect:/";
+            return "redirect:/dashboard";
         } catch (AuthenticationFailureException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
             return "authentication-login";

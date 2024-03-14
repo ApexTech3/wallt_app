@@ -32,7 +32,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getById(int id) {
         Wallet wallet = repository.findByIdAndIsActiveTrue(id);
-        if(wallet == null) {
+        if (wallet == null) {
             throw new EntityNotFoundException("Wallet", id);
         }
         return wallet;
@@ -75,7 +75,8 @@ public class WalletServiceImpl implements WalletService {
         return repository.getTotalBalance(userId);
     }
     @Override
-    public Wallet create(Wallet wallet) {
+    public Wallet create(Wallet wallet, User user) {
+        wallet.setHolder(user);
         return repository.save(wallet);
     }
 
