@@ -127,6 +127,12 @@
                         <span><i class="ti ti-plus"></i></span>
                         <span class="hide-menu">Add Wallet</span>
                     </a>
+                </li></li> <li  th:if="${isAuthenticated}" class="sidebar-item">
+                    <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#depositModal"
+                       aria-expanded="false">
+                        <span><i class="ti ti-plus"></i></span>
+                        <span class="hide-menu">Deposit</span>
+                    </a>
                 </li>
             </ul>
 

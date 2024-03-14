@@ -7,6 +7,7 @@ import com.apex.tech3.wallt_app.models.Currency;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.dtos.CardDto;
+import com.apex.tech3.wallt_app.models.dtos.TransferDto;
 import com.apex.tech3.wallt_app.models.dtos.WalletDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
 import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
@@ -95,7 +96,9 @@ public class HomeController {
             model.addAttribute("walletAmounts", wallets.stream().map(Wallet::getAmount).collect(Collectors.toList()));
             model.addAttribute("walletSymbols", wallets.stream().map(Wallet::getCurrency).map(Currency::getTicker).collect(Collectors.toList()));
             model.addAttribute("walletsTotal", walletService.getTotalBalance(user.getId()));
-            model.addAttribute("availableCurrencies", currencyService.getAllAvailableCurrenciesForUserWallets(user.getId()));
+            model.addAttribute("availableCurrenciesForNewWallets", currencyService.getAllAvailableCurrenciesForUserWallets(user.getId()));
+            model.addAttribute("transferDto", new TransferDto());
+            model.addAttribute("currentWalletCurrencies",wallets);
             return "dashboard";
         } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
