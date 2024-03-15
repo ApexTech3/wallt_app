@@ -34,7 +34,7 @@ public class TransactionMapper {
 
     public TransactionResponse toResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
-        transactionResponse.setAmountSent(transaction.getAmount().divide(BigDecimal.valueOf(transaction.getExchangeRate())));
+        transactionResponse.setAmountSent(transaction.getAmount().divide(BigDecimal.valueOf(transaction.getExchangeRate()), 2, RoundingMode.HALF_UP));
         transactionResponse.setExchangeRate(transaction.getExchangeRate());
         transactionResponse.setAmountReceived(transaction.getAmount());
         transactionResponse.setSenderWallet(transaction.getSenderWallet());

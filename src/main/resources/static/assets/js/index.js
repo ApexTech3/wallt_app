@@ -8,3 +8,7 @@ document.getElementById('blurToggleButton').addEventListener('click', function (
         }
     }
 });
+
+$(document).ready(function () {
+    $('#activityTable').DataTable();
+});

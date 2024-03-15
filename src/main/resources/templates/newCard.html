@@ -17,7 +17,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="form-label" for="CardNumber">Card Number</label>
+                        <label for="CardNumber">Card Number</label>
                         <div class="input-group">
                             <div class="input-group-text"><i class="fa-regular fa-credit-card"></i></div>
                             <input type="text" class="form-control" id="CardNumber" placeholder="Enter Card Number"
@@ -39,7 +39,7 @@
                                 <div class="input-group">
                                     <div class="input-group-text"><i class="fa-regular fa-calendar-days"></i></div>
                                     <input type="text" class="form-control" id="ExpirationMonth" placeholder="MM"
-                                           th:field="*{expirationMonth}"  minlength="2" maxlength="2" autofocus=""/>
+                                           th:field="*{expirationMonth}" minlength="2" maxlength="2" autofocus=""/>
                                 </div>
                                 <label class="form-error text-danger" th:errors="*{expirationMonth}">ExpirationMonth
                                     error
