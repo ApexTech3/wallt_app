@@ -49,8 +49,6 @@ public class TransferController {
             return "redirect:/dashboard";
         } catch (AuthorizationException | AuthenticationFailureException e) {
             return "redirect:/auth/login";
-        }catch (InsufficientFundsException e) {
-            return "redirect:/dashboard";
         }
     }
 }
