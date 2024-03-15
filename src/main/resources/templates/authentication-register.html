@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head th:replace="~{fragments/head.html :: head}"></head>
@@ -97,7 +97,7 @@
                   <label class="error" th:errors="*{profilePicture}">Profile Picture error placeholder</label>
                 </div>
                 <div class="mb-3 text-center">
-                  <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign Up</button>
+                  <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" id="submitButton" disabled>Sign Up</button>
                 </div>
                 <div class="d-flex align-items-center justify-content-center">
                   <p class="fs-4 mb-0 fw-bold">Already have an Account?</p>
@@ -116,22 +116,27 @@
                     passwordError.style.color = 'red';
                   } else {
                     passwordError.innerText = '';
+                    checkPasswordMatch();
                   }
                 });
 
-                document.getElementById('passwordConfirmation').addEventListener('input', function () {
+                document.getElementById('passwordConfirmation').addEventListener('input', checkPasswordMatch);
+
+                function checkPasswordMatch() {
                   var password = document.getElementById('password').value;
                   var passwordConfirmation = document.getElementById('passwordConfirmation').value;
                   var passwordMatchSpan = document.getElementById('passwordMatch');
 
-                  if (password === passwordConfirmation) {
+                  if (password === passwordConfirmation && password !== '') {
                     passwordMatchSpan.innerText = 'Passwords match';
                     passwordMatchSpan.style.color = 'green';
+                    document.getElementById('submitButton').disabled = false;
                   } else {
                     passwordMatchSpan.innerText = 'Passwords do not match';
                     passwordMatchSpan.style.color = 'red';
+                    document.getElementById('submitButton').disabled = true;
                   }
-                });
+                }
               </script>
 
             </div>
