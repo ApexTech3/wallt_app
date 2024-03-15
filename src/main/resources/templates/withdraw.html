@@ -5,14 +5,14 @@
     <title>$Title$</title>
 </head>
 <body>
-<div th:fragment="depositModal" class="modal fade" id="depositModal" tabindex="-1"
+<div th:fragment="withdrawalModal" class="modal fade" id="withdrawalModal" tabindex="-1"
      aria-labelledby="createNewCardModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:object="${transferDto}" th:action="@{/transfers/deposit}" method="post">
+            <form th:object="${transferDto}" th:action="@{/transfers/withdrawal}" method="post">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createNewCardModalLabel">New Deposit</h1>
+                    <h1 class="modal-title fs-5" id="createNewCardModalLabel">New Withdraw</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -21,7 +21,7 @@
                             <label class="form-label">Select Wallet</label>
                             <select th:field="*{walletId}"
                                     class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none">
-                                <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}" th:text="${wallet.currency.name}"></option>
+                                <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}" th:text="${wallet.currency.name}" th:if="${wallet.amount > 0}"></option>
                             </select>
                         </div>
                         <div class="input-group-append">
@@ -40,7 +40,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Deposit</button>
+                    <button type="submit" class="btn btn-primary">Withdraw</button>
                 </div>
             </form>
         </div>
