@@ -55,7 +55,7 @@ public class DashboardController {
         model.addAttribute("transferDto", new TransferDto());
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getLoggedInPage(Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);

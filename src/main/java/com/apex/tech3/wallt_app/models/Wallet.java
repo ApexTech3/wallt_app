@@ -27,6 +27,8 @@ public class Wallet {
     @CreationTimestamp
     @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp stampCreated;
+    @Column(name = "is_default")
+    private boolean isDefault;
     @Column(name = "is_active")
     private boolean isActive;
 
