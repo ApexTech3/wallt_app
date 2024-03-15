@@ -1,6 +1,6 @@
 # Build stage
 FROM openjdk:17-jdk-alpine AS build
-WORKDIR /workspace
+WORKDIR /build
 COPY . .
 RUN chmod +x ./gradlew
 RUN ./gradlew build
