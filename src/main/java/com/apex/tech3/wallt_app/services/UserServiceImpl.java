@@ -7,6 +7,7 @@ import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import com.apex.tech3.wallt_app.models.filters.UserSpecification;
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByToken(String token) {
+        return repository.findByConfirmationToken(token);
+    }
+
+    @Override
     public User getByUsername(String username) {
         return repository.findByUsername(username);
     }
@@ -101,6 +107,42 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new InvalidTokenException("Invalid confirmation token");
         }
+    }
+
+    @Override
+    public void confirmResetPasswordToken(String token) {
+        User user = repository.findByConfirmationToken(token);
+        if (user == null) {
+            throw new EntityNotFoundException("User", "confirmation token", token);
+        }
+        if (tokenService.isValidToken(token)) {
+            repository.save(user);
+        } else {
+            throw new InvalidTokenException("Invalid confirmation token");
+        }
+    }
+
+    @Override
+    public void handleForgottenPassword(String username, String email) {
+        User user = repository.getByEmail(email);//todo find by email and username
+        if (user == null) {
+            throw new EntityNotFoundException("User with this username and email not found");
+        }
+        String confirmationToken = tokenService.generateToken();
+        user.setConfirmationToken(confirmationToken);
+        emailService.sendResetPasswordEmail(email, confirmationToken);
+        repository.save(user);
+    }
+
+    @Override
+    public void changePassword(PasswordRecoveryDto dto) {
+        if (!dto.getPassword().equals(dto.getPasswordConfirmation())) {
+            throw new InvalidPasswordException("Passwords don't match");
+        }
+        User user = repository.findByConfirmationToken(dto.getToken());
+        user.setPassword(dto.getPassword());
+        user.setConfirmationToken(null);
+        repository.save(user);
     }
 
     @Override

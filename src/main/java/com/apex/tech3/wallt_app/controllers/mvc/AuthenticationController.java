@@ -2,22 +2,28 @@ package com.apex.tech3.wallt_app.controllers.mvc;
 
 import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
 import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
+import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
+import com.apex.tech3.wallt_app.exceptions.InvalidTokenException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Login;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
 import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +36,7 @@ public class AuthenticationController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final CloudinaryUploadService cloudinaryUploadService;
+
     public AuthenticationController(AuthenticationHelper authenticationHelper, UserMapper userMapper, UserService userService, CloudinaryUploadService cloudinaryUploadService) {
         this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
@@ -75,7 +82,7 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public String handleLogout(HttpSession session) {
         session.invalidate();
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @GetMapping("/register")
@@ -83,8 +90,9 @@ public class AuthenticationController {
         model.addAttribute("register", new UserRegisterDto());
         return "authentication-register";
     }
+
     @PostMapping("/register")
-    public String handleRegister(@Validated(Register.class)  @ModelAttribute("register") UserRegisterDto dto, BindingResult bindingResult) {
+    public String handleRegister(@Validated(Register.class) @ModelAttribute("register") UserRegisterDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "authentication-register";
         }
@@ -115,12 +123,39 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgotten")
-    public String handleForgottenPasswordRequest(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
-        //userService.sendPassword(email);
-
-        // Redirect back to the login page with a success message
-        //redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent successfully.");
-        return "redirect:/home";
+    public String handleForgottenPasswordRequest(@RequestParam("username") String username,
+                                                 @RequestParam("email") String email,
+                                                 RedirectAttributes redirectAttributes) {
+        userService.handleForgottenPassword(username, email);
+        redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent successfully.");
+        return "redirect:/auth/login";
     }
 
+    @GetMapping("/passwordReset")
+    public String confirmPasswordResetToken(@RequestParam("token") String token) {
+        try {
+            userService.confirmResetPasswordToken(token);
+        } catch (EntityNotFoundException | InvalidTokenException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return "redirect:/auth/reset?token=" + token;
+    }
+
+    @GetMapping("/reset")
+    public String showForgottenPasswordPage(@RequestParam("token") String token, Model model) {
+        PasswordRecoveryDto dto = new PasswordRecoveryDto();
+        dto.setToken(token);
+        model.addAttribute("password", dto);
+        return "authentication-password-reset";
+    }
+
+    @PostMapping("/reset")
+    public String handleReset(@Validated @ModelAttribute("password") PasswordRecoveryDto dto, @RequestParam("token") String token, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "authentication-password-reset";
+        }
+        dto.setToken(token);
+        userService.changePassword(dto);
+        return "redirect:/auth/login";
+    }
 }

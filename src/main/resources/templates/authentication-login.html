@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head th:replace="~{fragments/head.html :: head}"></head>
@@ -62,12 +62,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="forgotPasswordForm" action="/auth/forgotten" method="post">
+        <form action="#" th:action="@{/auth/forgotten}" method="post">
+          <div class="mb-3">
+            <label for="forgotUsername" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" id="forgotUsername">
+          </div>
           <div class="mb-3">
             <label for="forgotEmail" class="form-label">Email address</label>
             <input type="email" name="email" class="form-control" id="forgotEmail" aria-describedby="emailHelp">
           </div>
-          <button type="submit" class="btn btn-primary w-100">Send Email</button>
+          <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Send email</button>
         </form>
       </div>
     </div>

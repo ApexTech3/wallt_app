@@ -24,4 +24,15 @@ public class EmailServiceImpl implements EmailService {
                                 + "http://localhost/api/users/confirm?token=" + confirmationToken); // Assuming the application runs on localhost
         javaMailSender.send(message);
     }
+
+    @Override
+    public void sendResetPasswordEmail(String email, String confirmationToken) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Email Confirmation");
+        message.setText("Please click the link below to reset your password:\n\n"
+                + "http://localhost/auth/passwordReset?token=" + confirmationToken); // Assuming the application runs on localhost
+        javaMailSender.send(message);
+    }
+
 }
