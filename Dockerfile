@@ -7,7 +7,7 @@ RUN ./gradlew build
 
 # Package stage
 FROM openjdk:17-jdk-alpine
-COPY --from=build /workspace/build/libs/*.jar app.jar
+COPY --from=build /build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
 
 ## Start with a base image containing Java runtime
