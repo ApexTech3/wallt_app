@@ -12,3 +12,6 @@ document.getElementById('blurToggleButton').addEventListener('click', function (
 $(document).ready(function () {
     $('#activityTable').DataTable();
 });
+$(document).ready(function () {
+    $('#adminTable').DataTable();
+});

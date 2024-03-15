@@ -4,11 +4,18 @@ import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
+import com.apex.tech3.wallt_app.services.contracts.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
+    private final RoleService roleService;
 
+    @Autowired
+    public UserMapper(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     public User fromRegisterDto(UserRegisterDto userRegisterDto) {
         User user = new User();
@@ -19,6 +26,7 @@ public class UserMapper {
         user.setLastName(userRegisterDto.getLastName());
         user.setEmail(userRegisterDto.getEmail());
         user.setPhone(userRegisterDto.getPhone());
+        user.getRoles().add(roleService.get("USER"));
         if (userRegisterDto.getProfilePictureURL() != null) {
             user.setProfilePicture(userRegisterDto.getProfilePictureURL());
         }
