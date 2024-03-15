@@ -6,9 +6,7 @@ import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +20,8 @@ public interface UserService {
     Page<User> getAll(Pageable pageable, Integer id, String username, String firstName,
                       String middleName, String lastName, String email,
                       String phone);
+
+    List<User> getAllActiveAndVerified();
 
     User register(User user);
 

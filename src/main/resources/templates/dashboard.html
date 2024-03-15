@@ -25,17 +25,41 @@
         <div class="col-lg-8  flex-column align-items-stretch">
           <div class="card w-100">
             <div class="card-body">
-              <h2 class="mb-15"> Exchange Smiles Across Currencies with Wallt.</h2>
-              <ul class="list mb-15">
-                <li style="list-style-type: disc"><h4> Send money effortlessly to your friends, using only a mobile
-                  number.</h4></li>
-                <li style="list-style-type: disc"><h4> Receive and send money in multiple currencies.</h4></li>
-                <li style="list-style-type: disc"><h4> Get the best exchange rates for your currency.</h4></li>
-                <li style="list-style-type: disc"><h4> Create separate wallets for your specific needs in a currency of
-                  your choice.</h4></li>
-                <li style="list-style-type: disc"><h4>Track your spending activities, all in one place.</h4></li>
-              </ul>
-              <div class="justify-content-start mt-auto">
+              <h2 class="mb-15"> Send money to a friend:</h2>
+              <div class="d-flex justify-content-between">
+                <table class="table" id="transactionTable">
+                  <thead class="text-dark fs-4">
+                  <tr>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Username</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Name</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Email</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Phone</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Make a transaction</h6>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="user : ${users}">
+                    <td th:text="${user.username}">pesho"></td>
+                    <td th:text="${user.firstName}+' '+${user.lastName}">Pesho</td>
+                    <td th:text="${user.email}">Email</td>
+                    <td th:text="${user.phone}">Email</td>
+                    <td><a class="btn btn-warning" th:href="@{dashboard/transaction/{id}(id=${user.id})}" href="#"
+                           th:text="Send">Send</a></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+                <div class="justify-content-start mt-auto">
                 <!-- New Card Modal -->
                 <div th:replace="~{newCard.html :: newCardModal}"></div>
                 <!-- New Wallet Modal -->
@@ -45,6 +69,7 @@
                 <!-- New Withdraw Modal -->
                 <div th:replace="~{withdraw.html :: withdrawalModal}"></div>
               </div>
+            </div>
             </div>
           </div>
         </div>

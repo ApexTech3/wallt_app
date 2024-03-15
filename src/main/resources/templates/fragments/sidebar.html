@@ -64,25 +64,32 @@
                         <span><i class="fa-solid fa-credit-card fa-2xl"></i></span>
                         <span class="hide-menu">Add Card</span>
                     </a>
-                </li> <li  th:if="${isAuthenticated}" class="sidebar-item">
+                </li>
+                <li th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#createNewWalletModal"
                        aria-expanded="false">
                         <span><i class="fa-solid fa-wallet fa-2xl"></i></span>
                         <span class="hide-menu">Add Wallet</span>
                     </a>
-                </li></li> <li  th:if="${isAuthenticated}" class="sidebar-item">
+                </li>
+                <li th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#depositModal"
                        aria-expanded="false">
                         <span><i class="fa-solid fa-sack-dollar fa-2xl"></i></span>
                         <span class="hide-menu">Deposit</span>
                     </a>
-                </li> </li></li> <li  th:if="${isAuthenticated}" class="sidebar-item">
+                </li>
+                <li th:if="${isAuthenticated}" class="sidebar-item">
                     <a class="sidebar-link" href="#" data-bs-toggle="modal" data-bs-target="#withdrawalModal"
                        aria-expanded="false">
                         <span><i class="fa-solid fa-sack-dollar fa-2xl"></i></span>
                         <span class="hide-menu">Withdraw</span>
                     </a>
                 </li>
+
+
+                <!--            Admin panel buttons-->
+
             </ul>
             <!--            <div class="unlimited-access hide-menu bg-light-primary position-relative mb-7 mt-5 rounded">-->
             <!--                <div class="d-flex">-->

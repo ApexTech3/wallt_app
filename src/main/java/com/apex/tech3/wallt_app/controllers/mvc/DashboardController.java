@@ -62,6 +62,7 @@ public class DashboardController {
             List<Wallet> wallets = walletService.getByUserId(user.getId());
 
             model.addAttribute("cards", cardService.getByHolderId(user.getId()));
+            model.addAttribute("users", userService.getAllActiveAndVerified());
             model.addAttribute("wallets", wallets.stream().map(walletMapper::toDto));
             model.addAttribute("walletsTotal", walletService.getTotalBalance(user.getId()));
             model.addAttribute("availableCurrenciesForNewWallets", currencyService.getAllAvailableCurrenciesForUserWallets(user.getId()));

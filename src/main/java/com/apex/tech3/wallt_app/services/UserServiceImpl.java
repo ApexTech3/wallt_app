@@ -81,6 +81,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllActiveAndVerified() {
+        return repository.findAll(UserSpecification.getAllActiveAndVerified());
+    }
+
+    @Override
     public User register(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityDuplicateException("User", "username", user.getUsername());

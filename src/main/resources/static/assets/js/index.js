@@ -15,3 +15,17 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#adminTable').DataTable();
 });
+
+
+$(document).ready(function () {
+    var table = $('#transactionTable').DataTable({
+        autoWidth: false,
+        paging: false,
+        scrollY: 250,
+        ordering: false,
+        language: {
+            searchPlaceholder: 'Search a friend'
+        },
+    });
+
+});
