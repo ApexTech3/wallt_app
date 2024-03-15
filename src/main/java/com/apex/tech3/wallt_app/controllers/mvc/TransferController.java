@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.controllers.mvc;
 
 import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
+import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
 import com.apex.tech3.wallt_app.models.User;
@@ -37,6 +38,19 @@ public class TransferController {
             return "redirect:/dashboard";
         } catch (AuthorizationException | AuthenticationFailureException e) {
             return "redirect:/auth/login";
+        }
+    }
+
+    @PostMapping("/withdrawal")
+    public String withdraw(@Valid @ModelAttribute("transferDto") TransferDto transferDto, HttpSession httpSession) {
+        try {
+            User user = helper.tryGetCurrentUser(httpSession);
+            transferService.withdraw(transferMapper.fromDto(transferDto), user);
+            return "redirect:/dashboard";
+        } catch (AuthorizationException | AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        }catch (InsufficientFundsException e) {
+            return "redirect:/dashboard";
         }
     }
 }
