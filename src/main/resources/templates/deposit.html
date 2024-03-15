@@ -34,13 +34,13 @@
                         <label class="form-label" for="amount">Amount</label>
                         <div class="input-group">
                             <input type="number" step=".01" class="form-control" id="amount" placeholder="Enter amount"
-                                   th:field="*{amount}" autofocus="" required/>
+                                   th:field="*{amount}" autofocus="" min="0.01" required/>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Card</button>
+                    <button type="submit" class="btn btn-primary">Deposit</button>
                 </div>
             </form>
         </div>

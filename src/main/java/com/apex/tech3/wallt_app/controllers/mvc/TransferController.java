@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -31,12 +30,11 @@ public class TransferController {
     }
 
     @PostMapping("/deposit")
-    public String deposit(@ModelAttribute("transferDto") TransferDto transferDto, HttpSession httpSession) {
+    public String deposit(@Valid @ModelAttribute("transferDto") TransferDto transferDto, HttpSession httpSession) {
         try {
             User user = helper.tryGetCurrentUser(httpSession);
             transferService.deposit(transferMapper.fromDto(transferDto), user);
             return "redirect:/dashboard";
-
         } catch (AuthorizationException | AuthenticationFailureException e) {
             return "redirect:/auth/login";
         }
