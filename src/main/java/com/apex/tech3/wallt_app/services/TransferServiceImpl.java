@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.clients.DummyCardClient;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
+import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
 import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.CardDetails;
@@ -39,9 +40,14 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public Transfer withdraw(Transfer transfer, User user) {
-        WalletServiceImpl.checkIfFundsAreAvailable(transfer.getWallet(), transfer.getAmount());
         transfer.setDirection(DirectionEnum.WITHDRAW);
-        buildDepositOrWithdrawal(transfer, user);
+        transfer.setCurrency(transfer.getWallet().getCurrency());
+        try {
+            WalletServiceImpl.checkIfFundsAreAvailable(transfer.getWallet(), transfer.getAmount());
+            buildDepositOrWithdrawal(transfer, user);
+        } catch (InsufficientFundsException e) {
+            transfer.setStatus(StatusEnum.FAILED);
+        }
         return repository.save(transfer);
     }
 
@@ -51,7 +57,6 @@ public class TransferServiceImpl implements TransferService {
         CardDetails cardDetails = buildCardDetails(transfer);
         transfer.setStatus(dummyCardClient.tryPay(cardDetails)
                 ? StatusEnum.SUCCESSFUL : StatusEnum.FAILED);
-        transfer.setCurrency(transfer.getWallet().getCurrency());
         if (transfer.getStatus().equals(StatusEnum.SUCCESSFUL))
             transfer.getWallet().setAmount(transfer.getDirection().equals(DirectionEnum.DEPOSIT) ?
                     transfer.getWallet().getAmount().add(transfer.getAmount()) :
