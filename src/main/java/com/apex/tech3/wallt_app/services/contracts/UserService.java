@@ -49,6 +49,5 @@ public interface UserService {
 
     List<FinancialActivity> collectActivity(int userId);
 
-    Map<String, BigDecimal> collectStats(int userId);
-
+    public Map<String, Object> collectActivityAndStats(int userId);
 }

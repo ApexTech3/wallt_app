@@ -15,6 +15,7 @@ import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -124,11 +125,10 @@ public class AuthenticationController {
 
     @PostMapping("/forgotten")
     public String handleForgottenPasswordRequest(@RequestParam("username") String username,
-                                                 @RequestParam("email") String email,
-                                                 RedirectAttributes redirectAttributes) {
+                                                                 @RequestParam("email") String email) {
         userService.handleForgottenPassword(username, email);
-        redirectAttributes.addFlashAttribute("successMessage", "Password reset email sent successfully.");
-        return "redirect:/auth/login";
+        String successMessage = "Password reset email sent successfully.";
+        return "password-reset-success";
     }
 
     @GetMapping("/passwordReset")
