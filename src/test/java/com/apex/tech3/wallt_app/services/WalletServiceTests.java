@@ -80,7 +80,7 @@ public class WalletServiceTests {
     public void create_Should_CallRepository_When_MethodCalled() {
         Wallet mockWallet = Helpers.createMockWallet();
 
-        service.create(mockWallet);
+        service.create(mockWallet, Helpers.createMockUser());
 
         Mockito.verify(mockRepository, Mockito.times(1)).save(mockWallet);
     }
