@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> getAll(Pageable pageable, Integer id, String username, String firstName,
-                                    String middleName, String lastName, String email,
-                                    String phone) {
-        if(pageable == null) {
+                             String middleName, String lastName, String email,
+                             String phone) {
+        if (pageable == null) {
             List<User> users = repository.findAll(UserSpecification.filterByAllColumns(id, username, firstName, middleName, lastName, email, phone));
             return new PageImpl<>(users);
         } else {
@@ -93,12 +93,14 @@ public class UserServiceImpl implements UserService {
         sendConfirmationEmail(user);
         return repository.save(user);
     }
+
     @Override
     public void sendConfirmationEmail(User user) {
         String confirmationToken = tokenService.generateToken();
         user.setConfirmationToken(confirmationToken);
         emailService.sendConfirmationEmail(user.getEmail(), confirmationToken);
     }
+
     @Override
     public void confirmUser(String token) {
         User user = repository.findByConfirmationToken(token);
@@ -213,7 +215,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User blockUser(int userId, User requester) {
-        if(!isAdmin(requester)) {
+        if (!isAdmin(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         User userToBeBlocked = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
@@ -224,7 +226,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User unblockUser(int userId, User requester) {
-        if(!isAdmin(requester)) {
+        if (!isAdmin(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
         User userToBeUnblocked = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
@@ -259,6 +261,23 @@ public class UserServiceImpl implements UserService {
                 transactionMapper.moneySentToActivity(t) : transactionMapper.moneyReceivedToActivity(t)).toList();
 
         List<FinancialActivity> transfers = transferService.getUserTransfers(userId).stream()
+                .map(t -> t.getDirection() == DirectionEnum.DEPOSIT ?
+                        transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).toList();
+
+        List<FinancialActivity> activities = new ArrayList<>(transactions.size() + transfers.size());
+        activities.addAll(transactions);
+        activities.addAll(transfers);
+        activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
+        return activities;
+    }
+
+    @Override
+    public List<FinancialActivity> collectAllActivity() {
+
+        List<FinancialActivity> transactions = transactionService.getAll()
+                .stream().map(transactionMapper::moneySentToActivity).toList();
+
+        List<FinancialActivity> transfers = transferService.getAllTransfers().stream()
                 .map(t -> t.getDirection() == DirectionEnum.DEPOSIT ?
                         transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).toList();
 

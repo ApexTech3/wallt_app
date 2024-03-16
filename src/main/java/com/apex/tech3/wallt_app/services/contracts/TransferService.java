@@ -12,4 +12,6 @@ public interface TransferService {
     List<Transfer> getUserTransfers(User user);
 
     List<Transfer> getUserTransfers(int userId);
+
+    List<Transfer>getAllTransfers();
 }

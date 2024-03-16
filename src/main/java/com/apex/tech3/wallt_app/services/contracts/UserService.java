@@ -49,5 +49,7 @@ public interface UserService {
 
     List<FinancialActivity> collectActivity(int userId);
 
+    List<FinancialActivity> collectAllActivity();
+
     public Map<String, Object> collectActivityAndStats(int userId);
 }

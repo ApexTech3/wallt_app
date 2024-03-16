@@ -31,5 +31,7 @@ public interface TransactionService {
                              Double amount, Double amountGreaterThan, Double amountLesserThan,
                              String status, LocalDate date, LocalDate laterThan, LocalDate earlierThan);
 
+    List<Transaction> getAll();
+
     Transaction create(Transaction transaction, User user);
 }

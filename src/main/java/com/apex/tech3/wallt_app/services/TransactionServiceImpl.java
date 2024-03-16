@@ -33,7 +33,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final CurrencyService currencyService;
 
 
-
     @Autowired
     public TransactionServiceImpl(TransactionRepository repository, WalletService walletService, CurrencyService currencyService) {
         this.repository = repository;
@@ -83,20 +82,24 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-
     @Override
     public Page<Transaction> getAll(Pageable pageable, Integer id, Integer receiverWalletId, Integer senderWalletId,
                                     Double amount, Double amountGreaterThan, Double amountLesserThan, String status,
                                     LocalDate date, LocalDate laterThan, LocalDate earlierThan) {
 
-        if(pageable == null || pageable.isUnpaged()) {
+        if (pageable == null || pageable.isUnpaged()) {
             pageable = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.DESC, "stampCreated"));
         }
 
         return repository.findAll(TransactionSpecification.filterByAllColumns(id, receiverWalletId, senderWalletId, amount,
-                                                                              amountGreaterThan, amountLesserThan, status,
-                                                                              date, laterThan, earlierThan), pageable);
-        }
+                amountGreaterThan, amountLesserThan, status,
+                date, laterThan, earlierThan), pageable);
+    }
+
+    @Override
+    public List<Transaction> getAll() {
+        return repository.findAll();
+    }
 
     @Override
     public Transaction create(Transaction transaction, User user) {
@@ -115,11 +118,11 @@ public class TransactionServiceImpl implements TransactionService {
             walletService.debitAmount(receiverWallet, amountInReceiverCurrency);
             transaction.setStatus(StatusEnum.SUCCESSFUL);
             return repository.save(transaction);
-        } catch(AuthorizationException e) {
+        } catch (AuthorizationException e) {
             transaction.setStatus(StatusEnum.FAILED);
             repository.save(transaction);
             throw new AuthorizationException(e.getMessage());
-        } catch(InsufficientFundsException e) {
+        } catch (InsufficientFundsException e) {
             transaction.setStatus(StatusEnum.FAILED);
             repository.save(transaction);
             throw new InsufficientFundsException(e.getMessage());

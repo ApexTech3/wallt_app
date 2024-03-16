@@ -35,6 +35,7 @@ public class AdminController {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
     }
+
     @ModelAttribute
     public void populateAttributes(HttpSession httpSession, Model model, HttpServletRequest request) {
         boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
@@ -46,8 +47,9 @@ public class AdminController {
         model.addAttribute("walletDto", new WalletDto());
         model.addAttribute("transferDto", new TransferDto());
     }
+
     @GetMapping("/users")
-    public String getAll(@ModelAttribute("filterOptions") UserFilterOptions filterOptions, Model model, HttpSession httpSession) {
+    public String getAllUsers(@ModelAttribute("filterOptions") UserFilterOptions filterOptions, Model model, HttpSession httpSession) {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(httpSession);
@@ -66,6 +68,29 @@ public class AdminController {
             model.addAttribute("totalPages", userPage.getTotalPages());
             model.addAttribute("showPagination", true);
             return "users";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "errorView";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "errorView";
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        }
+    }
+
+    @GetMapping("/transactions")
+    public String getAllTransactions(Model model, HttpSession httpSession) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(httpSession);
+            if (!AuthenticationHelper.isAdmin(user)) {
+                throw new AuthorizationException("You are not authorized to perform this operation");
+            }
+            model.addAttribute("activities", userService.collectAllActivity());
+            return "transactions";
         } catch (AuthorizationException e) {
             model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             model.addAttribute("error", e.getMessage());
