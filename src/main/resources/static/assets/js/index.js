@@ -38,12 +38,20 @@ $(document).ready(function () {
 
 });
 
-var transactionWindow = document.getElementById('transaction-window');
-var transactionDialog = document.getElementById('transaction-dialog');
-var cancelButton = document.getElementById('transaction-cancel-btn');
-var buttons = document.getElementsByClassName('new-transaction-btn');
+let transactionWindow = document.getElementById('transaction-window');
+let transactionDialog = document.getElementById('transaction-dialog');
+let cancelButton = document.getElementById('transaction-cancel-btn');
+let buttons = document.getElementsByClassName('new-transaction-btn');
+
 for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', function () {
+    buttons[i].addEventListener('click', function (event) {
+        let target = event.target;
+        if (target.tagName.toLowerCase() === 'i') {
+            target = target.parentElement;
+        }
+        let userId = parseInt(target.getAttribute('data-user-id'));
+        let receiverId = document.getElementById('receiverId');
+        receiverId.value = userId;
         transactionWindow.style.display = 'none';
         transactionDialog.style.display = 'block';
         cancelButton.style.display = 'block';
@@ -54,5 +62,6 @@ cancelButton.addEventListener('click', function () {
     transactionWindow.style.display = 'block';
     transactionDialog.style.display = 'none';
     cancelButton.style.display = 'none';
+    receiverId.value = '';
 
 });

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/transactions")
+@RequestMapping("/transaction")
 public class TransactionController {
     private final TransactionService transactionService;
     private final AuthenticationHelper helper;
@@ -33,7 +33,7 @@ public class TransactionController {
     public String transaction(@Valid @ModelAttribute("transactionDto") TransactionDto transactionDto, HttpSession httpSession) {
         try {
             User user = helper.tryGetCurrentUser(httpSession);
-            transactionService.create(transactionMapper.fromDto(transactionDto), user);
+            transactionService.create(transactionMapper.fromWebDto(transactionDto), user);
             return "redirect:/dashboard";
         } catch(AuthorizationException | AuthenticationFailureException e) {
             return "redirect:/auth/login";

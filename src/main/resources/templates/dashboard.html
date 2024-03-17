@@ -58,11 +58,9 @@
                     <td th:text="${user.email}">Email</td>
                     <td th:text="${user.phone}">Email</td>
                     <td>
-                      <span class="new-transaction-btn">
-                        <a id="newTransaction" class="btn btn-warning" href="">
-                          <i class="fa-solid fa-paper-plane"></i>
-                        </a>
-                      </span>
+                      <button class="btn btn-warning new-transaction-btn" th:attr="data-user-id=${user.id}">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
                     </td>
                   </tr>
                   </tbody>
@@ -70,24 +68,26 @@
               </div>
 
               <div id="transaction-dialog" style="display: none;">
-                <a> form will be built here</a>
-                <!--                <form id="transactionForm" class="form" th:object="${transactionDto}" th:action="@{/transaction/new}" method="post">-->
-                <!--                    <h1 class="form-title fs-5" id="transaction-title">Sending money to user's name placeholder</h1>-->
-                <!--                    <div class="form-group">-->
-                <!--                      <div class="input-group-append">-->
-                <!--                        <label class="form-label" for="senderWalletId">Select Wallet</label>-->
-                <!--                        <select id="senderWalletId" th:field="*{senderWalletId}"-->
-                <!--                                class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none">-->
-                <!--                          <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}" th:text="${wallet.currency.name}"></option>-->
-                <!--                        </select>-->
-                <!--                      </div>-->
-                <!--                      <label class="form-label" for="amount">Amount</label>-->
-                <!--                        <input type="number" step=".01" class="form-control" id="amount" placeholder="Enter amount"-->
-                <!--                               th:field="*{amount}" autofocus="" min="0.01" required/>-->
-                <!--                      <button type="submit" class="btn btn-primary">Send</button>-->
-                <!--                    </div>-->
+                <form id="transactionForm" class="form" th:object="${transactionDto}" th:action="@{/transaction/new}"
+                      method="post">
+                  <h1 class="form-title fs-5" id="transaction-title">Sending money to user's name placeholder</h1>
+                  <div class="form-group">
+                    <div class="input-group-append">
+                      <label class="form-label" for="senderWalletId">Select Wallet</label>
+                      <select id="senderWalletId" th:field="*{senderWalletId}"
+                              class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none">
+                        <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}"
+                                th:text="${wallet.currency.name}"></option>
+                      </select>
+                    </div>
+                    <label class="form-label" for="amount">Amount</label>
+                    <input type="number" step=".01" class="form-control" id="amount" placeholder="Enter amount"
+                           th:field="*{amount}" autofocus="" min="0.01" required/>
+                    <input type="hidden" id="receiverId" th:field="*{receiverWalletId}">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                  </div>
 
-                <!--                </form>-->
+                </form>
               </div>
 
                 <div class="justify-content-start mt-auto">

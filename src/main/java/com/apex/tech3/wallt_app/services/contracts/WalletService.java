@@ -32,4 +32,8 @@ public interface WalletService {
     void debitAmount(Wallet wallet, BigDecimal amount);
 
     void checkOwnership(Wallet wallet, User user);
+
+    Wallet getDefaultWalletByHolderId(int holderId);
+
+    Wallet getSameOrDefaultWalletByHolderId(int holderId, int walletId);
 }

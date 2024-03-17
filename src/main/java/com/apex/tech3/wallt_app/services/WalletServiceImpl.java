@@ -3,6 +3,7 @@ package com.apex.tech3.wallt_app.services;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
+import com.apex.tech3.wallt_app.models.Currency;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.filters.WalletFilterOptions;
@@ -114,6 +115,21 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void checkOwnership(Wallet wallet, User user) {
         if (wallet.getHolder() != user) throw new AuthorizationException("You are not the owner of this wallet");
+    }
+
+    @Override
+    public Wallet getDefaultWalletByHolderId(int holderId) {
+        return repository.findByHolderIdAndIsDefaultTrue(holderId);
+    }
+
+    @Override
+    public Wallet getSameOrDefaultWalletByHolderId(int holderId, int walletId) {
+        Currency currency = getById(walletId).getCurrency();
+        if(repository.findByHolderIdAndCurrencyId(holderId, currency.getId()) != null) {
+            return repository.findByHolderIdAndCurrencyId(holderId, currency.getId());
+        }
+
+        return repository.findByHolderIdAndIsDefaultTrue(holderId);
     }
 
 

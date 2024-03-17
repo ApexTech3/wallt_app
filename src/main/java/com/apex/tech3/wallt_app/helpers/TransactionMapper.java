@@ -33,6 +33,17 @@ public class TransactionMapper {
         return transaction;
     }
 
+    public Transaction fromWebDto(TransactionDto transactionDto) {
+        Transaction transaction = new Transaction();
+        int senderWalletId = transactionDto.getSenderWalletId();
+        transaction.setAmount(transactionDto.getAmount());
+        transaction.setSenderWallet(walletService.getById(senderWalletId));
+        transaction.setReceiverWallet(walletService.getSameOrDefaultWalletByHolderId(transactionDto.getReceiverWalletId(), senderWalletId));
+        return transaction;
+    }
+
+
+
     public TransactionResponse toResponse(Transaction transaction) {
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setAmountSent(transaction.getAmount().divide(BigDecimal.valueOf(transaction.getExchangeRate()), 2, RoundingMode.HALF_UP));
