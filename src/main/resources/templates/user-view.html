@@ -48,18 +48,13 @@
                     </div>
                 </div>
             </div>
-            <div class="card p-2 p-sm-3">
-                <h5 class="card-title bg-secondary rounded-2 p-1" th:text="'Wallets by' + ' ' + ${user.username}">Wallets by: Username</h5>
-                <div class="card-body" th:each="wallet : ${userWallets}">
-                    <div class="media forum-item">
-                        <div class="media-body">
-                            <div class="card-title inline-flex">
-                                <h6 class="text-body">
-                                    <a th:text="${wallet.currency}" th:href="@{/wallets/{id}(id=${wallet.id})}" href="#" class="text-body">Currency
-                                    </a>
-                                </h6>
-                            </div>
-                            <div class="card-text text-secondary">
+            <div class="row">
+                <div class="d-flex align-items-stretch">
+                    <div class="card w-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold mb-4">Wallets</h5>
+                            <div th:with="wallets=${userWallets}">
+                                <div th:replace="~{walletsTable.html :: wallets-table}"></div>
                             </div>
                         </div>
                     </div>
@@ -82,6 +77,8 @@
     $(document).ready(function() {
         $('#activity-table').DataTable(); // Initialize DataTables for the Activity Table
         $('#cards-table').DataTable(); // Initialize DataTables for the Cards Table
+        $('#wallets-table').DataTable(); // Initialize DataTables for the Cards Table
+
     });
 </script>
 </body>

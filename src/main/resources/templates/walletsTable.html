@@ -23,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="wallets : ${wallets}">
+        <tr th:each="wallet : ${wallets}">
             <td class="border-bottom-0">
                 <h6 class="fw-semibold mb-1" th:text="${wallet.currency.symbol}">Currency</h6>
             </td>
@@ -31,7 +31,7 @@
                 <h6 class="fw-semibold mb-1" th:text="${wallet.holder.firstName}">Wallet holder</h6>
             </td>
             <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${wallet.expirationYear}">Expiration year</h6>
+                <h6 class="fw-semibold mb-1" th:text="${wallet.amount}">Amount</h6>
             </td>
             <td class="border-bottom-0">
                 <div class="d-flex align-items-center gap-2">
