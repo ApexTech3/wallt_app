@@ -56,7 +56,7 @@
             <div class="card-body p-4">
               <h5 class="card-title fw-semibold mb-4">Recent Activity(Demo)</h5>
               <div th:with="activities=${activityAndStats.get('activities')}">
-                <div th:replace="~{activityTable.html :: activityTable}"></div>
+                <div th:replace="~{activityTable.html :: activity-table}"></div>
               </div>
             </div>
           </div>

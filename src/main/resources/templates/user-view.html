@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head th:replace="~{fragments/head.html :: head}"></head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <aside th:replace="~{fragments/sidebar.html :: sidebar}"></aside>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+        <!--  Header Start -->
+        <!--    <header th:replace="~{fragments/header.html :: inner-main-header}"></header>-->
+        <!--  Header End -->
+        <div class="container-fluid">
+            <div class="d-flex pb-2" style="height: 650px">
+                <div class="card col-4">
+                    <img width="350" height="350" class="card-img-top rounded-3" th:src="@{${user.profilePicture != null ? user.profilePicture : '/uploads/chichkotrevichko.png'}}" alt="Profile Picture">
+
+                    <div class="card-body mb-10" th:style="text-align">
+                        <h2 class="card-title" th:text="${user.username}">Username</h2>
+                        <p>First Name: Pesho</p>
+                        <p>Last Name: Peshov</p>
+                        <p>Email: pesho@peshomail.com</p>
+                        <p>Phone: 0888123456</p>
+                        <p>User Role: USER</p>
+
+                        <div>
+                            <a href="#" class="btn btn-warning" style="height: 36px">Edit</a>
+                            <a href="#" class="btn btn-danger mr-5" style="height: 36px">Delete</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="d-flex align-items-stretch">
+                        <div class="card w-100">
+                            <div class="card-body p-4">
+                                <h5 class="card-title fw-semibold mb-4">Cards</h5>
+                                <div th:with="cards=${userCards}">
+                                    <div th:replace="~{cardsTable.html :: cards-table}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex align-items-stretch">
+                    <div class="card w-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold mb-4">Wallets</h5>
+                            <div th:with="wallets=${userWallets}">
+                                <div th:replace="~{walletsTable.html :: wallets-table}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/sidebarmenu.js"></script>
+<script src="../assets/js/app.min.js"></script>
+<script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+<script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+<script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
+<script src="../assets/libs/dataTable/datatables.js"></script>
+<script src="../assets/js/index.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#activity-table').DataTable(); // Initialize DataTables for the Activity Table
+        $('#cards-table').DataTable(); // Initialize DataTables for the Cards Table
+        $('#wallets-table').DataTable(); // Initialize DataTables for the Cards Table
+
+    });
+</script>
+</body>
+
+</html>

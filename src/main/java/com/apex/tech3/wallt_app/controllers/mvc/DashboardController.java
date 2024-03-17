@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.helpers.WalletMapper;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.dtos.CardDto;
+import com.apex.tech3.wallt_app.models.dtos.TransactionDto;
 import com.apex.tech3.wallt_app.models.dtos.TransferDto;
 import com.apex.tech3.wallt_app.models.dtos.WalletDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
@@ -53,6 +54,7 @@ public class DashboardController {
         model.addAttribute("cardDto", new CardDto());
         model.addAttribute("walletDto", new WalletDto());
         model.addAttribute("transferDto", new TransferDto());
+        model.addAttribute("transactionDto", new TransactionDto());
     }
 
     @GetMapping
