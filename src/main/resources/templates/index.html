@@ -21,46 +21,49 @@
         <i class="fa-regular fa-eye-slash fa-2xl"></i>
       </button>
       <!--  Row 1 -->
-      <div class="row">
-        <div class="col-lg-8  flex-column align-items-stretch">
-          <div class="card w-100">
-            <div class="card-body">
-              <h2 class="mb-15"> Exchange Smiles Across Currencies with Wallt.</h2>
-              <ul class="list mb-15">
-                <li style="list-style-type: disc"><h4> Send money effortlessly to your friends, using only a mobile
-                  number.</h4></li>
-                <li style="list-style-type: disc"><h4> Receive and send money in multiple currencies.</h4></li>
-                <li style="list-style-type: disc"><h4> Get the best exchange rates for your currency.</h4></li>
-                <li style="list-style-type: disc"><h4> Create separate wallets for your specific needs in a currency of
-                  your choice.</h4></li>
-                <li style="list-style-type: disc"><h4>Track your spending activities, all in one place.</h4></li>
-              </ul>
-              <div class="justify-content-start mt-auto">
-                <a th:href="@{/auth/register}" class="btn btn-primary btn-lg mr-5">Register</a>
-                <a th:href="@{/auth/login}" class="btn btn-primary btn-lg">Log in</a>
-
+      <div class="row d-flex">
+        <div class="col-8">
+          <div class="card">
+            <div class="card-body" style="flex: none">
+              <div class="content" style="margin-bottom: 15px">
+                <h2 style="margin-bottom: 5px"> Exchange Smiles Across Currencies with Wallt.</h2>
+                <ul class="list mb-15">
+                  <li class="my-3" style="list-style-type: disc"><h4> Send money effortlessly to your friends, using
+                    only a mobile
+                    number.</h4></li>
+                  <li class="my-3" style="list-style-type: disc"><h4> Receive and send money in multiple
+                    currencies.</h4></li>
+                  <li class="my-3" style="list-style-type: disc"><h4> Get the best exchange rates for your
+                    currency.</h4></li>
+                  <li class="my-3" style="list-style-type: disc"><h4> Create separate wallets for your specific needs in
+                    a currency of
+                    your choice.</h4></li>
+                  <li class="my-3" style="list-style-type: disc"><h4>Track your spending activities, all in one
+                    place.</h4></li>
+                </ul>
+              </div>
+              <div class="justify-content-start p-3">
+                <a th:href="@{/auth/register}" class="btn btn-warning btn-lg mr-5">Register</a>
+                <a th:href="@{/auth/login}" class="btn btn-warning btn-lg">Log in</a>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-4">
           <!-- Sent/Received donut -->
-          <div th:with="stats=${activityAndStats.get('stats')}">
-            <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
-          </div>
+          <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
           <div th:replace="~{walletsTab.html :: walletsVisual}"></div>
+        </div>
       </div>
       <div class="row">
-        <div class="d-flex align-items-stretch">
+        <!--        <div class="d-flex align-items-stretch">-->
           <div class="card w-100">
-            <div class="card-body p-4">
+            <div class="card-body">
               <h5 class="card-title fw-semibold mb-4">Recent Activity(Demo)</h5>
-              <div th:with="activities=${activityAndStats.get('activities')}">
                 <div th:replace="~{activityTable.html :: activity-table}"></div>
-              </div>
             </div>
           </div>
-        </div>
+        <!--        </div>-->
       </div>
       <div th:replace="~{fragments/footer.html :: footer}"></div>
     </div>

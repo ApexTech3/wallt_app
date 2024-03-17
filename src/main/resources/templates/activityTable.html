@@ -10,7 +10,10 @@
         <thead class="text-dark fs-4">
         <tr>
             <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Description/TimeStamp</h6>
+                <h6 class="fw-semibold mb-0">Time</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Description</h6>
             </th>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Amount</h6>
@@ -28,9 +31,12 @@
         </thead>
         <tbody>
         <tr th:each="activity : ${activities}">
+            <td class="border-bottom-0" data-order="2016.12.02 21:28">
+                <h6 class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024
+                    10:56</h6>
+            </td>
             <td class="border-bottom-0">
                 <h6 class="fw-semibold mb-1" th:text="${activity.description}">Money sent to pesho</h6>
-                <span class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</span>
             </td>
             <td class="border-bottom-0">
                 <p class="mb-0 fw-normal" data-blur-toggle th:text="${activity.amount}">-39</p>
@@ -53,8 +59,8 @@
             </td>
             <td class="border-bottom-0">
                 <div class="d-flex align-items-center gap-2" th:switch="${activity.status.toString()}">
-    <span class="badge rounded-3 fw-semibold" th:case="'SUCCESSFUL'" th:classappend="bg-success"
-          th:text="${activity.status}">SUCCESSFUL</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'SUCCESSFUL'" th:classappend="bg-success"
+                          th:text="${activity.status}">SUCCESSFUL</span>
                     <span class="badge rounded-3 fw-semibold" th:case="'FAILED'" th:classappend="bg-danger"
                           th:text="${activity.status}">FAILED</span>
                     <span class="badge rounded-3 fw-semibold" th:case="'PENDING'" th:classappend="bg-warning"

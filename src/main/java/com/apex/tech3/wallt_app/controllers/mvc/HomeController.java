@@ -43,7 +43,7 @@ public class HomeController {
             return "redirect:/dashboard";
         int userId = 3;
         List<WalletDto> wallets = walletService.getByUserId(3).stream().map(walletMapper::toDto).toList();
-        model.addAttribute("activityAndStats", userService.collectActivityAndStats(userId));
+        model.addAllAttributes(userService.collectActivityAndStats(userId));
         model.addAttribute("wallets", wallets);
         model.addAttribute("walletsTotal", walletService.getTotalBalance(userId));
         return "index";

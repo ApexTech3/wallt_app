@@ -8,7 +8,7 @@
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
      data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
-    <aside class="left-sidebar" th:fragment="sidebar">
+    <aside class="left-sidebar">
         <!-- Sidebar scroll-->
         <div>
             <div class="brand-logo d-flex align-items-center justify-content-center">
@@ -93,8 +93,8 @@
                 <i class="fa-regular fa-eye-slash fa-2xl"></i>
             </button>
             <!--  Row 1 -->
-            <div class="row justify-content-start">
-                <table class="table" id="admin-table">
+            <h2>Users View</h2>
+            <table class="table justify-content-start" id="admin-table">
                                 <thead class="text-dark fs-4">
                                 <tr>
                                     <th class="border-bottom-0">
@@ -161,19 +161,8 @@
                                 </tbody>
                             </table>
 
-                            <div class="justify-content-start mt-auto">
-                                <!-- New Card Modal -->
-                                <div th:replace="~{newCard.html :: newCardModal}"></div>
-                                <!-- New Wallet Modal -->
-                                <div th:replace="~{newWallet.html :: newWalletModal}"></div>
-                                <!-- New Deposit Modal -->
-                                <div th:replace="~{deposit.html :: depositModal}"></div>
-                                <!-- New Withdraw Modal -->
-                                <div th:replace="~{withdraw.html :: withdrawalModal}"></div>
-                            </div>
 
 
-            </div>
             <div th:replace="~{fragments/footer.html :: footer}"></div>
         </div>
     </div>

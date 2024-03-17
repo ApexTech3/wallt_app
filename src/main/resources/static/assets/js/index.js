@@ -13,7 +13,7 @@ $(document).ready(function () {
     $('#activity-table').DataTable(
         {
             scrollY: 350,
-            columns: [{width: '15%'}, {width: '25%'}, {width: '30%'}, {width: '20%'}, {width: '10%'}]
+            order: [],
         }
     );
 });
@@ -21,6 +21,9 @@ $(document).ready(function () {
     $('#admin-table').DataTable();
 });
 
+$(document).ready(function () {
+    $('#activity-table-admin').DataTable();
+});
 
 $(document).ready(function () {
     var table = $('#transaction-table').DataTable({
