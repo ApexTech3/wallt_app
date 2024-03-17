@@ -69,6 +69,10 @@ public class WalletServiceImpl implements WalletService {
     public List<Wallet> getByUserId(int userId) {
         return repository.findByHolderId(userId).stream().toList();
     }
+    @Override
+    public List<Wallet> getActiveByUserId(int userId) {
+        return repository.findByHolderIdAndIsActiveTrue(userId).stream().toList();
+    }
 
     @Override
     public BigDecimal getTotalBalance(int userId) {

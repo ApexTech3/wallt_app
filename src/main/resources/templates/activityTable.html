@@ -52,10 +52,15 @@
 
             </td>
             <td class="border-bottom-0">
-                <div class="d-flex align-items-center gap-2">
-                        <span class="badge rounded-3 fw-semibold"
-                              th:classappend="${activity.status.toString() == 'SUCCESSFUL'} ? 'bg-success' : 'bg-danger'"
-                              th:text="${activity.status}">SUCCESSFUL</span>
+                <div class="d-flex align-items-center gap-2" th:switch="${activity.status.toString()}">
+    <span class="badge rounded-3 fw-semibold" th:case="'SUCCESSFUL'" th:classappend="bg-success"
+          th:text="${activity.status}">SUCCESSFUL</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'FAILED'" th:classappend="bg-danger"
+                          th:text="${activity.status}">FAILED</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="'PENDING'" th:classappend="bg-warning"
+                          th:text="${activity.status}">PENDING</span>
+                    <span class="badge rounded-3 fw-semibold" th:case="*"
+                          th:classappend="bg-secondary" th:text="${activity.status}">OTHER</span>
                 </div>
             </td>
         </tr>

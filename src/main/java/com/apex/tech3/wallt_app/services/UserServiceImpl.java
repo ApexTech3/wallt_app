@@ -7,6 +7,7 @@ import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
 import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
+import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;

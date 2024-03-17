@@ -21,6 +21,7 @@ public class WalletSpecification {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("amount"), amountLessThan));
             if (currencyId != null)
                 predicates.add(criteriaBuilder.equal(root.get("currency").get("id"), currencyId));
+            predicates.add(criteriaBuilder.isTrue(root.get("isActive")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }

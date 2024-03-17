@@ -97,17 +97,14 @@
                 <div class="d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body p-4">
-                            <h5 class="card-title fw-semibold mb-4">Recent Activity</h5>
+                            <h5 class="card-title fw-semibold mb-4">Pending Withdrawals</h5>
 
-                            <div th:fragment="activityTable" class="table-responsive" style="max-height: 350px;overflow-y: auto;display: block;">
+                            <div th:fragment="pendingTransfers" class="table-responsive" style="max-height: 350px;overflow-y: auto;display: block;">
                                 <table id="activityTable" class="table text-nowrap mb-0 align-middle display">
-                                    <thead class="text-dark fs-4" style="position: sticky;top: 0;z-index: 100;background-color: white;">
+                                    <thead class="text-dark fs-4">
                                     <tr>
                                         <th class="border-bottom-0">
                                             <h6 class="fw-semibold mb-0">TimeStamp</h6>
-                                        </th>
-                                        <th class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0">From</h6>
                                         </th>
                                         <th class="border-bottom-0">
                                             <h6 class="fw-semibold mb-0">To</h6>
@@ -124,51 +121,72 @@
                                         <th class="border-bottom-0">
                                             <h6 class="fw-semibold mb-0">Status</h6>
                                         </th>
+                                        <th class="border-bottom-0">
+                                            <h6 class="fw-semibold mb-0">Action</h6>
+                                        </th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="activity : ${activities}">
+                                    <tr th:each="withdrawal : ${pendingWithdrawals}">
                                         <td class="border-bottom-0" data-order="2016.12.02 21:28">
-                                            <h6 class="fw-normal" th:text="${#dates.format(activity.timestamp, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</h6>
+                                            <h6 class="fw-normal" th:text="${#dates.format(withdrawal.stampCreated, 'dd.MM.yyyy HH:mm')}">07.03.2024 10:56</h6>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-1" th:text="${activity.sender}">Pesho</h6>
+                                            <h6 class="fw-semibold mb-1" th:text="${'*'.repeat(12) + withdrawal.card.number.toString().substring(withdrawal.card.number.toString().length() - 4)}">Gosho</h6>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-1" th:text="${activity.receiver}">Gosho</h6>
+                                            <h6 class="fw-semibold mb-1" th:text="${withdrawal.amount}">Gosho</h6>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <p class="mb-0 fw-normal" data-blur-toggle th:text="${activity.amount}">-39</p>
+                                            <h6 class="fw-semibold mb-1" th:text="${withdrawal.currency.symbol}">Pesho</h6>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <h6 class="fw-semibold mb-0 fs-4" th:text="${activity.currencySymbol}">EUR</h6>
+                                            <h6 class="fw-semibold mb-1" th:text="${withdrawal.direction}">Pesho</h6>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <div class="d-flex align-items-center gap-2" th:switch="${activity.type}">
-                        <span class="badge rounded-3 fw-semibold" th:case="'RECEIVED'" th:classappend="bg-success"
-                              th:text="${activity.type}">RECEIVED</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="'SENT'"
-                                                      th:classappend="bg-warning">SENT</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="'DEPOSIT'"
-                                                      th:classappend="bg-primary">DEPOSIT</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="'WITHDRAWAL'"
-                                                      th:classappend="bg-dark">WITHDRAWAL</span>
-                                            </div>
+                                            <h6 class="fw-semibold mb-1" th:text="${withdrawal.status}">Pesho</h6>
+                                        </td>
+                                        <td class="border-bottom-0">
+                                            <div class="d-flex">
+                                                <!-- Confirm form -->
+                                                <form action="#" th:action="@{/transfers/withdrawal/confirm}" th:object="${withdrawal}" method="post">
+                                                    <input type="hidden" th:value="${withdrawal.id}" name="withdrawalId" />
+                                                    <button type="submit" class="btn btn-primary me-2" onclick="return confirm('Are you sure you want to confirm this withdrawal?')">Confirm</button>
+                                                </form>
 
-                                        </td>
-                                        <td class="border-bottom-0">
-                                            <div class="d-flex align-items-center gap-2" th:switch="${activity.status.toString()}">
-    <span class="badge rounded-3 fw-semibold" th:case="'SUCCESSFUL'" th:classappend="bg-success"
-          th:text="${activity.status}">SUCCESSFUL</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="'FAILED'" th:classappend="bg-danger"
-                                                      th:text="${activity.status}">FAILED</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="'PENDING'" th:classappend="bg-warning"
-                                                      th:text="${activity.status}">PENDING</span>
-                                                <span class="badge rounded-3 fw-semibold" th:case="*"
-                                                      th:classappend="bg-secondary" th:text="${activity.status}">OTHER</span>
+                                                <!-- Cancel form -->
+                                                <form action="#" th:action="@{/transfers/withdrawal/cancel}" th:object="${withdrawal}" method="post">
+                                                    <input type="hidden" th:value="${withdrawal.id}" name="withdrawalId" />
+                                                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to cancel this withdrawal?')">Cancel</button>
+                                                </form>
                                             </div>
                                         </td>
-                                    </tr>
+<!--                                        <td class="border-bottom-0">-->
+<!--                                            <div class="d-flex align-items-center gap-2" th:switch="${activity.type}">-->
+<!--                        <span class="badge rounded-3 fw-semibold" th:case="'RECEIVED'" th:classappend="bg-success"-->
+<!--                              th:text="${activity.type}">RECEIVED</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="'SENT'"-->
+<!--                                                      th:classappend="bg-warning">SENT</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="'DEPOSIT'"-->
+<!--                                                      th:classappend="bg-primary">DEPOSIT</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="'WITHDRAWAL'"-->
+<!--                                                      th:classappend="bg-dark">WITHDRAWAL</span>-->
+<!--                                            </div>-->
+
+<!--                                        </td>-->
+<!--                                        <td class="border-bottom-0">-->
+<!--                                            <div class="d-flex align-items-center gap-2" th:switch="${activity.status.toString()}">-->
+<!--    <span class="badge rounded-3 fw-semibold" th:case="'SUCCESSFUL'" th:classappend="bg-success"-->
+<!--          th:text="${activity.status}">SUCCESSFUL</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="'FAILED'" th:classappend="bg-danger"-->
+<!--                                                      th:text="${activity.status}">FAILED</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="'PENDING'" th:classappend="bg-warning"-->
+<!--                                                      th:text="${activity.status}">PENDING</span>-->
+<!--                                                <span class="badge rounded-3 fw-semibold" th:case="*"-->
+<!--                                                      th:classappend="bg-secondary" th:text="${activity.status}">OTHER</span>-->
+<!--                                            </div>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
                                     </tbody>
                                 </table>
 
@@ -177,10 +195,10 @@
                     </div>
                 </div>
             </div>
-            </div>
-            <div th:replace="~{fragments/footer.html :: footer}"></div>
         </div>
+        <div th:replace="~{fragments/footer.html :: footer}"></div>
     </div>
+</div>
 </div>
 <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
 <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -192,6 +210,7 @@
 <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
 <script src="../assets/libs/dataTable/datatables.js"></script>
 <script src="../assets/js/index.js"></script>
+
 </body>
 
 </html>

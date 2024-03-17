@@ -51,7 +51,7 @@ public class TransferRestController {
     public TransferResponse withdraw(@RequestHeader HttpHeaders headers, @Valid @RequestBody TransferDto transferDto) {
         try {
             User user = helper.tryGetUser(headers);
-            return transferMapper.toDto(transferService.withdraw(transferMapper.fromDto(transferDto), user));
+            return transferMapper.toDto(transferService.initiateWithdraw(transferMapper.fromDto(transferDto), user));
         } catch (InsufficientFundsException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {

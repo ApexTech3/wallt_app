@@ -2,6 +2,7 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.clients.DummyCardClient;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
+import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.exceptions.InsufficientFundsException;
 import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
@@ -13,6 +14,7 @@ import com.apex.tech3.wallt_app.repositories.TransferRepository;
 import com.apex.tech3.wallt_app.services.contracts.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,17 +40,49 @@ public class TransferServiceImpl implements TransferService {
         return repository.save(transfer);
     }
 
+    @Transactional
     @Override
-    public Transfer withdraw(Transfer transfer, User user) {
+    public Transfer initiateWithdraw(Transfer transfer, User user) {
         transfer.setDirection(DirectionEnum.WITHDRAW);
         transfer.setCurrency(transfer.getWallet().getCurrency());
         try {
             WalletServiceImpl.checkIfFundsAreAvailable(transfer.getWallet(), transfer.getAmount());
-            buildDepositOrWithdrawal(transfer, user);
+            checkModifyPermissions(transfer, user);
+            verifyCardOwner(transfer);
+            transfer.setStatus(StatusEnum.PENDING);
         } catch (InsufficientFundsException e) {
             transfer.setStatus(StatusEnum.FAILED);
         }
         return repository.save(transfer);
+    }
+
+    @Transactional
+    @Override
+    public Transfer editWithdraw(Transfer transfer, User user) {
+        return repository.save(transfer);
+    }
+
+    @Transactional
+    @Override
+    public Transfer confirmWithdraw(Transfer transfer, User user) {
+        CardDetails cardDetails = buildCardDetails(transfer);
+        transfer.setStatus(dummyCardClient.tryPay(cardDetails) ? StatusEnum.SUCCESSFUL : StatusEnum.FAILED);
+        if (transfer.getStatus().equals(StatusEnum.SUCCESSFUL))
+            transfer.getWallet().setAmount(transfer.getWallet().getAmount().subtract(transfer.getAmount()));
+        return repository.save(transfer);
+    }
+
+    @Transactional
+    @Override
+    public Transfer cancelWithdraw(Transfer transfer, User user) {
+        transfer.setStatus(StatusEnum.CANCELLED);
+        return repository.save(transfer);
+
+    }
+
+    @Override
+    public List<Transfer> getUserPendingWithdrawals(User user) {
+        return repository.findAllByWalletHolderAndStatus(user, StatusEnum.PENDING);
     }
 
     private void buildDepositOrWithdrawal(Transfer transfer, User user) {
@@ -94,5 +128,10 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public List<Transfer> getAllTransfers() {
         return repository.findAll();
+    }
+
+    @Override
+    public Transfer get(int id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Transfer", id));
     }
 }

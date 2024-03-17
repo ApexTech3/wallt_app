@@ -17,6 +17,8 @@ public interface WalletService {
 
     List<Wallet> getByUserId(int userId);
 
+    List<Wallet> getActiveByUserId(int userId);
+
     BigDecimal getTotalBalance(int userId);
 
     Wallet create(Wallet wallet, User user);

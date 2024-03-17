@@ -108,10 +108,18 @@
           <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
           <div th:replace="~{walletsTab.html :: walletsVisual}"></div>
         </div>
+        <div th:if="${!#lists.isEmpty(pendingWithdrawals)}" class="row">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-2">Pending Withdrawals</h5>
+              <div th:replace="~{pendingTransfers.html :: pendingTransfers }"></div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-2">Recent Activity(Demo)</h5>
+              <h5 class="card-title fw-semibold mb-2">Recent Activity</h5>
               <div th:replace="~{activityTable.html :: activity-table}"></div>
               </div>
             </div>
@@ -131,7 +139,13 @@
   <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
 <script src="../assets/libs/dataTable/datatables.js"></script>
 <script src="../assets/js/index.js"></script>
-
+<script>
+  $(document).ready(function() {
+    $('#withdrawalModal, #newCardModal, #newWalletModal, #depositModal').submit(function() {
+      $(this).find(':input[type=submit]').prop('disabled', true);
+    });
+  });
+</script>
 </body>
 
 </html>

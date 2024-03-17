@@ -73,7 +73,7 @@ public class WalletServiceTests {
     @Test
     public void getByUserId_Should_CallRepository_When_MethodCalled() {
         service.getByUserId(1);
-        Mockito.verify(mockRepository, Mockito.times(1)).findByHolderId(1);
+        Mockito.verify(mockRepository, Mockito.times(1)).findByHolderIdAndIsActiveTrue(1);
     }
 
     @Test

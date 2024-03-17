@@ -9,10 +9,7 @@ import com.apex.tech3.wallt_app.models.dtos.CardDto;
 import com.apex.tech3.wallt_app.models.dtos.TransactionDto;
 import com.apex.tech3.wallt_app.models.dtos.TransferDto;
 import com.apex.tech3.wallt_app.models.dtos.WalletDto;
-import com.apex.tech3.wallt_app.services.contracts.CardService;
-import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
-import com.apex.tech3.wallt_app.services.contracts.UserService;
-import com.apex.tech3.wallt_app.services.contracts.WalletService;
+import com.apex.tech3.wallt_app.services.contracts.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,16 +24,16 @@ import java.util.List;
 public class DashboardController {
 
     private final UserService userService;
-
+    private final TransferService transferService;
     private final CardService cardService;
-
     private final WalletService walletService;
     private final CurrencyService currencyService;
     private final WalletMapper walletMapper;
     private final AuthenticationHelper authenticationHelper;
 
-    public DashboardController(UserService userService, CardService cardService, WalletService walletService, CurrencyService currencyService, WalletMapper walletMapper, AuthenticationHelper authenticationHelper) {
+    public DashboardController(UserService userService, TransferService transferService, CardService cardService, WalletService walletService, CurrencyService currencyService, WalletMapper walletMapper, AuthenticationHelper authenticationHelper) {
         this.userService = userService;
+        this.transferService = transferService;
         this.cardService = cardService;
         this.walletService = walletService;
         this.currencyService = currencyService;
@@ -61,7 +58,7 @@ public class DashboardController {
     public String getLoggedInPage(Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
-            List<Wallet> wallets = walletService.getByUserId(user.getId());
+            List<Wallet> wallets = walletService.getActiveByUserId(user.getId());
 
             model.addAttribute("cards", cardService.getByHolderId(user.getId()));
             model.addAttribute("users", userService.getAllActiveAndVerified());
@@ -69,9 +66,10 @@ public class DashboardController {
             model.addAttribute("walletsTotal", walletService.getTotalBalance(user.getId()));
             model.addAttribute("availableCurrenciesForNewWallets", currencyService.getAllAvailableCurrenciesForUserWallets(user.getId()));
             model.addAttribute("currentWalletCurrencies", wallets);
+            model.addAttribute("pendingWithdrawals", transferService.getUserPendingWithdrawals(user));
             model.addAllAttributes(userService.collectActivityAndStats(user.getId()));
             return "dashboard";
-        } catch(AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException e) {
             return "redirect:/auth/login";
         }
     }
