@@ -42,6 +42,8 @@ let transactionWindow = document.getElementById('transaction-window');
 let transactionDialog = document.getElementById('transaction-dialog');
 let cancelButton = document.getElementById('transaction-cancel-btn');
 let buttons = document.getElementsByClassName('new-transaction-btn');
+let transactionTitle = document.getElementById('transaction-title');
+let firstName;
 
 for (var i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', function (event) {
@@ -49,6 +51,8 @@ for (var i = 0; i < buttons.length; i++) {
         if (target.tagName.toLowerCase() === 'i') {
             target = target.parentElement;
         }
+        firstName = target.getAttribute('data-user-first-name');
+        transactionTitle.innerHTML = 'Sending money to ' + firstName;
         let userId = parseInt(target.getAttribute('data-user-id'));
         let receiverId = document.getElementById('receiverId');
         receiverId.value = userId;
@@ -59,9 +63,17 @@ for (var i = 0; i < buttons.length; i++) {
 }
 
 cancelButton.addEventListener('click', function () {
+    transactionTitle.innerHTML = 'Send money to a friend';
     transactionWindow.style.display = 'block';
     transactionDialog.style.display = 'none';
     cancelButton.style.display = 'none';
     receiverId.value = '';
 
 });
+
+function confirmSubmit(event) {
+    var result = confirm("Do you confirm the transaction?");
+    if (!result) {
+        event.preventDefault();
+    }
+}
