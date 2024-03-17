@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.helpers;
 
+import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.Transaction;
 import com.apex.tech3.wallt_app.models.dtos.TransactionDto;
@@ -59,7 +60,6 @@ public class TransactionMapper {
     public FinancialActivity moneyReceivedToActivity(Transaction transaction) {
         FinancialActivity activity = new FinancialActivity();
         activity.setDescription("Money received from " + transaction.getSenderWallet().getHolder().getUsername());
-        activity.setAmount(transaction.getAmount().setScale(2, RoundingMode.HALF_UP));
         activity.setCurrencySymbol(transaction.getReceiverWallet().getCurrency().getSymbol());
         activity.setTimestamp(transaction.getStampCreated());
         activity.setWalletId(transaction.getReceiverWallet().getId());
@@ -67,4 +67,17 @@ public class TransactionMapper {
         activity.setType("RECEIVED");
         return activity;
     }
+
+    public AdminFinancialActivity toAdminActivity(Transaction transaction) {
+        AdminFinancialActivity activity = new AdminFinancialActivity();
+        activity.setSender(transaction.getSenderWallet().getHolder().getUsername());
+        activity.setReceiver(transaction.getReceiverWallet().getHolder().getUsername());
+        activity.setAmount(transaction.getAmount().setScale(2, RoundingMode.HALF_UP));
+        activity.setCurrencySymbol(transaction.getSenderWallet().getCurrency().getSymbol());
+        activity.setTimestamp(transaction.getStampCreated());
+        activity.setStatus(transaction.getStatus());
+        activity.setType("SENT");
+        return activity;
+    }
+
 }

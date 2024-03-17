@@ -5,6 +5,7 @@ import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.TokenService;
 import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
+import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
@@ -272,19 +273,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<FinancialActivity> collectAllActivity() {
+    public List<AdminFinancialActivity> collectAllActivity() {
 
-        List<FinancialActivity> transactions = transactionService.getAll()
-                .stream().map(transactionMapper::moneySentToActivity).toList();
+        List<AdminFinancialActivity> transactions = transactionService.getAll()
+                .stream().map(transactionMapper::toAdminActivity).toList();
 
-        List<FinancialActivity> transfers = transferService.getAllTransfers().stream()
+        List<AdminFinancialActivity> transfers = transferService.getAllTransfers().stream()
                 .map(t -> t.getDirection() == DirectionEnum.DEPOSIT ?
-                        transferMapper.depositToActivity(t) : transferMapper.withdrawalToActivity(t)).toList();
+                        transferMapper.toAdminDeposit(t) : transferMapper.toAdminWithdrawal(t)).toList();
 
-        List<FinancialActivity> activities = new ArrayList<>(transactions.size() + transfers.size());
+        List<AdminFinancialActivity> activities = new ArrayList<>(transactions.size() + transfers.size());
         activities.addAll(transactions);
         activities.addAll(transfers);
-        activities.sort(Comparator.comparing(FinancialActivity::getTimestamp).reversed());
+//        activities.sort(Comparator.comparing(AdminFinancialActivity::getTimestamp).reversed());
+        activities.sort((a1, a2) -> Long.compare(a2.getTimestamp().getTime(), a1.getTimestamp().getTime()));
         return activities;
     }
 

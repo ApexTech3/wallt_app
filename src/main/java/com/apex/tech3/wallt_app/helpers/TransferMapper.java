@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.helpers;
 
+import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.dtos.TransferDto;
@@ -61,6 +62,32 @@ public class TransferMapper {
         activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
         activity.setTimestamp(transfer.getStampCreated());
         activity.setWalletId(transfer.getWallet().getId());
+        activity.setStatus(transfer.getStatus());
+        activity.setType("WITHDRAWAL");
+        return activity;
+    } public AdminFinancialActivity toAdminDeposit(Transfer transfer) {
+        AdminFinancialActivity activity = new AdminFinancialActivity();
+        String cardNumber = transfer.getCard().getNumber();
+        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        activity.setSender("Deposited through ****" + lastFour);
+        activity.setReceiver(transfer.getWallet().getHolder().getUsername());
+        activity.setAmount(transfer.getAmount().setScale(2, RoundingMode.HALF_UP));
+        activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
+        activity.setTimestamp(transfer.getStampCreated());
+        activity.setStatus(transfer.getStatus());
+        activity.setType("DEPOSIT");
+        return activity;
+    }
+
+    public AdminFinancialActivity toAdminWithdrawal(Transfer transfer) {
+        AdminFinancialActivity activity = new AdminFinancialActivity();
+        String cardNumber = transfer.getCard().getNumber();
+        String lastFour = cardNumber.substring(cardNumber.length() - 4);
+        activity.setSender(transfer.getWallet().getHolder().getUsername());
+        activity.setReceiver("Withdrawn through ****" + lastFour);
+        activity.setAmount(transfer.getAmount().negate().setScale(2, RoundingMode.HALF_UP));
+        activity.setCurrencySymbol(transfer.getWallet().getCurrency().getSymbol());
+        activity.setTimestamp(transfer.getStampCreated());
         activity.setStatus(transfer.getStatus());
         activity.setType("WITHDRAWAL");
         return activity;

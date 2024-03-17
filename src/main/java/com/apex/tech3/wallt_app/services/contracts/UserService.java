@@ -1,5 +1,6 @@
 package com.apex.tech3.wallt_app.services.contracts;
 
+import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
@@ -49,7 +50,7 @@ public interface UserService {
 
     List<FinancialActivity> collectActivity(int userId);
 
-    List<FinancialActivity> collectAllActivity();
+    List<AdminFinancialActivity> collectAllActivity();
 
     public Map<String, Object> collectActivityAndStats(int userId);
 }
