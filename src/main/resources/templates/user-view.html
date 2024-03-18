@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <div class="d-flex pb-2" style="height: 650px">
                 <div class="card col-4">
-                    <img width="350" height="350" class="card-img-top rounded-3" th:src="@{${user.profilePicture != null ? user.profilePicture : '/uploads/chichkotrevichko.png'}}" alt="Profile Picture">
+                    <img width="350" height="350" class="card-img-top rounded-3" th:src="@{${user.profilePicture != null ? user.profilePicture : '/assets/images/profile/user-1.jpg'}}" alt="Profile Picture">
 
                     <div class="card-body mb-10" th:style="text-align">
                         <h2 class="card-title" th:text="${user.username}">Username</h2>

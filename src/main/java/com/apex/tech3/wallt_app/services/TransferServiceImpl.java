@@ -88,6 +88,7 @@ public class TransferServiceImpl implements TransferService {
     private void buildDepositOrWithdrawal(Transfer transfer, User user) {
         checkModifyPermissions(transfer, user);
         verifyCardOwner(transfer);
+        transfer.setCurrency(transfer.getWallet().getCurrency());
         CardDetails cardDetails = buildCardDetails(transfer);
         transfer.setStatus(dummyCardClient.tryPay(cardDetails)
                 ? StatusEnum.SUCCESSFUL : StatusEnum.FAILED);

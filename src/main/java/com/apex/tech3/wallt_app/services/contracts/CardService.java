@@ -11,6 +11,8 @@ public interface CardService {
 
     Set<Card> getByHolderId(int userId);
 
+    Set<Card> getByHolderIdAndActive(int userId);
+
     List<Card> getAll();
 
     Card create(Card card, User user);

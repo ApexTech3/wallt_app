@@ -12,4 +12,5 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     Card findByNumber(String number);
     Set<Card> findByHolderId(int holderId);
+    Set<Card> findByHolderIdAndIsActiveTrue(int holderId);
 }

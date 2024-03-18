@@ -8,6 +8,8 @@ import com.apex.tech3.wallt_app.services.contracts.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class UserMapper {
     private final RoleService roleService;
@@ -26,7 +28,9 @@ public class UserMapper {
         user.setLastName(userRegisterDto.getLastName());
         user.setEmail(userRegisterDto.getEmail());
         user.setPhone(userRegisterDto.getPhone());
-        user.getRoles().add(roleService.get("USER"));
+        if (user.getRoles() == null) {
+            user.setRoles(Set.of(roleService.get("USER")));
+        }
         if (userRegisterDto.getProfilePictureURL() != null) {
             user.setProfilePicture(userRegisterDto.getProfilePictureURL());
         }
