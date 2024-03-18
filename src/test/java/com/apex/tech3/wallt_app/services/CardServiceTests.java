@@ -59,6 +59,14 @@ public class CardServiceTests {
     }
 
     @Test
+    public void getByHolderIdAndActive_Should_CallRepository_When_MethodCalled() {
+
+        service.getByHolderIdAndActive(1);
+
+        Mockito.verify(mockRepository, Mockito.times(1)).findByHolderIdAndIsActiveTrue(1);
+    }
+
+    @Test
     public void getByHolderId_Should_Throw_When_CardDoesNotExist() {
         Mockito.when(mockRepository.findByIdAndIsActiveTrue(1)).thenReturn(null);
 
@@ -153,6 +161,36 @@ public class CardServiceTests {
 
         Assertions.assertThrows(AuthorizationException.class, () -> service.deactivate(1, Helpers.createMockUser()));
     }
+
+    @Test
+    public void changeStatus_Should_CallRepository_When_MethodCalled() {
+        Card mockCard = Helpers.createMockCard();
+        Mockito.when(mockRepository.findById(1)).thenReturn(Optional.of(mockCard));
+
+        service.changeStatus(1, mockCard.getHolder());
+
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockCard);
+    }
+
+    @Test
+    public void changeStatus_Should_Throw_When_CardDoesNotExist() {
+        Card mockCard = Helpers.createMockCard();
+
+        Mockito.when(mockRepository.findById(1)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> service.changeStatus(1, Helpers.createMockUser()));
+    }
+    @Test
+    public void changeStatus_Should_Throw_When_UserNotAuthorized() {
+        Card mockCard = Helpers.createMockCard();
+        User holder = Helpers.createMockUser();
+        holder.setId(2);
+        mockCard.setHolder(holder);
+        Mockito.when(mockRepository.findById(1)).thenReturn(Optional.of(mockCard));
+
+        Assertions.assertThrows(AuthorizationException.class, () -> service.changeStatus(1, Helpers.createMockUser()));
+    }
+
 
     @Test
     public void delete_Should_CallRepository_When_MethodCalled() {
