@@ -88,32 +88,21 @@
         <header th:replace="~{fragments/header.html :: inner-main-header}"></header>
         <!--  Header End -->
         <div class="container-fluid">
-            <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
-                    style="position: fixed;top: 100px;right: 0;z-index:9999">
-                <i class="fa-regular fa-eye-slash fa-2xl"></i>
-            </button>
-            <!--  Row 1 -->
             <h2>Users View</h2>
-            <table class="table justify-content-start" id="admin-table">
+            <table class="table justify-content-start align-items-center" id="admin-table">
                                 <thead class="text-dark fs-4">
                                 <tr>
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Action</h6>
                                     </th>
                                     <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">User ID</h6>
+                                        <h6 class="fw-semibold mb-0">ID</h6>
                                     </th>
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Username</h6>
                                     </th>
                                     <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">First Name</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Middle Name</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Last Name</h6>
+                                        <h6 class="fw-semibold mb-0">Name</h6>
                                     </th>
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Email</h6>
@@ -122,19 +111,7 @@
                                         <h6 class="fw-semibold mb-0">Phone</h6>
                                     </th>
                                     <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Street</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Number</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">City</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Country</h6>
-                                    </th>
-                                    <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Phone</h6>
+                                        <h6 class="fw-semibold mb-0">Address</h6>
                                     </th>
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Verified</h6>
@@ -154,17 +131,19 @@
                                     </td>
                                     <th scope="row" th:text="${user.id}">1</th>
                                     <td><a href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}">pesho"</a></td>
-                                    <td th:text="${user.firstName}">Pesho</td>
-                                    <td th:text="${user.middleName}">Pesho</td>
-                                    <td th:text="${user.lastName}">Peshov</td>
+                                    <td th:text="${user.firstName}+' '+${user.middleName}+' '+${user.lastName}">Pesho
+                                        Peshov Peshonkov
+                                    </td>
                                     <td th:text="${user.email}">Email</td>
                                     <td th:text="${user.phone}">Email</td>
-                                    <td th:text="${user.street}">Email</td>
-                                    <td th:text="${user.number}">Email</td>
-                                    <td th:text="${user.city}">Email</td>
-                                    <td th:text="${user.country}">Email</td>
-                                    <td th:text="${user.blocked}">Email</td>
-                                    <td th:text="${user.verified}">Email</td>
+                                    <td th:text="${user.street}+' '+${user.number}+', '+${user.city}+', '+${user.country}">
+                                        Email
+                                    </td>
+                                    <td>
+                                        <span th:class="${user.verified} ? 'text-success' : 'text-danger'"
+                                              th:utext="${user.verified} ? '<i class=&quot;fa-solid fa-check fa-xl&quot;></i>'
+                                              : '<i class=&quot;fa-solid fa-x fa-xl&quot;></i>'"></span>
+                                    </td>
                                     <td th:text="${user.roles}">USER</td>
                                 </tr>
                                 </tbody>
