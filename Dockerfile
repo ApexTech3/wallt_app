@@ -1,10 +1,10 @@
 # Start with a base image containing Java runtime
-FROM openjdk:17-jdk-alpine AS build
+FROM openjdk:17-jdk as build
 
 # Set the current working directory inside the image
-WORKDIR /wallt_app
+WORKDIR /app
 
-# Copy gradle.war and build.gradle to the image
+# Copy gradlew and build.gradle to the image
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
@@ -13,19 +13,19 @@ COPY build.gradle .
 RUN chmod +x ./gradlew
 
 # Copy the rest of the application to the image
-COPY src src
+COPY src/ app/src/
 
 # Build the application
 RUN ./gradlew build
 
 # Start a new stage to keep our final image clean and small
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk
 
 # Set the current working directory inside the image
-WORKDIR /wallt_app
+WORKDIR /app
 
 # Copy the jar file from the build stage
-COPY --from=build /wallt_app/build/libs/*.jar app.jar
+COPY --from=build /app/build/libs/*.jar app.jar
 
 # Run the jar file
 ENTRYPOINT ["java","-jar","app.jar"]
