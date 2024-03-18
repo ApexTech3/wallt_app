@@ -28,7 +28,9 @@
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <h2 class="mb-4" id="transaction-title"> Send money to a friend:</h2>
-                <button id="transaction-cancel-btn" class="btn btn-danger" style="display: none;">Cancel</button>
+                <button id="transaction-cancel-btn" class="btn btn-danger" style="display: none;"
+                        onclick="cancelTransaction()">Cancel
+                </button>
               </div>
               <div id="transaction-window">
                 <table class="table" id="transaction-table">
@@ -52,7 +54,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="user : ${users}">
+                  <tr th:each="user : ${users}" th:unless="${user.id} == ${userId}">
                     <td th:text="${user.username}">pesho"></td>
                     <td th:text="${user.firstName}+' '+${user.lastName}">Pesho</td>
                     <td th:text="${user.email}">Email</td>
@@ -85,7 +87,8 @@
                           <select class="form-control" id="senderWalletId" th:field="*{senderWalletId}"> >
                             <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}"
                                     th:text="${wallet.currency.symbol}"
-                                    th:attr="data-symbol=${wallet.currency.symbol}"></option>
+                                    th:attr="data-symbol=${wallet.currency.symbol},
+                                    data-funds-available=${wallet.amount}"></option>
                           </select>
                         </div>
                       </div>
@@ -105,7 +108,9 @@
                   <h4 id="confirmation-details" class="fw-semibold"></h4>
                 </div>
                 <div class="col-2">
-                  <button class="btn btn-success btn-lg w-100" id="confirm-transaction-btn">Confirm</button>
+                  <button class="btn btn-success btn-lg w-100" id="confirm-transaction-btn"
+                          onclick="confirmTransaction()">Confirm
+                  </button>
                 </div>
               </div>
             </div>

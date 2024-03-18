@@ -10,12 +10,12 @@
      aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form th:object="${user}"  th:action="@{__${requestURI}__/edit}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h1 class="modal-title fs-5 fw-semibold" id="editProfileModalLabel">Edit Your Profile: </h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <h1 class="card-title" th:text="${user.username}" style="text-align: center">Username</h1>
+        <div class="modal-body">
+            <form th:object="${user}" th:action="@{__${requestURI}__/edit}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email Address</label>
                     <input type="email" th:field="*{email}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -93,7 +93,8 @@
                 <div class="mb-3 text-center">
                   <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" id="submitButton">Confirm</button>
                 </div>
-      </form>
+            </form>
+        </div>
     </div>
   </div>
 </div>
