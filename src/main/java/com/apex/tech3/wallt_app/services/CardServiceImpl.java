@@ -78,6 +78,16 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public void changeStatus(int id, User user) {
+        Card card = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Card", id));
+        if(card.getHolder().getId() != user.getId()) {
+            throw new AuthorizationException("You are not the owner of this card.");
+        }
+        card.setActive(!card.isActive());
+        repository.save(card);
+    }
+
+    @Override
     public void delete(int id) {
         repository.deleteById(id);
     }

@@ -6,6 +6,7 @@ import com.apex.tech3.wallt_app.models.Card;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.CardDto;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,18 @@ public class CardController {
             cardService.create(card, user);
         } catch (Exception e) {
             System.out.println("Error adding card: " + e.getMessage());
+        }
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/{id}/changeStatus")
+    public String changeStatus(@PathVariable int id, HttpSession httpSession, HttpServletRequest request) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(httpSession);
+            cardService.changeStatus(id, user);
+            return "redirect:/users/" + user.getId();
+        } catch(Exception e) {
+            System.out.println("Error activating card: " + e.getMessage());
         }
         return "redirect:/dashboard";
     }

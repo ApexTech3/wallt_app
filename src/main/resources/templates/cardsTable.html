@@ -20,6 +20,10 @@
             </th>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Active</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Action</h6>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -39,7 +43,12 @@
                         th:classappend="${card.isActive} ? 'bg-success' : 'bg-danger'"
                         th:text="${card.isActive ? 'ACTIVE' : 'INACTIVE'}">ACTIVE</span>
                 </div>
-
+            <td class="border-bottom-0">
+                <a th:href="@{/cards/{id}/changeStatus(id=${card.id})}"
+                   th:classappend="${card.isActive} ? 'btn btn-danger' : 'btn btn-success'"
+                   th:text="${card.isActive ? 'Deactivate' : 'Activate'}"
+                   class="btn btn-warning" style="height: 36px">Change Status</a>
+            </td>
         </tr>
         </tbody>
     </table>

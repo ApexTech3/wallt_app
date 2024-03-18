@@ -19,6 +19,8 @@ public interface CardService {
 
     Card update(Card card, User user);
 
+    void changeStatus(int id, User user);
+
     void delete(int id);
 
     boolean exists(String number);
