@@ -2,23 +2,31 @@ package com.apex.tech3.wallt_app.controllers.mvc;
 
 import com.apex.tech3.wallt_app.exceptions.AuthenticationFailureException;
 import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
+import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
+import com.apex.tech3.wallt_app.helpers.UserMapper;
 import com.apex.tech3.wallt_app.models.Card;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
+import com.apex.tech3.wallt_app.models.dtos.*;
+import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -29,13 +37,32 @@ public class UserController {
     private final AuthenticationHelper authenticationHelper;
     private final CardService cardService;
     private final WalletService walletService;
+    private final UserMapper mapper;
+    private final CloudinaryUploadService cloudinaryUploadService;
 
     @Autowired
-    public UserController(UserService userService, AuthenticationHelper authenticationHelper, CardService cardService, WalletService walletService) {
+    public UserController(UserService userService, AuthenticationHelper authenticationHelper, CardService cardService, WalletService walletService, UserMapper mapper, CloudinaryUploadService cloudinaryUploadService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.cardService = cardService;
         this.walletService = walletService;
+        this.mapper = mapper;
+        this.cloudinaryUploadService = cloudinaryUploadService;
+    }
+
+    @ModelAttribute
+    public void populateAttributes(HttpSession httpSession, Model model, HttpServletRequest request) {
+        boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("isAdmin", isAuthenticated ? httpSession.getAttribute("isAdmin") : false);
+        model.addAttribute("isBlocked", isAuthenticated ? httpSession.getAttribute("isBlocked") : false);
+
+        model.addAttribute("requestURI", request.getRequestURI());
+
+        model.addAttribute("cardDto", new CardDto());
+        model.addAttribute("walletDto", new WalletDto());
+        model.addAttribute("transferDto", new TransferDto());
+        model.addAttribute("transactionDto", new TransactionDto());
     }
 
     @GetMapping("/{id}")
@@ -66,6 +93,82 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}/edit")
+    public String showEditUserPage(@PathVariable int id, Model model, HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+            tryAuthenticateUser(id, user);
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "errorView";
+        }
+        UserUpdateDto dto = mapper.toUserDto(userService.getById(id));
+        model.addAttribute("user", dto);
+        return "userUpdateView";
+    }
+
+
+    @PostMapping("/{id}/edit")
+    public String editUser(@PathVariable int id, @Valid @ModelAttribute("user") UserUpdateDto userDto,
+                           BindingResult bindingResult, Model model, HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetCurrentUser(session);
+            tryAuthenticateUser(id, user);
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/auth/login";
+        } catch (AuthorizationException e) {
+            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "errorView";
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "userUpdateView";
+        }
+        if (!userDto.getCurrentPassword().equals(user.getPassword())) {
+            bindingResult.rejectValue("currentPassword", "error", "Invalid password");
+            return "userUpdateView";
+        }
+
+        if (!userDto.getNewPassword().isEmpty() && userDto.getCurrentPassword().equals(userDto.getPasswordConfirmation())) {
+            userDto.setCurrentPassword(userDto.getNewPassword());
+        } else if (!userDto.getCurrentPassword().isEmpty()) {
+            bindingResult.rejectValue("password", "error", "Passwords do not match");
+            return "userUpdateView";
+        }
+        try {
+            MultipartFile profilePicture = userDto.getProfilePicture();
+            if (!profilePicture.isEmpty()) {
+                File pictureFile = File.createTempFile("temp", profilePicture.getOriginalFilename());
+                profilePicture.transferTo(pictureFile);
+                String pictureUrl = cloudinaryUploadService.uploadImage(pictureFile);
+                userDto.setProfilePictureURL(pictureUrl);
+            }
+            userService.update(mapper.fromUpdateDto(userDto, id), user);
+            return "redirect:/users/{id}";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("statusCode", HttpStatus.NOT_FOUND.getReasonPhrase());
+            model.addAttribute("error", e.getMessage());
+            return "errorView";
+        } catch (EntityDuplicateException e) {
+            bindingResult.rejectValue("email", "error", e.getMessage());
+            return "userUpdateView";
+        } catch (IOException e) {
+            bindingResult.rejectValue("profilePicture", "auth_error", e.getMessage());
+            return "userUpdateView";
+        }
+    }
+
+    private void tryAuthenticateUser(int id, User user) {
+        if (!AuthenticationHelper.isAdmin(user) && user.getId() != id) {
+            throw new AuthorizationException("You are not allowed to perform this operation");
+        }
+    }
 }
 
 

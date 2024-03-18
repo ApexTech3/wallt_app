@@ -91,7 +91,7 @@ public class UserRestController {
         try {
             User requester = helper.tryGetUser(headers);
             User newUser = userMapper.fromUpdateDto(userUpdateDto, id);
-            return userMapper.toResponseDto(userService.update(newUser, requester, userUpdateDto, id));
+            return userMapper.toResponseDto(userService.update(newUser, requester));
         } catch (AuthorizationException | AuthenticationFailureException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {

@@ -70,7 +70,9 @@ public class UserMapper {
         user.setLastName(userUpdateDto.getLastName());
         user.setEmail(userUpdateDto.getEmail());
         user.setPhone(userUpdateDto.getPhone());
-        user.setProfilePicture(userUpdateDto.getProfilePicture());
+        if (userUpdateDto.getProfilePictureURL()!=null) {
+            user.setProfilePicture(userUpdateDto.getProfilePictureURL());
+        }
         user.setStreet(userUpdateDto.getStreet());
         user.setNumber(userUpdateDto.getNumber());
         user.setCity(userUpdateDto.getCity());
@@ -78,4 +80,19 @@ public class UserMapper {
         return user;
     }
 
+    public UserUpdateDto toUserDto(User user) {
+        UserUpdateDto userUpdateDto = new UserUpdateDto();
+        userUpdateDto.setUsername(user.getUsername());
+        userUpdateDto.setFirstName(user.getFirstName());
+        userUpdateDto.setLastName(user.getLastName());
+        userUpdateDto.setEmail(user.getEmail());
+        userUpdateDto.setPhone(user.getPhone());
+        userUpdateDto.setStreet(user.getStreet());
+        userUpdateDto.setNumber(userUpdateDto.getNumber());
+        userUpdateDto.setCity(userUpdateDto.getCity());
+        userUpdateDto.setCountry(user.getCountry());
+        user.setProfilePicture(user.getProfilePicture());
+        userUpdateDto.setVerified(user.isVerified());
+        return userUpdateDto;
+    }
 }

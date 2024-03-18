@@ -37,7 +37,7 @@ public interface UserService {
 
     void changePassword(PasswordRecoveryDto dto);
 
-    User update(User user, User requester, UserUpdateDto dto, int id);
+    User update(User user, User requester);
 
     boolean isAdmin(User user);
 

@@ -155,32 +155,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, User requester, UserUpdateDto dto, int id) {
-        User userToUpdate = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("User", id));
-        tryAuthorizeUser(requester, userToUpdate);
-        checkIfUniqueEmail(user, requester);
-        User updatedUser = addUneditableAttributes(userToUpdate, user);
-        if (dto.getNewPassword() != null && !dto.getNewPassword().isEmpty()) {
-            updatedUser = validateNewPassword(dto, updatedUser);
-        } else {
-            updatedUser.setPassword(requester.getPassword());
-        }
-        return repository.save(updatedUser);
+    public User update(User user, User requester) {
+        tryAuthorizeUser(user, requester);
+        checkIfUniqueEmail(user);
+        return repository.save(user);
     }
 
-    private void checkIfUniqueEmail(User user, User requester) {
-        if (Objects.equals(user.getEmail(), requester.getEmail())) {
-            return;
-        }
+    private void checkIfUniqueEmail(User user) {
         boolean duplicateExists = true;
-        User userByEmail = repository.getByEmail(user.getEmail());
-        if (userByEmail == null) {
+        try {
+            User userByEmail = repository.getByEmail(user.getEmail());
+            if (userByEmail.getId() == user.getId())
+                duplicateExists = false;
+        } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
         if (duplicateExists) {
             throw new EntityDuplicateException("User", "email", user.getEmail());
         }
     }
+
 
     private void tryAuthorizeUser(User user, User requester) {
         if (!user.getUsername().equals(requester.getUsername()) && AuthenticationHelper.isBlocked(requester)) {
