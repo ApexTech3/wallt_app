@@ -6,32 +6,31 @@
 </head>
 <body>
 <div th:fragment="wallets-table" class="table-responsive">
-    <table id="activity-table" class="table text-nowrap mb-0 align-middle display">
+    <table id="wallets-table" class="table text-nowrap mb-0 align-middle display">
         <thead class="text-dark fs-4">
         <tr>
+
             <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Currency</h6>
-            </th>
-            <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Holder</h6>
+                <h6 class="fw-semibold mb-0">Wallet</h6>
             </th>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Amount</h6>
             </th>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Active</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Action</h6>
+            </th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="wallet : ${wallets}">
             <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${wallet.currency.symbol}">Currency</h6>
+                <h6 class="fw-semibold mb-1" th:text="${wallet.currency.name}">Wallet holder</h6>
             </td>
             <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${wallet.holder.firstName}">Wallet holder</h6>
-            </td>
-            <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${wallet.amount}">Amount</h6>
+                <h6 class="fw-semibold mb-1" th:text="${wallet.amount} + ${wallet.currency.symbol}">Amount</h6>
             </td>
             <td class="border-bottom-0">
                 <div class="d-flex align-items-center gap-2">
@@ -39,6 +38,12 @@
                           th:classappend="${wallet.isActive} ? 'bg-success' : 'bg-danger'"
                           th:text="${wallet.isActive ? 'ACTIVE' : 'INACTIVE'}">ACTIVE</span>
                 </div>
+            </td>
+            <td class="border-bottom-0">
+                <a th:href="@{/wallets/{id}/changeStatus(id=${wallet.id})}"
+                   th:classappend="${wallet.isActive} ? 'btn btn-danger' : 'btn btn-success'"
+                   th:text="${wallet.isActive ? 'Deactivate' : 'Activate'}"
+                   class="btn btn-warning" style="height: 36px">Change Status</a>
 
         </tr>
         </tbody>

@@ -66,4 +66,16 @@ public class WalletController {
         }
         return "redirect:/dashboard";
     }
+
+    @GetMapping("/{id}/changeStatus")
+    public String changeStatus(@PathVariable int id, HttpSession httpSession, HttpServletRequest request) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(httpSession);
+            walletService.changeStatus(id, user);
+            return "redirect:/users/" + user.getId();
+        } catch(Exception e) {
+            System.out.println("Error activating card: " + e.getMessage());
+        }
+        return "redirect:/dashboard";
+    }
 }

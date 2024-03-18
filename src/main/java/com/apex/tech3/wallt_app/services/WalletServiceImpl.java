@@ -90,6 +90,18 @@ public class WalletServiceImpl implements WalletService {
         return repository.save(wallet);
     }
 
+
+    @Override
+    public void changeStatus(int id, User user) {
+        Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
+        if(wallet.getHolder().getId() != user.getId()) {
+            throw new AuthorizationException("You are not the owner of this wallet.");
+        }
+        wallet.setActive(!wallet.isActive());
+        repository.save(wallet);
+    }
+
+
     @Override
     public void delete(int id) {
         Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));

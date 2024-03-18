@@ -26,6 +26,13 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+    let walletTable = $('#wallets-table').DataTable({
+        paging: false,
+        order: [1, 'desc']
+    });
+});
+
+$(document).ready(function () {
     var table = $('#transaction-table').DataTable({
         autoWidth: false,
         paging: false,
