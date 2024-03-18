@@ -27,6 +27,8 @@ public interface WalletService {
 
     void changeStatus(int id, User user);
 
+    void changeDefaultWallet(int id, User user);
+
     void delete(int id);
 
     void creditAmount(Wallet wallet, BigDecimal amount);

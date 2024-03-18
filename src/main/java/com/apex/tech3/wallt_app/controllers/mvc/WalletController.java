@@ -62,7 +62,7 @@ public class WalletController {
             User user = authenticationHelper.tryGetCurrentUser(httpSession);
             walletService.create(wallet, user);
         } catch (Exception e) {
-            System.out.println("Error adding card: " + e.getMessage());
+            System.out.println("Error adding wallet: " + e.getMessage());
         }
         return "redirect:/dashboard";
     }
@@ -74,7 +74,19 @@ public class WalletController {
             walletService.changeStatus(id, user);
             return "redirect:/users/" + user.getId();
         } catch(Exception e) {
-            System.out.println("Error activating card: " + e.getMessage());
+            System.out.println("Error changing wallet status: " + e.getMessage());
+        }
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/{id}/makeDefault")
+    public String changeDefault(@PathVariable int id, HttpSession httpSession, HttpServletRequest request) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(httpSession);
+            walletService.changeDefaultWallet(id, user);
+            return "redirect:/users/" + user.getId();
+        } catch(Exception e) {
+            System.out.println("Error changing wallet status: " + e.getMessage());
         }
         return "redirect:/dashboard";
     }

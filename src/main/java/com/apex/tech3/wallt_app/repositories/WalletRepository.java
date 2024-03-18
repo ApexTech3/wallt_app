@@ -17,6 +17,27 @@ public interface WalletRepository extends JpaRepository<Wallet, Integer>, JpaSpe
        Wallet findByHolderIdAndIsDefaultTrue(int holderId);
 
        Wallet findByHolderIdAndCurrencyId(int holderId, int currencyId);
+
        @Query("SELECT ROUND(SUM(w.amount*w.currency.rateToUsd),2) FROM Wallet w WHERE w.holder.id = :userId AND w.isActive = true")
        BigDecimal getTotalBalance(int userId);
+
+       // To be implemented later
+//       @Query(value = """
+//               SELECT
+//                   SUM(w.amount * c.rate_to_usd /
+//                       (SELECT mc.rate_to_usd
+//                        FROM wallt_db.currencies mc
+//                        WHERE mc.currency_id =
+//                           (SELECT currency_id
+//                            FROM wallt_db.wallets w
+//                            WHERE holder_id = :userId AND w.is_default = true)
+//                       )
+//                   )as total
+//               FROM
+//                   wallt_db.wallets w
+//               JOIN
+//                   wallt_db.currencies c ON w.currency_id = c.currency_id
+//               WHERE
+//                   holder_id = :userId AND w.is_active = true;""", nativeQuery = true)
+//       BigDecimal getTotalBalanceInDefault(int userId);
 }

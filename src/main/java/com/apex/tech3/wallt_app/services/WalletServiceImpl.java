@@ -77,7 +77,10 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public BigDecimal getTotalBalance(int userId) {
-        return repository.getTotalBalance(userId);
+        BigDecimal total = repository.getTotalBalance(userId);
+        if(total.compareTo(BigDecimal.ONE) < 0) return total.setScale(6, BigDecimal.ROUND_HALF_UP);
+        ;
+        return total.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     @Override
     public Wallet create(Wallet wallet, User user) {
@@ -101,6 +104,19 @@ public class WalletServiceImpl implements WalletService {
         repository.save(wallet);
     }
 
+    @Override
+    public void changeDefaultWallet(int id, User user) {
+        Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
+        if(wallet.getHolder().getId() != user.getId()) {
+            throw new AuthorizationException("You are not the owner of this wallet.");
+        }
+        if(wallet.isDefault()) return;
+        Wallet oldDefault = repository.findByHolderIdAndIsDefaultTrue(user.getId());
+        oldDefault.setDefault(false);
+        if(!wallet.isActive()) wallet.setActive(true);
+        wallet.setDefault(true);
+        repository.save(wallet);
+    }
 
     @Override
     public void delete(int id) {
