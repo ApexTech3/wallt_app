@@ -1,0 +1,5 @@
+.appear-disabled {
+    background-color: #e9ecef;
+    color: #495057;
+    cursor: not-allowed;
+}
