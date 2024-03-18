@@ -2,10 +2,8 @@ package com.apex.tech3.wallt_app.services.contracts;
 
 import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
-import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
-import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -44,6 +42,8 @@ public interface UserService {
     User blockUser(int userId, User requester);
 
     User unblockUser(int userId, User requester);
+
+    User switchBlockedStatus(int userId, User requester);
 
     void deleteUser(int userId, User requester);
 

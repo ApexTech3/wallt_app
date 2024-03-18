@@ -98,6 +98,9 @@
                                 <thead class="text-dark fs-4">
                                 <tr>
                                     <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Action</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">User ID</h6>
                                     </th>
                                     <th class="border-bottom-0">
@@ -143,6 +146,12 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="user : ${users}">
+                                    <td class="border-bottom-0">
+                                        <a th:href="@{/admin/user/{id}/block(id=${user.id})}"
+                                           th:classappend="${user.blocked} ? 'btn-success' : 'btn-danger'"
+                                           th:text="${user.blocked ? 'Unblock' : 'Block'}"
+                                           class="btn" style="height: 36px">Block/Unblock</a>
+                                    </td>
                                     <th scope="row" th:text="${user.id}">1</th>
                                     <td><a href="#" th:href="@{/users/{id}(id=${user.id})}" th:text="${user.username}">pesho"</a></td>
                                     <td th:text="${user.firstName}">Pesho</td>

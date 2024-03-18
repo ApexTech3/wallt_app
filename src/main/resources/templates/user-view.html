@@ -72,14 +72,21 @@
 <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
 <script src="../assets/js/dashboard.js"></script>
 <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
-<script src="../assets/libs/dataTable/datatables.js"></script>
-<script src="../assets/js/index.js"></script>
+<script src="/assets/libs/dataTable/datatables.js"></script>
+<script src="/assets/js/index.js"></script>
 <script>
-    $(document).ready(function() {
-        $('#activity-table').DataTable(); // Initialize DataTables for the Activity Table
-        $('#cards-table').DataTable(); // Initialize DataTables for the Cards Table
-        $('#wallets-table').DataTable(); // Initialize DataTables for the Cards Table
+    $(document).ready(function () {
+        let walletTable = $('#wallets-table').DataTable({
+            paging: false,
+            order: [1, 'desc']
+        });
+    });
 
+    $(document).ready(function () {
+        let cardsTable = $('#cards-table').DataTable({
+            paging: false,
+            scrollY: 500,
+        });
     });
 </script>
 </body>

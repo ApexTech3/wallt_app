@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -111,5 +112,16 @@ public class AdminController {
         Sort sort = Sort.by(filterOptions.getSortBy());
         sort = filterOptions.getSortOrder().equals("desc") ? sort.descending() : sort.ascending();
         return PageRequest.of(filterOptions.getPage(), PAGE_SIZE, sort);
+    }
+
+    @GetMapping("/user/{id}/block")
+    private String changeBlockedStatus(@PathVariable int id, HttpSession httpSession) {
+        try {
+            User user = authenticationHelper.tryGetCurrentUser(httpSession);
+            userService.switchBlockedStatus(id, user);
+        } catch(Exception e) {
+            System.out.println("Error changing blocked status: " + e.getMessage());
+        }
+        return "redirect:/admin/users";
     }
 }

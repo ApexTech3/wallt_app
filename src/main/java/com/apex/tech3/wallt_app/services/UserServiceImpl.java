@@ -7,7 +7,6 @@ import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
 import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
-import com.apex.tech3.wallt_app.models.Transfer;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
@@ -228,6 +227,17 @@ public class UserServiceImpl implements UserService {
         User userToBeUnblocked = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
         userToBeUnblocked.setBlocked(false);
         return repository.save(userToBeUnblocked);
+    }
+
+    @Override
+    public User switchBlockedStatus(int userId, User requester) {
+        User user = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
+        if(isAdmin(requester)) {
+            user.setBlocked(!user.isBlocked());
+            return repository.save(user);
+        } else {
+            throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
+        }
     }
 
     @Override
