@@ -36,6 +36,11 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public Set<Card> getByHolderIdAndActive(int userId) {
+        return repository.findByHolderIdAndIsActiveTrue(userId);
+    }
+
+    @Override
     public List<Card> getAll() {
         return repository.findAll();
     }

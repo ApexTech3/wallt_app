@@ -60,7 +60,7 @@ public class DashboardController {
             User user = authenticationHelper.tryGetCurrentUser(session);
             List<Wallet> wallets = walletService.getActiveByUserId(user.getId());
 
-            model.addAttribute("cards", cardService.getByHolderId(user.getId()));
+            model.addAttribute("cards", cardService.getByHolderIdAndActive(user.getId()));
             model.addAttribute("users", userService.getAllActiveAndVerified());
             model.addAttribute("wallets", wallets.stream().map(walletMapper::toDto));
             model.addAttribute("walletsTotal", walletService.getTotalBalance(user.getId()));
