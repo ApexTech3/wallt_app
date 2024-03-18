@@ -5,6 +5,7 @@ import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.UserResponseDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.services.contracts.RoleService;
+import com.apex.tech3.wallt_app.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,12 @@ import java.util.Set;
 @Component
 public class UserMapper {
     private final RoleService roleService;
+    private final UserService userService;
 
     @Autowired
-    public UserMapper(RoleService roleService) {
+    public UserMapper(RoleService roleService, UserService userService) {
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     public User fromRegisterDto(UserRegisterDto userRegisterDto) {
@@ -62,15 +65,14 @@ public class UserMapper {
     }
 
     public User fromUpdateDto(UserUpdateDto userUpdateDto, int id) {
-        User user = new User();
-        user.setId(id);
-        user.setUsername(userUpdateDto.getUsername());
+        User user = userService.getById(id);
+        user.setPassword(userUpdateDto.getCurrentPassword());
         user.setFirstName(userUpdateDto.getFirstName());
         user.setMiddleName(userUpdateDto.getMiddleName());
         user.setLastName(userUpdateDto.getLastName());
         user.setEmail(userUpdateDto.getEmail());
         user.setPhone(userUpdateDto.getPhone());
-        if (userUpdateDto.getProfilePictureURL()!=null) {
+        if (userUpdateDto.getProfilePictureURL() != null) {
             user.setProfilePicture(userUpdateDto.getProfilePictureURL());
         }
         user.setStreet(userUpdateDto.getStreet());
@@ -80,18 +82,19 @@ public class UserMapper {
         return user;
     }
 
-    public UserUpdateDto toUserDto(User user) {
+    public UserUpdateDto toUpdateDto(User user) {
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         userUpdateDto.setUsername(user.getUsername());
         userUpdateDto.setFirstName(user.getFirstName());
+        userUpdateDto.setMiddleName(user.getFirstName());
         userUpdateDto.setLastName(user.getLastName());
         userUpdateDto.setEmail(user.getEmail());
         userUpdateDto.setPhone(user.getPhone());
         userUpdateDto.setStreet(user.getStreet());
-        userUpdateDto.setNumber(userUpdateDto.getNumber());
-        userUpdateDto.setCity(userUpdateDto.getCity());
+        userUpdateDto.setNumber(user.getNumber());
+        userUpdateDto.setCity(user.getCity());
         userUpdateDto.setCountry(user.getCountry());
-        user.setProfilePicture(user.getProfilePicture());
+        userUpdateDto.setProfilePictureURL(user.getProfilePicture());
         userUpdateDto.setVerified(user.isVerified());
         return userUpdateDto;
     }

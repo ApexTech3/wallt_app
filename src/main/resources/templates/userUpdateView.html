@@ -1,46 +1,109 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
-
-<head th:replace="~{fragments/head.html :: head}"></head>
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>$Title$</title>
+</head>
 <body>
-<!--  Body Wrapper -->
-<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-     data-sidebar-position="fixed" data-header-position="fixed">
-  <!-- Sidebar Start -->
-  <aside th:replace="~{fragments/sidebar.html :: sidebar}"></aside>
-  <!--  Sidebar End -->
-  <!--  Main wrapper -->
-  <div class="body-wrapper">
-    <!--  Header Start -->
-    <header th:replace="~{fragments/header.html :: inner-main-header}"></header>
-    <!--  Header End -->
-    <div class="container-fluid">
-      <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
-              style="position: fixed;top: 100px;right: 0;z-index:9999">
-        <i class="fa-regular fa-eye-slash fa-2xl"></i>
-      </button>
-      <!--  Row 1 -->
-  </div>
+<div th:fragment="editProfileModal" class="modal fade" id="editProfileModal" tabindex="-1"
+     aria-labelledby="editProfileModal"
+     aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form th:object="${user}"  th:action="@{__${requestURI}__/edit}" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="editProfileModalLabel">Edit Profile</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <h1 class="card-title" th:text="${user.username}" style="text-align: center">Username</h1>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
+                    <input type="email" th:field="*{email}" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <label class="error" th:errors="*{email}">Email error placeholder</label>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Current Password</label>
+                  <input type="password" th:field="*{currentPassword}" class="form-control" id="password">
+                  <label class="error" th:errors="*{currentPassword}">Password error placeholder</label>
+                </div>
+                  <div class="mb-3">
+                   <label for="newPassword" class="form-label">New Password</label>
+                   <input type="password" th:field="*{newPassword}" class="form-control" id="newPassword">
+                    <span id="passwordError" class="text-danger"></span>
+                    <label class="error" th:errors="*{newPassword}">Password confirmation error placeholder</label>
+                  </div>
+                <div class="mb-3">
+                  <label for="passwordConfirmation" class="form-label">Confirm Password</label>
+                  <input type="password" th:field="*{passwordConfirmation}" class="form-control" id="passwordConfirmation">
+                  <span id="passwordMatch"></span>
+                  <label class="error" th:errors="*{passwordConfirmation}">Password confirmation error placeholder</label>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-md-4">
+                    <label for="exampleInputtext2" class="form-label">First Name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" id="exampleInputtext2" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{firstName}">First name error placeholder</label>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="exampleInputtext3" class="form-label">Middle Name</label>
+                    <input type="text" th:field="*{middleName}" class="form-control" id="exampleInputtext3" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{middleName}">Middle name error placeholder</label>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="exampleInputtext4" class="form-label">Last Name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" id="exampleInputtext4" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{lastName}">Last name error placeholder</label>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="exampleInputtext5" class="form-label">Street</label>
+                    <input type="text" th:field="*{street}" class="form-control" id="exampleInputtext5" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{street}">Street error placeholder</label>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="exampleInputtext7" class="form-label">Number</label>
+                    <input type="text" th:field="*{number}" class="form-control" id="exampleInputtext7" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{number}">Number error placeholder</label>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="exampleInputtext8" class="form-label">City</label>
+                    <input type="text" th:field="*{city}" class="form-control" id="exampleInputtext8" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{city}">City error placeholder</label>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="exampleInputtext9" class="form-label">Country</label>
+                    <input type="text" th:field="*{country}" class="form-control" id="exampleInputtext9" aria-describedby="textHelp">
+                    <label class="error" th:errors="*{country}">Country error placeholder</label>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="exampleInputphone" class="form-label">Phone</label>
+                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone" aria-describedby="phoneHelp">
+                    <label class="error" th:errors="*{phone}">Phone error placeholder</label>
+                  </div>
+                </div>
+                <div class="mb-3 text-center">
+                  <label for="profilePicture" class="form-label">Profile Picture</label>
+                  <input type="file" id="profilePicture" th:field="*{profilePicture}" name="profilePicture" class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none"/>
+                  <label class="error" th:errors="*{profilePicture}">Profile Picture error placeholder</label>
+                </div>
+                <div class="mb-3 text-center">
+                  <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" id="submitButton">Confirm</button>
+                </div>
+      </form>
+    </div>
   </div>
 </div>
-<script src="/assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/assets/js/sidebarmenu.js"></script>
-<script src="/assets/js/app.min.js"></script>
-<script src="/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-<script src="/assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="/assets/js/dashboard.js"></script>
+<script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/sidebarmenu.js"></script>
+<script src="../assets/js/app.min.js"></script>
+<script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+<script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+<script src="../assets/js/dashboard.js"></script>
 <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
-<script src="/assets/libs/dataTable/datatables.js"></script>
-<script src="/assets/js/index.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#withdrawalModal, #newCardModal, #newWalletModal, #depositModal').submit(function() {
-      $(this).find(':input[type=submit]').prop('disabled', true);
-    });
-  });
-</script>
 </body>
-
 </html>

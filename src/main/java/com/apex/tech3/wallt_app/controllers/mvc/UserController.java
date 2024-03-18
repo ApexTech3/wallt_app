@@ -69,7 +69,8 @@ public class UserController {
     public String showSingleUser(@PathVariable int id, Model model, HttpSession session) {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
-            model.addAttribute("user", userService.getById(id));
+            UserUpdateDto dto = mapper.toUpdateDto(userService.getById(id));
+            model.addAttribute("user", dto);
             model.addAttribute("adminOrCurrentUser", user.getId() == id || AuthenticationHelper.isAdmin(userService.getById(user.getId())));
             try {
                 Set<Card> userCards = cardService.getByHolderId(id);
@@ -93,25 +94,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}/edit")
-    public String showEditUserPage(@PathVariable int id, Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetCurrentUser(session);
-            tryAuthenticateUser(id, user);
-        } catch (AuthenticationFailureException e) {
-            return "redirect:/auth/login";
-        } catch (AuthorizationException e) {
-            model.addAttribute("statusCode", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-            model.addAttribute("error", e.getMessage());
-            return "errorView";
-        }
-        UserUpdateDto dto = mapper.toUserDto(userService.getById(id));
-        model.addAttribute("user", dto);
-        return "userUpdateView";
-    }
-
-
     @PostMapping("/{id}/edit")
     public String editUser(@PathVariable int id, @Valid @ModelAttribute("user") UserUpdateDto userDto,
                            BindingResult bindingResult, Model model, HttpSession session) {
@@ -128,18 +110,18 @@ public class UserController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "userUpdateView";
+            return "redirect:/users/{id}";
         }
         if (!userDto.getCurrentPassword().equals(user.getPassword())) {
             bindingResult.rejectValue("currentPassword", "error", "Invalid password");
-            return "userUpdateView";
+            return "redirect:/users/{id}";
         }
 
-        if (!userDto.getNewPassword().isEmpty() && userDto.getCurrentPassword().equals(userDto.getPasswordConfirmation())) {
+        if (!userDto.getNewPassword().isEmpty() && userDto.getNewPassword().equals(userDto.getPasswordConfirmation())) {
             userDto.setCurrentPassword(userDto.getNewPassword());
-        } else if (!userDto.getCurrentPassword().isEmpty()) {
-            bindingResult.rejectValue("password", "error", "Passwords do not match");
-            return "userUpdateView";
+        } else if (!userDto.getNewPassword().isEmpty()) {
+            bindingResult.rejectValue("newPassword", "error", "Passwords do not match");
+            return "redirect:/users/{id}";
         }
         try {
             MultipartFile profilePicture = userDto.getProfilePicture();
@@ -157,10 +139,10 @@ public class UserController {
             return "errorView";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("email", "error", e.getMessage());
-            return "userUpdateView";
+            return "redirect:/users/{id}";
         } catch (IOException e) {
             bindingResult.rejectValue("profilePicture", "auth_error", e.getMessage());
-            return "userUpdateView";
+            return "redirect:/users/{id}";
         }
     }
 
