@@ -49,9 +49,8 @@ function confirmSubmit(event) {
     senderId = document.getElementById('senderWalletId');
     let amountValue = parseFloat(amount.value);
     let symbol = senderId.options[senderId.selectedIndex].getAttribute('data-symbol');
-    // reviewButton.disabled = true;
-    // amount.disabled = true;
-    // senderId.disabled = true;
+    amount.disabled = true;
+    senderId.disabled = true;
     confirmationDetails.innerText = 'You are about to send ' + amountValue + symbol + ' to ' + firstName + ', are you sure?';
     event.preventDefault();
     transactionReview.style.display = 'block';
@@ -59,5 +58,7 @@ function confirmSubmit(event) {
 }
 
 confirmTransactionButton.addEventListener('click', function () {
+    amount.disabled = false;
+    senderId.disabled = false;
     transactionForm.submit();
 });
