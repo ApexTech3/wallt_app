@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<div th:fragment="cards-table" class="table-responsive">
+    <table id="cards-table" class="table justify-content-start align-items-center">
+        <thead class="text-dark fs-4">
+        <tr>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Number</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Holder</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Expiration year</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Active</h6>
+            </th>
+            <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Action</h6>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="card : ${cards}">
+            <td class="border-bottom-0">
+                <h6 class="fw-semibold mb-1" th:text="${card.number}">Card number</h6>
+            </td>
+            <td class="border-bottom-0">
+                <h6 class="fw-semibold mb-1" th:text="${card.holder.firstName}">Card holder</h6>
+            </td>
+            <td class="border-bottom-0">
+                <h6 class="fw-semibold mb-1" th:text="${card.expirationYear}">Expiration year</h6>
+            </td>
+            <td class="border-bottom-0">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge rounded-3 fw-semibold"
+                        th:classappend="${card.isActive} ? 'bg-success' : 'bg-danger'"
+                        th:text="${card.isActive ? 'ACTIVE' : 'INACTIVE'}">ACTIVE</span>
+                </div>
+            <td class="border-bottom-0">
+                <a th:href="@{/cards/{id}/changeStatus(id=${card.id})}"
+                   th:classappend="${card.isActive} ? 'btn btn-danger' : 'btn btn-success'"
+                   th:text="${card.isActive ? 'Deactivate' : 'Activate'}"
+                   class="btn btn-warning" style="height: 36px">Change Status</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>

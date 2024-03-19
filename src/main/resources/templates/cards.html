@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Cards</title>
-</head>
+<head th:replace="~{fragments/head.html :: head}"></head>
 <body>
 <table class="table">
     <tbody>
     <tr th:each="card : ${cards}">
         <th scope="row" th:text="${card.id}">1</th>
         <td><a href="#" th:href="@{/cards/{id}(id=${card.id})}" th:text="${card.number}">123456"</a></td>
-        <td th:text="${#temporals.format(card.expirationDate, 'MM/yy')}">Pesho</td>
-
-        <td th:text="${card.cvv}">Pesho</td>
-        <td th:text="${card.holder.firstName}">Pesho</td>
-        <td th:text="${card.holder.lastName}">Pesho</td>
+        <td th:text="${(card.expirationMonth)}">01</td>
+        <td th:text="${(card.expirationYear)}">01</td>
+        <td th:text="${card.cvv}">123</td>
+        <td th:text="${card.cardHolderName}">Pesho Peshov</td>
 
     </tr>
     </tbody>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head th:replace="~{fragments/head.html :: head}"></head>
+
+<body>
+<!--  Body Wrapper -->
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+     data-sidebar-position="fixed" data-header-position="fixed">
+  <!-- Sidebar Start -->
+  <aside th:replace="~{fragments/sidebar.html :: sidebar}"></aside>
+  <!--  Sidebar End -->
+  <!--  Main wrapper -->
+  <div class="body-wrapper">
+    <!--  Header Start -->
+    <header th:replace="~{fragments/header.html :: inner-main-header}"></header>
+    <!--  Header End -->
+    <div class="container-fluid">
+      <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
+              style="position: fixed;top: 100px;right: 0;z-index:9999" onclick="BlurContent()">
+        <i class="fa-regular fa-eye-slash fa-2xl"></i>
+      </button>
+      <!--  Row 1 -->
+      <div class="row">
+        <!--        flex-column align-items-stretch-->
+        <div class="col-8 flex-column align-items-stretch">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h2 class="mb-4" id="transaction-title"> Send money to a friend:</h2>
+                <button id="transaction-cancel-btn" class="btn btn-danger" style="display: none;"
+                        onclick="cancelTransaction()">Cancel
+                </button>
+              </div>
+              <div id="transaction-window">
+                <table class="table" id="transaction-table">
+                  <thead class="text-dark fs-4">
+                  <tr>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Username</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Name</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Email</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Phone</h6>
+                    </th>
+                    <th class="border-bottom-0">
+                      <h6 class="fw-semibold mb-0">Send</h6>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="user : ${users}" th:unless="${user.id} == ${currentUser.id}">
+                    <td th:text="${user.username}">pesho"></td>
+                    <td th:text="${user.firstName}+' '+${user.lastName}">Pesho</td>
+                    <td th:text="${user.email}">Email</td>
+                    <td th:text="${user.phone}">Email</td>
+                    <td>
+                      <button class="btn btn-warning new-transaction-btn"
+                              th:attr="data-user-id=${user.id},
+                                       data-user-first-name=${user.firstName}">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+              <div id="transaction-dialog" style="display: none;">
+                <form id="transaction-form" class="form" th:object="${transactionDto}" th:action="@{/transaction/new}"
+                      method="post">
+                  <div class="form-group px-3">
+                    <div class="input-group-append mb-10">
+                      <div class="row">
+                        <div class="col">
+                          <label class="form-label" for="amount">Amount</label>
+                          <input type="number" step=".01" class="form-control" id="amount" placeholder="Enter amount"
+                                 th:field="*{amount}" autofocus="" min="0.01" required/>
+                        </div>
+                        <div class="col">
+                          <label class="form-label" for="senderWalletId">Select Wallet</label>
+                          <select class="form-control" id="senderWalletId" th:field="*{senderWalletId}"> >
+                            <option th:each="wallet : ${currentWalletCurrencies}" th:value="${wallet.id}"
+                                    th:text="${wallet.currency.symbol}"
+                                    th:attr="data-symbol=${wallet.currency.symbol},
+                                    data-funds-available=${wallet.amount}"></option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="hidden" id="receiverId" th:field="*{receiverWalletId}">
+                  </div>
+                  <button type="submit" class="btn btn-warning  btn-lg m-3" id="review-and-submit-button"
+                          onclick="confirmSubmit(event)">Review & Send
+                  </button>
+                </form>
+              </div>
+
+            <div id="transaction-review" class="p-3" style="display: none;">
+              <h5>Review Transaction</h5>
+              <div class="row justify-content-between">
+                <div class="col-10">
+                  <h4 id="confirmation-details" class="fw-semibold"></h4>
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-success btn-lg w-100" id="confirm-transaction-btn"
+                          onclick="confirmTransaction()">Confirm
+                  </button>
+                </div>
+              </div>
+            </div>
+                <div class="justify-content-start mt-auto">
+                <!-- New Card Modal -->
+                  <div th:replace="~{newCard.html :: newCardModal}"></div>
+                  <!-- New Wallet Modal -->
+                  <div th:replace="~{newWallet.html :: newWalletModal}"></div>
+                  <!-- New Deposit Modal -->
+                  <div th:replace="~{deposit.html :: depositModal}"></div>
+                  <!-- New Withdraw Modal -->
+                  <div th:replace="~{withdraw.html :: withdrawalModal}"></div>
+                </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <!-- Sent/Received donut -->
+          <div th:replace="~{activityDonutChart.html:: donutTab('')}"></div>
+          <div th:replace="~{walletsTab.html :: walletsVisual('')}"></div>
+        </div>
+        <div th:if="${!#lists.isEmpty(pendingWithdrawals)}" class="row">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-2">Pending Withdrawals</h5>
+              <div th:replace="~{pendingTransfers.html :: pendingTransfers }"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="card">
+            <div class="card-body">
+              <div th:replace="~{activityTable.html :: activity-table('')}"></div>
+              </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer.html :: footer}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/sidebarmenu.js"></script>
+  <script src="../assets/js/app.min.js"></script>
+  <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
+<script src="../assets/libs/dataTables/datatables.js"></script>
+<script src="../assets/js/index.js"></script>
+<script src="../assets/js/transaction.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#withdrawalModal, #newCardModal, #newWalletModal, #depositModal').submit(function() {
+      $(this).find(':input[type=submit]').prop('disabled', true);
+    });
+  });
+</script>
+</body>
+
+</html>

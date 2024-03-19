@@ -4,58 +4,35 @@ create schema wallt_db;
 SET search_path TO wallt_db;
 CREATE SEQUENCE increment_SEQ START 1;
 
-create table countries
-(
-    country_id serial      not null primary key,
-    name       varchar(50) not null
-        constraint countries_pk_2
-            unique
-);
 
-create table cities
-(
-    city_id    serial primary key,
-    name       varchar(50) not null
-        constraint cities_pk_2
-            unique,
-    country_id integer     not null
-        constraint cities_countries_country_id_fk
-            references countries
-);
-
-create table addresses
-(
-    address_id serial      not null primary key,
-    street     varchar(50) not null,
-    number     integer     not null,
-    city_id    integer     not null
-        constraint addresses_cities_city_id_fk
-            references cities
-);
 
 create table users
 (
-    user_id     serial
+    user_id            serial
         primary key,
-    username    varchar(50)           not null
+    username           varchar(50)                         not null
         constraint users_pk_2
             unique,
-    password    varchar(32)           not null,
-    first_name  varchar(50)           not null,
-    middle_name varchar(50)           not null,
-    last_name   varchar(50)           not null,
-    email       varchar(100)          not null
+    password           varchar(32)                         not null,
+    first_name         varchar(50)                         not null,
+    middle_name        varchar(50)                         not null,
+    last_name          varchar(50)                         not null,
+    email              varchar(100)                        not null
         constraint users_pk_3
             unique,
-    phone       varchar(10)           not null
+    phone              varchar(10)                         not null
         constraint users_pk_4
             unique,
-    photo       varchar(255)          not null,
-    address_id  integer
-        constraint users_addresses_address_id_fk
-            references addresses,
-    verified    boolean default false not null,
-    blocked     boolean default false not null
+    photo              varchar(255)                        not null,
+    verified           boolean   default false             not null,
+    blocked            boolean   default false             not null,
+    stamp_created      timestamp default CURRENT_TIMESTAMP not null,
+    is_deleted         boolean   default false             not null,
+    confirmation_token varchar(100),
+    street             varchar(50),
+    number             integer,
+    city               varchar(20),
+    country            varchar(20)
 );
 
 create table roles
@@ -76,15 +53,23 @@ create table users_roles
 
 create table cards
 (
-    card_id         serial      not null primary key,
-    number          varchar(50) not null
+    card_id          serial
+        primary key,
+    number           varchar(16) not null
         constraint cards2_pk_2
             unique,
-    expiration_date date        not null,
-    cvv             varchar(3)  not null,
-    holder_id       integer     not null
+    cvv              varchar(3)  not null,
+    holder_id        integer     not null
         constraint cards2_users_id_fk
-            references users
+            references users,
+    first_last_name  varchar(30),
+    stamp_created    timestamp default CURRENT_TIMESTAMP,
+    expiration_month varchar(2),
+    expiration_year  varchar(2),
+    is_active        boolean   default true,
+    wallet_id        integer     not null
+        constraint cards_wallets_wallet_id_fk
+            references wallets
 );
 
 create table currencies
@@ -140,3 +125,28 @@ create table transfers
             references wallets,
     direction   varchar(20)           not null
 );
+
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+                            verified, blocked)
+VALUES ('pesho', '1234', 'pesho', 'peshov', 'peshov', 'pesho@peshomail.com', 'pesho', 'pesho', 1, false, false, false);
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+                            verified, blocked)
+VALUES ('gosho', '1234', 'gosho', 'goshov', 'gosho', 'gosho@goshomail.com', 'gosho', 'gosho', 1, false, false, false);
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+                            verified, blocked)
+VALUES ('tosho', '1234', 'tosho', 'toshov', 'toshov', 'tosho@toshomail.com', 'tosho', 'tosho', 1, false, false, false);
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+                            verified, blocked)
+VALUES ('ivan', '1234', 'ivan', 'ivanov', 'ivanov', 'ivan@ivanmail.com', 'ivan', 'ivan', 1, false, false, false);
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+                            verified, blocked)
+VALUES ('mariika', '1234', 'mariika', 'mariikova', 'mariikova', 'mariika@mariikamail.com', 'mariika', 'mariika', 1, false, false, false);
+
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
+VALUES (1, 12345678, 1);
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
+VALUES (1, 23456789, 2);
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
+VALUES (1, 3456789, 3);
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
+VALUES (2, 3456, 2);

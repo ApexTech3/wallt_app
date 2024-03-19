@@ -14,4 +14,11 @@ public class Currency {
     private int id;
     @Column(name = "name")
     private String name;
+    @Column(name = "symbol")
+    private String symbol;
+    @Column(name = "ticker")
+    private String ticker;
+    @Column(name = "rate_to_usd")
+    private double rateToUsd;
+    //TODO are we going to use external API for rates or store them in our DB?
 }

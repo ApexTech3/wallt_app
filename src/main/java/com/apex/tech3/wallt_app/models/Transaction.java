@@ -3,6 +3,10 @@ package com.apex.tech3.wallt_app.models;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -10,7 +14,7 @@ import lombok.Data;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
-    @SequenceGenerator(name = "transaction_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "transaction_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
     @Column(name = "transaction_id")
     private int id;
     @ManyToOne
@@ -19,10 +23,13 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "sender_wallet")
     private Wallet senderWallet;
-    private long amount;
-    @ManyToOne
-    @JoinColumn(name = "currency_id")
-    private Currency currency;
+    @Column(name = "amount")
+    private BigDecimal amount;
+    @Column(name = "exchange_rate")
+    private double exchangeRate;
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
+    @CreationTimestamp
+    @Column(name = "stamp_created", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp stampCreated;
 }

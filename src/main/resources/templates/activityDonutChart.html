@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+</head>
+<body>
+<div th:fragment="donutTab(isDemo)" class="card overflow-hidden">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <h5 class="card-title mb-9 fw-semibold" th:text="'Funds Sent/Received '+${isDemo}">Funds Sent/Received</h5>
+            <div class="col-8">
+                <h4 class="fw-semibold mb-3" data-blur-toggle
+                    th:text="'$'+${stats.get('totalSent')}+'/$'+${stats.get('totalReceived')}">
+                    $36,358</h4>
+
+                <div class="d-flex align-items-center">
+                    <div class="me-4">
+                          <span class="round-8 rounded-circle me-2 d-inline-block"
+                                style="background-color: #FAD10BEA"></span>
+                        <span class="fs-2">Sent</span>
+                    </div>
+                    <div>
+                          <span class="round-8 rounded-circle me-2 d-inline-block"
+                                style="background-color: #68ff5d"></span>
+                        <span class="fs-2">Received</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center mr-2">
+                <div id="breakup"
+                     th:attr="data-series='[' + ${stats.get('totalSent')} + ',' + ${stats.get('totalReceived')} + ']'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
