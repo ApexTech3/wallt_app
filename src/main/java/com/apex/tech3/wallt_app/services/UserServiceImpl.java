@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User addUneditableAttributes(User old, User updated) {
+    User addUneditableAttributes(User old, User updated) {
         updated.setBlocked(old.isBlocked());
         updated.setVerified(old.isVerified());
         updated.setStampCreated(old.getStampCreated());
@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
         return updated;
     }
 
-    private User validateNewPassword(UserUpdateDto toUpdate, User updated) {
+    User validateNewPassword(UserUpdateDto toUpdate, User updated) {
         String newPassword = toUpdate.getNewPassword();
         String passwordConfirmation = toUpdate.getPasswordConfirmation();
 
