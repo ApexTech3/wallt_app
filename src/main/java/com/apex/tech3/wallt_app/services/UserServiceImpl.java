@@ -96,6 +96,12 @@ public class UserServiceImpl implements UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityDuplicateException("User", "username", user.getUsername());
         }
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new EntityDuplicateException("User", "email", user.getEmail());
+        }
+        if (repository.existsByPhone(user.getPhone())) {
+            throw new EntityDuplicateException("User", "phone", user.getPhone());
+        }
         sendConfirmationEmail(user);
         User curr = repository.save(user);
         Wallet wallet = new Wallet();

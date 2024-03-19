@@ -16,7 +16,7 @@ public class UserRegisterDto {
     private String username;
     @NotEmpty(message = "Password can't be empty", groups = {Register.class, Login.class})
     //@Size(min = 8, message = "Password must be at least 8 characters long", groups = {Register.class})
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must contain at least one capital letter, one digit, and one special symbol", groups = {Register.class})
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+]).{8,}$", message = "Password must contain at least one capital letter, one digit, and one special symbol", groups = {Register.class})
     private String password;
     private String passwordConfirmation;
     @NotEmpty(message = "First name cannot be empty")
