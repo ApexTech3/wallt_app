@@ -22,11 +22,10 @@
 
                     <div class="card-body mb-10" th:style="text-align">
                         <h2 class="card-title" th:text="${user.username}">Username</h2>
-                        <p>First Name: Pesho</p>
-                        <p>Last Name: Peshov</p>
-                        <p>Email: pesho@peshomail.com</p>
-                        <p>Phone: 0888123456</p>
-                        <p>User Role: USER</p>
+                        <p th:text="'First Name: ' + ${user.firstName}">First Name: Pesho</p>
+                        <p th:text="'Last Name: ' + ${user.lastName}">Last Name: Peshov</p>
+                        <p th:text="'Email: ' + ${user.email}">Email: pesho@peshomail.com</p>
+                        <p th:text="'Phone: ' + ${user.phone}">Phone: 0888123456</p>
 
                         <div>
                             <a href="#" data-bs-toggle="modal"
