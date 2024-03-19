@@ -194,7 +194,7 @@ public class UserServiceImpl implements UserService {
 
 
     private void tryAuthorizeUser(User user, User requester) {
-        if (!user.getUsername().equals(requester.getUsername()) && AuthenticationHelper.isBlocked(requester)) {
+        if (!user.getUsername().equals(requester.getUsername()) || AuthenticationHelper.isBlocked(requester)) {
             throw new AuthorizationException(UNAUTHORIZED_USER_ERROR);
         }
     }

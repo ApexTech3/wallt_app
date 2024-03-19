@@ -86,7 +86,7 @@ public class UserMapper {
         UserUpdateDto userUpdateDto = new UserUpdateDto();
         userUpdateDto.setUsername(user.getUsername());
         userUpdateDto.setFirstName(user.getFirstName());
-        userUpdateDto.setMiddleName(user.getFirstName());
+        userUpdateDto.setMiddleName(user.getMiddleName());
         userUpdateDto.setLastName(user.getLastName());
         userUpdateDto.setEmail(user.getEmail());
         userUpdateDto.setPhone(user.getPhone());

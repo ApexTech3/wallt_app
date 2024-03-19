@@ -1,6 +1,10 @@
 package com.apex.tech3.wallt_app.services;
+
 import com.apex.tech3.wallt_app.Helpers;
-import com.apex.tech3.wallt_app.exceptions.*;
+import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
+import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
+import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
+import com.apex.tech3.wallt_app.exceptions.InvalidPasswordException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.TokenService;
 import com.apex.tech3.wallt_app.models.Role;
@@ -8,13 +12,17 @@ import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.models.filters.UserSpecification;
+import com.apex.tech3.wallt_app.repositories.UserRepository;
+import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
+import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.apex.tech3.wallt_app.repositories.UserRepository;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -34,13 +42,16 @@ public class UserServiceTests {
     UserRepository mockRepository;
     @Mock
     AuthenticationHelper authenticationHelper;
-    @InjectMocks
+    @Mock
     TokenService tokenService;
-    @InjectMocks
+    @Mock
     EmailServiceImpl emailService;
+    @Mock
+    CurrencyService currencyService;
+    @Mock
+    WalletService walletService;
     @InjectMocks
     UserServiceImpl userService;
-
 
 
     @Test
@@ -109,6 +120,7 @@ public class UserServiceTests {
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.handleForgottenPassword("test", "test"));
 
+        Mockito.verify(mockRepository, never()).save(any());
         Mockito.verify(mockRepository, never()).save(any());
     }
 
@@ -272,6 +284,79 @@ public class UserServiceTests {
         Mockito.verify(mockRepository, never()).save(any());
     }
 
+    @Test
+    public void getAll_Should_CallRepositoryWhenMethodCalled() {
+        userService.getAll(null, null, null, null, null, null, null, null);
+        Mockito.verify(mockRepository, times(1)).findAll(Mockito.any(Specification.class));
+    }
 
+    @Test
+    public void getAllActiveAndVerified_Should_CallRepositoryWhenMethodCalled() {
+        userService.getAllActiveAndVerified();
+        Mockito.verify(mockRepository, times(1)).findAll(Mockito.any(Specification.class));
+    }
+
+    @Test
+    public void register_Should_CallRepository_When_ValidUserSubmitted() {
+        User user = Helpers.createMockUser();
+        Mockito.when(mockRepository.existsByUsername(user.getUsername())).thenReturn(false);
+        Mockito.when(mockRepository.existsByEmail(user.getEmail())).thenReturn(false);
+        Mockito.when(mockRepository.existsByPhone(user.getPhone())).thenReturn(false);
+        Mockito.when(tokenService.generateToken()).thenReturn("mockToken");
+        Mockito.when(currencyService.getById(2)).thenReturn(Helpers.createMockCurrency());
+        userService.register(user);
+        Mockito.verify(mockRepository, times(1)).save(user);
+    }
+
+    @Test
+    public void register_Should_Throw_When_UsernameExists() {
+        User user = Helpers.createMockUser();
+        Mockito.when(mockRepository.existsByUsername(user.getUsername())).thenReturn(true);
+        Assertions.assertThrows(EntityDuplicateException.class, () -> userService.register(user));
+    }
+
+    @Test
+    public void register_Should_Throw_When_EmailExists() {
+        User user = Helpers.createMockUser();
+        Mockito.when(mockRepository.existsByUsername(user.getUsername())).thenReturn(false);
+        Mockito.when(mockRepository.existsByEmail(user.getEmail())).thenReturn(true);
+        Assertions.assertThrows(EntityDuplicateException.class, () -> userService.register(user));
+    }
+
+    @Test
+    public void register_Should_Throw_When_phoneExists() {
+        User user = Helpers.createMockUser();
+        Mockito.when(mockRepository.existsByUsername(user.getUsername())).thenReturn(false);
+        Mockito.when(mockRepository.existsByEmail(user.getEmail())).thenReturn(false);
+        Mockito.when(mockRepository.existsByPhone(user.getPhone())).thenReturn(true);
+        Assertions.assertThrows(EntityDuplicateException.class, () -> userService.register(user));
+    }
+    @Test
+    public void update_Should_Throw_When_UserIsNotTheRequester() {
+        User mockUser = Helpers.createMockUser();
+        User mockUser2 = Helpers.createMockUser();
+        mockUser2.setUsername("DifferentMockUsername");
+
+        Assertions.assertThrows(AuthorizationException.class, () -> userService.update(mockUser, mockUser2));
+    }
+
+    @Test
+    public void update_Should_Throw_When_EmailIsNotUnique() {
+        User mockUser = Helpers.createMockUser();
+        User mockUser2 = Helpers.createMockUser();
+        mockUser2.setId(2);
+        Mockito.when(mockRepository.getByEmail(mockUser.getEmail())).thenReturn(mockUser2);
+
+        Assertions.assertThrows(EntityDuplicateException.class, () -> userService.update(mockUser, mockUser));
+    }
+    @Test
+    public void update_Should_CallRepository_When_UserIsAuthorizedAndEmailIsSame() {
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.getByEmail(mockUser.getEmail())).thenReturn(mockUser);
+
+        userService.update(mockUser, mockUser);
+
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
 
 }

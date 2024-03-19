@@ -81,7 +81,7 @@
                   </div>
                   <div class="col-md-6">
                     <label for="exampleInputphone" class="form-label">Phone</label>
-                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone" aria-describedby="phoneHelp">
+                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone" aria-describedby="phoneHelp" maxlength="10">
                     <label class="error" th:errors="*{phone}">Phone error placeholder</label>
                   </div>
                 </div>
