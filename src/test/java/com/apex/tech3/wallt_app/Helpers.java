@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app;
 
 import com.apex.tech3.wallt_app.models.*;
+import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
@@ -107,5 +108,11 @@ public class Helpers {
         return transaction;
     }
 
-
+    public static PasswordRecoveryDto createPasswordRecoveryDto() {
+        PasswordRecoveryDto passwordRecoveryDto = new PasswordRecoveryDto();
+        passwordRecoveryDto.setToken("mockToken");
+        passwordRecoveryDto.setPassword("mockPassword");
+        passwordRecoveryDto.setPasswordConfirmation("mockPassword");
+        return passwordRecoveryDto;
+    }
 }

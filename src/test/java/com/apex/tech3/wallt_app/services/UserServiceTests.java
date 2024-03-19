@@ -1,10 +1,7 @@
 package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.Helpers;
-import com.apex.tech3.wallt_app.exceptions.AuthorizationException;
-import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
-import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
-import com.apex.tech3.wallt_app.exceptions.InvalidPasswordException;
+import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.TokenService;
 import com.apex.tech3.wallt_app.models.Role;
@@ -331,6 +328,7 @@ public class UserServiceTests {
         Mockito.when(mockRepository.existsByPhone(user.getPhone())).thenReturn(true);
         Assertions.assertThrows(EntityDuplicateException.class, () -> userService.register(user));
     }
+
     @Test
     public void update_Should_Throw_When_UserIsNotTheRequester() {
         User mockUser = Helpers.createMockUser();
@@ -349,6 +347,7 @@ public class UserServiceTests {
 
         Assertions.assertThrows(EntityDuplicateException.class, () -> userService.update(mockUser, mockUser));
     }
+
     @Test
     public void update_Should_CallRepository_When_UserIsAuthorizedAndEmailIsSame() {
         User mockUser = Helpers.createMockUser();
@@ -357,6 +356,126 @@ public class UserServiceTests {
         userService.update(mockUser, mockUser);
 
         Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void confirmUser_Should_CallRepository_When_TokenIsValid() {
+        User mockUser = Helpers.createMockUser();
+        mockUser.setConfirmationToken("mockToken");
+        Mockito.when(mockRepository.findByConfirmationToken("mockToken")).thenReturn(mockUser);
+        Mockito.when(tokenService.isValidToken("mockToken")).thenReturn(true);
+        userService.confirmUser("mockToken");
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void confirmUser_Should_Throw_When_UserNotFound() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.confirmUser("mockToken"));
+    }
+
+    @Test
+    public void confirmUser_Should_Throw_When_InvalidToken() {
+        User mockUser = Helpers.createMockUser();
+        mockUser.setConfirmationToken("mockToken");
+        Mockito.when(mockRepository.findByConfirmationToken("mockToken")).thenReturn(mockUser);
+        Mockito.when(tokenService.isValidToken("mockToken")).thenReturn(false);
+        Assertions.assertThrows(InvalidTokenException.class, () -> userService.confirmUser("mockToken"));
+    }
+
+    @Test
+    public void confirmResetPasswordToken_Should_Throw_When_UserNotFound() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.confirmResetPasswordToken("mockToken"));
+    }
+
+    @Test
+    public void confirmResetPasswordToken_Should_Throw_When_InvalidToken() {
+        User mockUser = Helpers.createMockUser();
+        mockUser.setConfirmationToken("mockToken");
+        Mockito.when(mockRepository.findByConfirmationToken("mockToken")).thenReturn(mockUser);
+        Mockito.when(tokenService.isValidToken("mockToken")).thenReturn(false);
+        Assertions.assertThrows(InvalidTokenException.class, () -> userService.confirmResetPasswordToken("mockToken"));
+    }
+
+    @Test
+    public void confirmResetPasswordToken_Should_CallRepository_When_ValidToken() {
+        User mockUser = Helpers.createMockUser();
+        mockUser.setConfirmationToken("mockToken");
+        Mockito.when(mockRepository.findByConfirmationToken("mockToken")).thenReturn(mockUser);
+        Mockito.when(tokenService.isValidToken("mockToken")).thenReturn(true);
+        userService.confirmResetPasswordToken("mockToken");
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void handleForgottenPassword_Should_CallRepository_When_ValidToken() {
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.getByEmail(Mockito.any())).thenReturn(mockUser);
+        Mockito.when(tokenService.generateToken()).thenReturn("mockToken");
+        userService.handleForgottenPassword("mockUsername", "mockEmail");
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void handleForgottenPassword_Should_Throw_When_InvalidUser() {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.handleForgottenPassword("mockUsername", "mockEmail"));
+    }
+
+    @Test
+    public void changePassword_Should_CallRepository_When_ValidPassword() {
+        PasswordRecoveryDto mockPasswordRecoveryDto = Helpers.createPasswordRecoveryDto();
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.findByConfirmationToken("mockToken")).thenReturn(mockUser);
+        userService.changePassword(mockPasswordRecoveryDto);
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void changePassword_Should_Throw_When__InvalidPassword() {
+        PasswordRecoveryDto mockPasswordRecoveryDto = Helpers.createPasswordRecoveryDto();
+        mockPasswordRecoveryDto.setPasswordConfirmation("invalidPassword");
+        Assertions.assertThrows(InvalidPasswordException.class, () -> userService.changePassword(mockPasswordRecoveryDto));
+    }
+
+    @Test
+    public void switchBlockedStatus_Should_CallRepository_When_ValidUser() {
+        User mockUser = Helpers.createMockUser();
+        User mockAdmin = Helpers.createMockAdmin();
+        Mockito.when(mockRepository.findById(Mockito.any())).thenReturn(Optional.of(mockUser));
+        userService.switchBlockedStatus(1, mockAdmin);
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void switchBlockedStatus_Should_Throw_When_RequesterNotAdmin() {
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.findById(Mockito.any())).thenReturn(Optional.of(mockUser));
+        Assertions.assertThrows(AuthorizationException.class, () -> userService.switchBlockedStatus(1, mockUser));
+    }
+
+    @Test
+    public void switchBlockedStatus_Should_Throw_When_UserNotFound() {
+        User mockUser = Helpers.createMockUser();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.switchBlockedStatus(1, mockUser));
+    }
+
+    @Test
+    public void deleteUser_Should_CallRepository_When_ValidUser() {
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.findById(Mockito.any())).thenReturn(Optional.of(mockUser));
+        userService.deleteUser(1, mockUser);
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void deleteUser_Should_Throw_When_UserNotRequesterOrAdmin() {
+        User mockUser = Helpers.createMockUser();
+        Assertions.assertThrows(AuthorizationException.class, () -> userService.deleteUser(2, mockUser));
+    }
+
+    @Test
+    public void deleteUser_Should_Throw_When_UserNotFound() {
+        User mockUser = Helpers.createMockUser();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(1, mockUser));
     }
 
 }
