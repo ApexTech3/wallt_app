@@ -105,7 +105,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     private void checkModifyPermissions(Transfer transfer, User user) {
-        if (isAdmin(user) && !transfer.getWallet().getHolder().equals(user)) {
+        if (!isAdmin(user) && !transfer.getWallet().getHolder().equals(user)) {
             throw new AuthorizationException(TRANSFER_ERROR_MESSAGE);
         }
     }

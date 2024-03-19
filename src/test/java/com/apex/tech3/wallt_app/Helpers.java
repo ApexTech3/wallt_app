@@ -1,6 +1,8 @@
 package com.apex.tech3.wallt_app;
 
 import com.apex.tech3.wallt_app.models.*;
+import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
+import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 
 import java.math.BigDecimal;
@@ -70,6 +72,14 @@ public class Helpers {
         return wallet;
     }
 
+    public static Transfer createMockTransfer() {
+        Transfer transfer = new Transfer();
+        transfer.setCurrency(createMockCurrency());
+        transfer.setWallet(createMockWallet());
+        transfer.setCard(createMockCard());
+        transfer.setAmount(BigDecimal.valueOf(100));
+        return transfer;
+    }
 
     public static Role createMockUserRole() {
         Role userRole = new Role();
