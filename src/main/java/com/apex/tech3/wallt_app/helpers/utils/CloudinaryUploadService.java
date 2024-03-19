@@ -31,7 +31,9 @@ public class CloudinaryUploadService {
             e.printStackTrace();
         }
 
-        return (String) uploadResult.get("url");
+        String url = (String) uploadResult.get("url");
+        url = url.substring(0, 4) + "s" + url.substring(4);
+        return url;
     }
 }
 
