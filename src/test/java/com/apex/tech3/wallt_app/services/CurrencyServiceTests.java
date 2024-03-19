@@ -39,7 +39,7 @@ public class CurrencyServiceTests {
     }
 
     @Test
-    public void getById_Should_Throw_When_CardDoesNotExist() {
+    public void getById_Should_Throw_When_CurrencyDoesNotExist() {
         Mockito.when(mockRepository.findById(1)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> service.getById(1));

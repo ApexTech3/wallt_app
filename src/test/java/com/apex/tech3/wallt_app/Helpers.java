@@ -1,6 +1,7 @@
 package com.apex.tech3.wallt_app;
 
 import com.apex.tech3.wallt_app.models.*;
+import com.apex.tech3.wallt_app.models.enums.StatusEnum;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -83,4 +84,18 @@ public class Helpers {
         adminRole.setName("ADMIN");
         return adminRole;
     }
+
+    public static Transaction createMockTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setId(1);
+        transaction.setSenderWallet(createMockWallet());
+        transaction.setReceiverWallet(createMockWallet());
+        transaction.setAmount(BigDecimal.valueOf(100));
+        transaction.setExchangeRate(1);
+        transaction.setStatus(StatusEnum.SUCCESSFUL);
+        transaction.setStampCreated(Timestamp.valueOf("2021-01-01 00:00:00"));
+        return transaction;
+    }
+
+
 }
