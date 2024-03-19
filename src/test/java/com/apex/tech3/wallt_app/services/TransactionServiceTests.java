@@ -122,7 +122,7 @@ public class TransactionServiceTests {
         Mockito.when(mockRepository.findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class))).thenReturn(mockPage);
 
         Pageable pageable = PageRequest.of(0, 10);
-
+service.getBySender(pageable, 1, "test");
         Mockito.verify(mockRepository, Mockito.times(1)).findAll(Mockito.any(Specification.class), Mockito.any(Pageable.class));
     }
 

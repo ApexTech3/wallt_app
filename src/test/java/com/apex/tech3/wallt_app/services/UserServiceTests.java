@@ -477,5 +477,24 @@ public class UserServiceTests {
         User mockUser = Helpers.createMockUser();
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(1, mockUser));
     }
+    @Test
+    public void restoreUser_Should_CallRepository_When_ValidUser() {
+        User mockUser = Helpers.createMockUser();
+        Mockito.when(mockRepository.findById(Mockito.any())).thenReturn(Optional.of(mockUser));
+        userService.restoreUser(1, mockUser);
+        Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
+    }
+
+    @Test
+    public void restoreUser_Should_Throw_When_UserNotRequesterOrAdmin() {
+        User mockUser = Helpers.createMockUser();
+        Assertions.assertThrows(AuthorizationException.class, () -> userService.restoreUser(2, mockUser));
+    }
+
+    @Test
+    public void restoreUser_Should_Throw_When_UserNotFound() {
+        User mockUser = Helpers.createMockUser();
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.restoreUser(1, mockUser));
+    }
 
 }
