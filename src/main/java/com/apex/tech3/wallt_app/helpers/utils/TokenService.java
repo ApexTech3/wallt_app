@@ -1,4 +1,4 @@
-package com.apex.tech3.wallt_app.helpers;
+package com.apex.tech3.wallt_app.helpers.utils;
 
 import org.springframework.stereotype.Service;
 

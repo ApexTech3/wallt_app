@@ -6,16 +6,15 @@ import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.exceptions.InvalidTokenException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
+import com.apex.tech3.wallt_app.helpers.utils.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserRegisterDto;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Login;
 import com.apex.tech3.wallt_app.models.dtos.interfaces.Register;
-import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,8 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 
 import java.io.File;
 import java.io.IOException;

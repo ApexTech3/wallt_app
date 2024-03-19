@@ -1,4 +1,4 @@
-package com.apex.tech3.wallt_app.services;
+package com.apex.tech3.wallt_app.helpers.utils;
 
 import com.apex.tech3.wallt_app.services.contracts.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
