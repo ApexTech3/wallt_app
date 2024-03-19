@@ -6,12 +6,14 @@ import com.apex.tech3.wallt_app.exceptions.EntityDuplicateException;
 import com.apex.tech3.wallt_app.exceptions.EntityNotFoundException;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
 import com.apex.tech3.wallt_app.helpers.UserMapper;
+import com.apex.tech3.wallt_app.helpers.WalletMapper;
 import com.apex.tech3.wallt_app.models.Card;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.dtos.*;
 import com.apex.tech3.wallt_app.services.CloudinaryUploadService;
 import com.apex.tech3.wallt_app.services.contracts.CardService;
+import com.apex.tech3.wallt_app.services.contracts.CurrencyService;
 import com.apex.tech3.wallt_app.services.contracts.UserService;
 import com.apex.tech3.wallt_app.services.contracts.WalletService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,27 +41,35 @@ public class UserController {
     private final WalletService walletService;
     private final UserMapper mapper;
     private final CloudinaryUploadService cloudinaryUploadService;
+    private final WalletMapper walletMapper;
+    private final CurrencyService currencyService;
 
     @Autowired
-    public UserController(UserService userService, AuthenticationHelper authenticationHelper, CardService cardService, WalletService walletService, UserMapper mapper, CloudinaryUploadService cloudinaryUploadService) {
+    public UserController(UserService userService, AuthenticationHelper authenticationHelper, CardService cardService, WalletService walletService, UserMapper mapper, CloudinaryUploadService cloudinaryUploadService, WalletMapper walletMapper, CurrencyService currencyService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.cardService = cardService;
         this.walletService = walletService;
         this.mapper = mapper;
         this.cloudinaryUploadService = cloudinaryUploadService;
+        this.walletMapper = walletMapper;
+        this.currencyService = currencyService;
     }
 
     @ModelAttribute
     public void populateAttributes(HttpSession httpSession, Model model, HttpServletRequest request) {
         boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
+        User user = authenticationHelper.tryGetCurrentUser(httpSession);
+        List<Wallet> wallets = walletService.getActiveByUserId(user.getId());
         model.addAttribute("isAuthenticated", isAuthenticated);
         model.addAttribute("isAdmin", isAuthenticated ? httpSession.getAttribute("isAdmin") : false);
         model.addAttribute("isBlocked", isAuthenticated ? httpSession.getAttribute("isBlocked") : false);
-
+        model.addAttribute("wallets", wallets.stream().map(walletMapper::toDto));
+        model.addAttribute("availableCurrenciesForNewWallets", currencyService.getAllAvailableCurrenciesForUserWallets(user.getId()));
+        model.addAttribute("currentWalletCurrencies", wallets);
+        model.addAttribute("cards", cardService.getByHolderIdAndActive(user.getId()));
         model.addAttribute("requestURI", request.getRequestURI());
-
-        model.addAttribute("cardDto", new CardDto());
+         model.addAttribute("cardDto", new CardDto());
         model.addAttribute("walletDto", new WalletDto());
         model.addAttribute("transferDto", new TransferDto());
         model.addAttribute("transactionDto", new TransactionDto());
