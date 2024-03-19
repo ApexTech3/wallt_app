@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService {
         boolean duplicateExists = true;
         try {
             User userByEmail = repository.getByEmail(user.getEmail());
-            if (userByEmail.getId() == user.getId())
+            if (userByEmail == null || userByEmail.getId() == user.getId())
                 duplicateExists = false;
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
@@ -318,8 +318,8 @@ public class UserServiceImpl implements UserService {
         BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
         BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
         Map<String, BigDecimal> stats = new HashMap<>();
-        if(totalSent == null) totalSent = BigDecimal.ZERO;
-        if(totalReceived == null) totalReceived = BigDecimal.ZERO;
+        if (totalSent == null) totalSent = BigDecimal.ZERO;
+        if (totalReceived == null) totalReceived = BigDecimal.ZERO;
         stats.put("totalSent", totalSent);
         stats.put("totalReceived", totalReceived);
         return stats;
