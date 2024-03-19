@@ -21,12 +21,16 @@
               <p class="text-center">Your Wallet, Freed</p>
               <form action="#" th:action="@{/auth/login}" th:object="${login}" method="post">
                 <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Username</label>
-                  <input type="text" th:field="*{username}" class="form-control" id="exampleInputEmail1">
+                  <label for="exampleUsername" class="form-label">Username</label>
+                  <input type="text" th:field="*{username}" class="form-control" id="exampleUsername">
+                  <br/>
+                  <label class="error" th:errors="*{username}">Username error placeholder.</label>
                 </div>
                 <div class="mb-4">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
                   <input type="password" th:field="*{password}" class="form-control" id="exampleInputPassword1">
+                  <br/>
+                  <label class="error" th:errors="*{password}">Password error placeholder</label>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mb-4">
                   <!-- Open the Forgot Password modal -->

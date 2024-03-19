@@ -82,15 +82,15 @@ public class AuthenticationHelper {
     }
 
     public User verifyAuthentication(String username, String password) {
-        try {
             User user = userService.getByUsername(username);
+            if (user == null) {
+                throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
+            }
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
             }
             return user;
-        } catch (EntityNotFoundException e) {
-            throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
-        }
+
     }
 
     public User tryGetCurrentUser(HttpSession session) {
