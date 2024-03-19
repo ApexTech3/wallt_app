@@ -8,19 +8,19 @@ import com.apex.tech3.wallt_app.helpers.TransferMapper;
 import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
+import com.apex.tech3.wallt_app.models.Wallet;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
 import com.apex.tech3.wallt_app.models.dtos.UserUpdateDto;
 import com.apex.tech3.wallt_app.models.enums.DirectionEnum;
 import com.apex.tech3.wallt_app.models.filters.UserSpecification;
 import com.apex.tech3.wallt_app.repositories.UserRepository;
-import com.apex.tech3.wallt_app.services.contracts.TransactionService;
-import com.apex.tech3.wallt_app.services.contracts.TransferService;
-import com.apex.tech3.wallt_app.services.contracts.UserService;
+import com.apex.tech3.wallt_app.services.contracts.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private final TransactionService transactionService;
 
     private final TransferService transferService;
+    private final WalletService walletService;
+    private final CurrencyService currencyService;
 
     private final TransactionMapper transactionMapper;
 
@@ -43,12 +45,14 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public UserServiceImpl(UserRepository repository, TokenService tokenService, EmailServiceImpl emailService,
-                           TransactionService transactionService, TransferService transferService, TransactionMapper transactionMapper, TransferMapper transferMapper) {
+                           TransactionService transactionService, TransferService transferService, WalletService walletService, CurrencyService currencyService, TransactionMapper transactionMapper, TransferMapper transferMapper) {
         this.repository = repository;
         this.tokenService = tokenService;
         this.emailService = emailService;
         this.transactionService = transactionService;
         this.transferService = transferService;
+        this.walletService = walletService;
+        this.currencyService = currencyService;
         this.transactionMapper = transactionMapper;
         this.transferMapper = transferMapper;
     }
@@ -86,13 +90,21 @@ public class UserServiceImpl implements UserService {
         return repository.findAll(UserSpecification.getAllActiveAndVerified());
     }
 
+    @Transactional
     @Override
     public User register(User user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityDuplicateException("User", "username", user.getUsername());
         }
         sendConfirmationEmail(user);
-        return repository.save(user);
+        User curr = repository.save(user);
+        Wallet wallet = new Wallet();
+        wallet.setAmount(BigDecimal.ZERO);
+        wallet.setCurrency(currencyService.getById(2));
+        wallet.setDefault(true);
+        wallet.setActive(true);
+        walletService.create(wallet, curr);
+        return curr;
     }
 
     @Override
@@ -232,7 +244,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User switchBlockedStatus(int userId, User requester) {
         User user = repository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User", userId));
-        if(isAdmin(requester)) {
+        if (isAdmin(requester)) {
             user.setBlocked(!user.isBlocked());
             return repository.save(user);
         } else {

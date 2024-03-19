@@ -70,6 +70,7 @@ public class WalletServiceImpl implements WalletService {
     public List<Wallet> getByUserId(int userId) {
         return repository.findByHolderId(userId).stream().toList();
     }
+
     @Override
     public List<Wallet> getActiveByUserId(int userId) {
         return repository.findByHolderIdAndIsActiveTrue(userId).stream().toList();
@@ -78,12 +79,14 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public BigDecimal getTotalBalance(int userId) {
         BigDecimal total = repository.getTotalBalance(userId);
-        if(total.compareTo(BigDecimal.ONE) < 0) return total.setScale(6, BigDecimal.ROUND_HALF_UP);
+        if (total.compareTo(BigDecimal.ONE) < 0) return total.setScale(6, BigDecimal.ROUND_HALF_UP);
         return total.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
+
     @Override
     public Wallet create(Wallet wallet, User user) {
         wallet.setHolder(user);
+        wallet.setActive(true);
         return repository.save(wallet);
     }
 
@@ -96,7 +99,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void changeStatus(int id, User user) {
         Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
-        if(wallet.getHolder().getId() != user.getId()) {
+        if (wallet.getHolder().getId() != user.getId()) {
             throw new AuthorizationException("You are not the owner of this wallet.");
         }
         wallet.setActive(!wallet.isActive());
@@ -106,13 +109,13 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public void changeDefaultWallet(int id, User user) {
         Wallet wallet = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Wallet", id));
-        if(wallet.getHolder().getId() != user.getId()) {
+        if (wallet.getHolder().getId() != user.getId()) {
             throw new AuthorizationException("You are not the owner of this wallet.");
         }
-        if(wallet.isDefault()) return;
+        if (wallet.isDefault()) return;
         Wallet oldDefault = repository.findByHolderIdAndIsDefaultTrue(user.getId());
         oldDefault.setDefault(false);
-        if(!wallet.isActive()) wallet.setActive(true);
+        if (!wallet.isActive()) wallet.setActive(true);
         wallet.setDefault(true);
         repository.save(wallet);
     }
@@ -152,7 +155,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet getSameOrDefaultWalletByHolderId(int holderId, int walletId) {
         Currency currency = getById(walletId).getCurrency();
-        if(repository.findByHolderIdAndCurrencyId(holderId, currency.getId()) != null) {
+        if (repository.findByHolderIdAndCurrencyId(holderId, currency.getId()) != null) {
             return repository.findByHolderIdAndCurrencyId(holderId, currency.getId());
         }
 
