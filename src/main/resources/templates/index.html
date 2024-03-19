@@ -51,16 +51,15 @@
         </div>
         <div class="col-4">
           <!-- Sent/Received donut -->
-          <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
-          <div th:replace="~{walletsTab.html :: walletsVisual}"></div>
+          <div th:replace="~{activityDonutChart.html:: donutTab('(Demo)')}"></div>
+          <div th:replace="~{walletsTab.html :: walletsVisual('(Demo)')}"></div>
         </div>
       </div>
       <div class="row">
         <!--        <div class="d-flex align-items-stretch">-->
           <div class="card w-100">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Recent Activity(Demo)</h5>
-                <div th:replace="~{activityTable.html :: activity-table}"></div>
+              <div th:replace="~{activityTable.html :: activity-table('(Demo)')}"></div>
             </div>
           </div>
         <!--        </div>-->
@@ -78,7 +77,7 @@
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
   <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
-<script src="../assets/libs/dataTable/datatables.js"></script>
+<script src="../assets/libs/dataTables/datatables.js"></script>
 <script src="../assets/js/index.js"></script>
 </body>
 

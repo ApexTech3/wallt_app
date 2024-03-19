@@ -54,6 +54,7 @@ public class AdminController {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(httpSession);
+            model.addAttribute("currentUser", user);
             model.addAttribute("filterOptions", filterOptions);
             if (!AuthenticationHelper.isAdmin(user)) {
                 throw new AuthorizationException("You are not authorized to perform this operation");
@@ -87,6 +88,7 @@ public class AdminController {
         User user;
         try {
             user = authenticationHelper.tryGetCurrentUser(httpSession);
+            model.addAttribute("currentUser", user);
             if (!AuthenticationHelper.isAdmin(user)) {
                 throw new AuthorizationException("You are not authorized to perform this operation");
             }

@@ -17,7 +17,7 @@
     <!--  Header End -->
     <div class="container-fluid">
       <button id="blurToggleButton" class="btn bg-light py-2" title="Hide/Show sensitive data."
-              style="position: fixed;top: 100px;right: 0;z-index:9999">
+              style="position: fixed;top: 100px;right: 0;z-index:9999" onclick="BlurContent()">
         <i class="fa-regular fa-eye-slash fa-2xl"></i>
       </button>
       <!--  Row 1 -->
@@ -54,7 +54,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr th:each="user : ${users}" th:unless="${user.id} == ${userId}">
+                  <tr th:each="user : ${users}" th:unless="${user.id} == ${currentUser.id}">
                     <td th:text="${user.username}">pesho"></td>
                     <td th:text="${user.firstName}+' '+${user.lastName}">Pesho</td>
                     <td th:text="${user.email}">Email</td>
@@ -128,8 +128,8 @@
         </div>
         <div class="col-4">
           <!-- Sent/Received donut -->
-          <div th:replace="~{activityDonutChart.html:: donutTab}"></div>
-          <div th:replace="~{walletsTab.html :: walletsVisual}"></div>
+          <div th:replace="~{activityDonutChart.html:: donutTab('')}"></div>
+          <div th:replace="~{walletsTab.html :: walletsVisual('')}"></div>
         </div>
         <div th:if="${!#lists.isEmpty(pendingWithdrawals)}" class="row">
           <div class="card">
@@ -142,8 +142,7 @@
         <div class="row">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-2">Recent Activity</h5>
-              <div th:replace="~{activityTable.html :: activity-table}"></div>
+              <div th:replace="~{activityTable.html :: activity-table('')}"></div>
               </div>
             </div>
         </div>
@@ -160,7 +159,7 @@
   <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
   <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
-<script src="../assets/libs/dataTable/datatables.js"></script>
+<script src="../assets/libs/dataTables/datatables.js"></script>
 <script src="../assets/js/index.js"></script>
 <script src="../assets/js/transaction.js"></script>
 <script>

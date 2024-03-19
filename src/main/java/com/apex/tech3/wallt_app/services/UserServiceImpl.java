@@ -96,6 +96,12 @@ public class UserServiceImpl implements UserService {
         if (repository.existsByUsername(user.getUsername())) {
             throw new EntityDuplicateException("User", "username", user.getUsername());
         }
+        if (repository.existsByEmail(user.getEmail())) {
+            throw new EntityDuplicateException("User", "email", user.getEmail());
+        }
+        if (repository.existsByPhone(user.getPhone())) {
+            throw new EntityDuplicateException("User", "phone", user.getPhone());
+        }
         sendConfirmationEmail(user);
         User curr = repository.save(user);
         Wallet wallet = new Wallet();
@@ -311,6 +317,8 @@ public class UserServiceImpl implements UserService {
         BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
         BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
         Map<String, BigDecimal> stats = new HashMap<>();
+        if(totalSent == null) totalSent = BigDecimal.ZERO;
+        if(totalReceived == null) totalReceived = BigDecimal.ZERO;
         stats.put("totalSent", totalSent);
         stats.put("totalReceived", totalReceived);
         return stats;

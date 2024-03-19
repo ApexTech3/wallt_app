@@ -80,6 +80,7 @@ public class UserController {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
             UserUpdateDto dto = mapper.toUpdateDto(userService.getById(id));
+            model.addAttribute("currentUser", user);
             model.addAttribute("user", dto);
             model.addAttribute("adminOrCurrentUser", user.getId() == id || AuthenticationHelper.isAdmin(userService.getById(user.getId())));
             try {
