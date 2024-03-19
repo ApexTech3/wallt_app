@@ -5,12 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<div th:fragment="walletsVisual" class="col-lg-12">
+<div th:fragment="walletsVisual(isDemo)" class="col-lg-12">
     <!-- Monthly Earnings -->
     <div class="card">
         <div class="card-body">
             <div class="row justify-content-between">
-                <h5 class="card-title mb-9 fw-semibold"> Wallets </h5>
+                <h5 class="card-title mb-9 fw-semibold" th:text="'Wallets '+${isDemo}"> Wallets </h5>
             </div>
             <div class="row" th:each="wallet : ${wallets}">
                 <div class="d-flex justify-content-between">

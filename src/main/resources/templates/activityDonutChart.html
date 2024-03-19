@@ -5,10 +5,10 @@
     <title>$Title$</title>
 </head>
 <body>
-<div th:fragment="donutTab" class="card overflow-hidden">
+<div th:fragment="donutTab(isDemo)" class="card overflow-hidden">
     <div class="card-body p-4">
         <div class="row align-items-center">
-            <h5 class="card-title mb-9 fw-semibold">Funds Sent/Received(Demo)</h5>
+            <h5 class="card-title mb-9 fw-semibold" th:text="'Funds Sent/Received '+${isDemo}">Funds Sent/Received</h5>
             <div class="col-8">
                 <h4 class="fw-semibold mb-3" data-blur-toggle
                     th:text="'$'+${stats.get('totalSent')}+'/$'+${stats.get('totalReceived')}">

@@ -1,5 +1,5 @@
-document.getElementById('blurToggleButton').addEventListener('click', function () {
-    var sensitiveContentElements = document.querySelectorAll('[data-blur-toggle]');
+function BlurContent() {
+    let sensitiveContentElements = document.querySelectorAll('[data-blur-toggle]');
     for (var i = 0; i < sensitiveContentElements.length; i++) {
         if (sensitiveContentElements[i].style.filter === 'blur(5px)') {
             sensitiveContentElements[i].style.filter = 'none';
@@ -7,7 +7,7 @@ document.getElementById('blurToggleButton').addEventListener('click', function (
             sensitiveContentElements[i].style.filter = 'blur(5px)';
         }
     }
-});
+}
 
 $(document).ready(function () {
     $('#activity-table').DataTable(
@@ -25,6 +25,14 @@ $(document).ready(function () {
     $('#activity-table-admin').DataTable();
 });
 
+
+$(document).ready(function () {
+    $('#pending-transfers-table').DataTable(
+        {
+            scrollY: 150,
+        }
+    );
+});
 
 $(document).ready(function () {
     var table = $('#transaction-table').DataTable({
