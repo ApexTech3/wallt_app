@@ -311,6 +311,8 @@ public class UserServiceImpl implements UserService {
         BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
         BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
         Map<String, BigDecimal> stats = new HashMap<>();
+        if(totalSent == null) totalSent = BigDecimal.ZERO;
+        if(totalReceived == null) totalReceived = BigDecimal.ZERO;
         stats.put("totalSent", totalSent);
         stats.put("totalReceived", totalReceived);
         return stats;

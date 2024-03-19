@@ -45,7 +45,6 @@ public class DashboardController {
     public void populateAttributes(HttpSession httpSession, Model model) {
         boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
         model.addAttribute("isAuthenticated", isAuthenticated);
-
         model.addAttribute("isAdmin", isAuthenticated ? httpSession.getAttribute("isAdmin") : false);
         model.addAttribute("isBlocked", isAuthenticated ? httpSession.getAttribute("isBlocked") : false);
         model.addAttribute("cardDto", new CardDto());
@@ -59,6 +58,7 @@ public class DashboardController {
         try {
             User user = authenticationHelper.tryGetCurrentUser(session);
             List<Wallet> wallets = walletService.getActiveByUserId(user.getId());
+            model.addAttribute("currentUser", user);
             model.addAttribute("userId", user.getId());
             model.addAttribute("cards", cardService.getByHolderIdAndActive(user.getId()));
             model.addAttribute("users", userService.getAllActiveAndVerified());

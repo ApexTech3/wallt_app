@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -79,8 +80,9 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public BigDecimal getTotalBalance(int userId) {
         BigDecimal total = repository.getTotalBalance(userId);
-        if (total.compareTo(BigDecimal.ONE) < 0) return total.setScale(6, BigDecimal.ROUND_HALF_UP);
-        return total.setScale(2, BigDecimal.ROUND_HALF_UP);
+        if(total.compareTo(BigDecimal.ONE) > 0) return total.setScale(2, RoundingMode.HALF_UP);
+        else if(total.equals(BigDecimal.ZERO)) return BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        else return total.setScale(6, RoundingMode.HALF_UP);
     }
 
     @Override
