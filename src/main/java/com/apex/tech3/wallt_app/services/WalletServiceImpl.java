@@ -79,7 +79,6 @@ public class WalletServiceImpl implements WalletService {
     public BigDecimal getTotalBalance(int userId) {
         BigDecimal total = repository.getTotalBalance(userId);
         if(total.compareTo(BigDecimal.ONE) < 0) return total.setScale(6, BigDecimal.ROUND_HALF_UP);
-        ;
         return total.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     @Override
