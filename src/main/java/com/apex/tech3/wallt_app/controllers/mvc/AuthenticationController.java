@@ -115,7 +115,6 @@ public class AuthenticationController {
             return "redirect:/auth/login";
         } catch (EntityDuplicateException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());
-            //email error
             return "authentication-register";
         } catch (IOException e) {
             bindingResult.rejectValue("profilePicture", "auth_error", e.getMessage());
@@ -126,7 +125,11 @@ public class AuthenticationController {
     @PostMapping("/forgotten")
     public String handleForgottenPasswordRequest(@RequestParam("username") String username,
                                                                  @RequestParam("email") String email) {
-        userService.handleForgottenPassword(username, email);
+        try {
+            userService.handleForgottenPassword(username, email);
+        } catch (EntityNotFoundException e) {
+            return "password-reset-failure";
+        }
         String successMessage = "Password reset email sent successfully.";
         return "password-reset-success";
     }
