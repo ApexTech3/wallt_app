@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void handleForgottenPassword(String username, String email) {
-        User user = repository.getByEmail(email);//todo find by email and username
+        User user = repository.findByUsernameAndEmail(username, email);
         if (user == null) {
             throw new EntityNotFoundException("User with this username and email not found");
         }
