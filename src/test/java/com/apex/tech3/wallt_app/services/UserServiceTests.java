@@ -3,7 +3,8 @@ package com.apex.tech3.wallt_app.services;
 import com.apex.tech3.wallt_app.Helpers;
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
-import com.apex.tech3.wallt_app.helpers.TokenService;
+import com.apex.tech3.wallt_app.helpers.utils.EmailServiceImpl;
+import com.apex.tech3.wallt_app.helpers.utils.TokenService;
 import com.apex.tech3.wallt_app.models.Role;
 import com.apex.tech3.wallt_app.models.User;
 import com.apex.tech3.wallt_app.models.dtos.PasswordRecoveryDto;
@@ -110,7 +111,7 @@ public class UserServiceTests {
 
     @Test
     public void handleForgottenPassword_Should_ThrowEntityNotFoundException_When_UserNotFound() {
-        Mockito.when(mockRepository.getByEmail(anyString())).thenReturn(null);
+        Mockito.when(mockRepository.findByUsernameAndEmail(anyString(),anyString())).thenReturn(null);
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.handleForgottenPassword("test", "test"));
 
@@ -402,7 +403,7 @@ public class UserServiceTests {
     @Test
     public void handleForgottenPassword_Should_CallRepository_When_ValidToken() {
         User mockUser = Helpers.createMockUser();
-        Mockito.when(mockRepository.getByEmail(Mockito.any())).thenReturn(mockUser);
+        Mockito.when(mockRepository.findByUsernameAndEmail(Mockito.any(),Mockito.any())).thenReturn(mockUser);
         Mockito.when(tokenService.generateToken()).thenReturn("mockToken");
         userService.handleForgottenPassword("mockUsername", "mockEmail");
         Mockito.verify(mockRepository, Mockito.times(1)).save(mockUser);
