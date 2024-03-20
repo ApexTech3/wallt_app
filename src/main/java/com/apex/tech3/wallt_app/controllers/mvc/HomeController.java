@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -31,6 +32,15 @@ public class HomeController {
         this.walletService = walletService;
         this.walletMapper = walletMapper;
     }
+
+    @ModelAttribute
+    public void populateAttributes(HttpSession httpSession, Model model) {
+        boolean isAuthenticated = httpSession.getAttribute("currentUser") != null;
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("isBlocked", isAuthenticated ? httpSession.getAttribute("isBlocked") : false);
+
+    }
+
 
     @GetMapping()
     public String index() {

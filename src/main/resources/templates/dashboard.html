@@ -25,7 +25,7 @@
         <!--        flex-column align-items-stretch-->
         <div class="col-8 flex-column align-items-stretch">
           <div class="card">
-            <div class="card-body">
+              <div class="card-body" th:unless="${isBlocked}">
               <div class="d-flex justify-content-between">
                 <h2 class="mb-4" id="transaction-title"> Send money to a friend:</h2>
                 <button id="transaction-cancel-btn" class="btn btn-danger" style="display: none;"
@@ -70,6 +70,10 @@
                   </tbody>
                 </table>
               </div>
+              </div>
+              <div class="card-body" th:if="${isBlocked}">
+                  <h1 class="text-danger fw-bold">You are blocked from making transactions. Contemplate on the reasons
+                      to get here.<i class="fa-solid fa-skull fa-xl"></i></h1>
             </div>
               <div id="transaction-dialog" style="display: none;">
                 <form id="transaction-form" class="form" th:object="${transactionDto}" th:action="@{/transaction/new}"

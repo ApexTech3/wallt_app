@@ -6,17 +6,14 @@
 </head>
 <body>
 <div th:fragment="cards-table" class="table-responsive">
-    <table id="cards-table" class="table justify-content-start align-items-center">
+    <table id="cards-table" class="table justify-content-center align-items-center">
         <thead class="text-dark fs-4">
         <tr>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Number</h6>
             </th>
             <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Holder</h6>
-            </th>
-            <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Expiration year</h6>
+                <h6 class="fw-semibold mb-0">Expiration Date</h6>
             </th>
             <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Active</h6>
@@ -32,10 +29,8 @@
                 <h6 class="fw-semibold mb-1" th:text="${card.number}">Card number</h6>
             </td>
             <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${card.holder.firstName}">Card holder</h6>
-            </td>
-            <td class="border-bottom-0">
-                <h6 class="fw-semibold mb-1" th:text="${card.expirationYear}">Expiration year</h6>
+                <h6 class="fw-semibold mb-1" th:text="${card.expirationMonth}+'/'+${card.expirationYear}">Expiration
+                    year</h6>
             </td>
             <td class="border-bottom-0">
                 <div class="d-flex align-items-center gap-2">
