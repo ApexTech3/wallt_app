@@ -15,7 +15,6 @@ public class UserUpdateDto {
     @NotEmpty(message = "First name can't be empty")
     @Size(min = 4, max = 32, message = "First name should be between 4 and 32 symbols")
     private String firstName;
-    @Size(min = 4, max = 32, message = "Last name should be between 4 and 32 symbols")
     @NotEmpty(message = "Middle name can't be empty")
     private String middleName;
     @Size(min = 4, max = 32, message = "Last name should be between 4 and 32 symbols")
