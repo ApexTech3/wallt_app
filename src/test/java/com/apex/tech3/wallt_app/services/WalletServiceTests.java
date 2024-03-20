@@ -246,7 +246,6 @@ public class WalletServiceTests {
 
     @Test
     public void getSameOrDefaultWalletByHolderId_Should_Return_WalletByCurrencyId_When_Found() {
-        // Create a mock currency and wallet
         Currency mockCurrency = Helpers.createMockCurrency();
         Wallet mockWallet = Helpers.createMockWallet();
         mockWallet.setCurrency(mockCurrency);
@@ -262,7 +261,7 @@ public class WalletServiceTests {
     @Test
     public void getTotalBalance_Should_CallRepository_When_MethodCalled() {
         Wallet mockWallet = Helpers.createMockWallet();
-        BigDecimal expectedTotal = new BigDecimal("100.00"); // Or any other value you prefer
+        BigDecimal expectedTotal = new BigDecimal("100.00");
         Mockito.when(mockRepository.getTotalBalance(1)).thenReturn(expectedTotal);
         service.getTotalBalance(1);
         Mockito.verify(mockRepository, Mockito.times(1)).getTotalBalance(1);
@@ -270,7 +269,7 @@ public class WalletServiceTests {
 
     @Test
     public void testGetTotalBalance_ReturnsCorrectTotal() {
-        BigDecimal expectedTotal = new BigDecimal("100.00"); // Or any other expected value
+        BigDecimal expectedTotal = new BigDecimal("100.00");
         Mockito.when(mockRepository.getTotalBalance(1)).thenReturn(expectedTotal);
 
         BigDecimal actualTotal = service.getTotalBalance(1);

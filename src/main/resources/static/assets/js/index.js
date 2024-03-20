@@ -1,13 +1,3 @@
-function BlurContent() {
-    let sensitiveContentElements = document.querySelectorAll('[data-blur-toggle]');
-    for (var i = 0; i < sensitiveContentElements.length; i++) {
-        if (sensitiveContentElements[i].style.filter === 'blur(5px)') {
-            sensitiveContentElements[i].style.filter = 'none';
-        } else {
-            sensitiveContentElements[i].style.filter = 'blur(5px)';
-        }
-    }
-}
 
 $(document).ready(function () {
     $('#activity-table').DataTable(
@@ -35,7 +25,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    var table = $('#transaction-table').DataTable({
+    $('#transaction-table').DataTable({
         autoWidth: false,
         paging: false,
         scrollY: 250,
@@ -46,6 +36,18 @@ $(document).ready(function () {
     });
 
 });
+
+function BlurContent() {
+    let sensitiveContentElements = document.querySelectorAll('[data-blur-toggle]');
+    for (var i = 0; i < sensitiveContentElements.length; i++) {
+        if (sensitiveContentElements[i].style.filter === 'blur(5px)') {
+            sensitiveContentElements[i].style.filter = 'none';
+        } else {
+            sensitiveContentElements[i].style.filter = 'blur(5px)';
+        }
+    }
+}
+
 
 
 

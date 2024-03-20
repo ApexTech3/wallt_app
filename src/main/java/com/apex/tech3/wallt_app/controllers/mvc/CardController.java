@@ -29,12 +29,6 @@ public class CardController {
         this.cardMapper = cardMapper;
     }
 
-    @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("cards", cardService.getAll());
-        return "cards";
-    }
-
     @GetMapping("/{id}")
     public String getSingleCard(@PathVariable int id, Model model) {
         model.addAttribute("card", cardService.getById(id));

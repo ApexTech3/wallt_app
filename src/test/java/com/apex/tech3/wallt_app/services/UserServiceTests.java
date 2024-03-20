@@ -101,13 +101,10 @@ public class UserServiceTests {
 
     @Test
     public void confirmResetPasswordToken_Should_ThrowEntityNotFoundException_When_UserNotFound() {
-        // Mock the behavior of the repository method findByConfirmationToken to return null
         Mockito.when(mockRepository.findByConfirmationToken(anyString())).thenReturn(null);
 
-        // Call the method under test and assert that it throws EntityNotFoundException
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.confirmResetPasswordToken("invalidToken"));
 
-        // Verify that repository.save() is not called
         Mockito.verify(mockRepository, never()).save(any());
     }
 
@@ -232,7 +229,6 @@ public class UserServiceTests {
         userToBeUnblocked.setBlocked(true);
 
         Mockito.when(mockRepository.findById(userId)).thenReturn(java.util.Optional.of(userToBeUnblocked));
-        //Mockito.when(userService.isAdmin(adminUser)).thenReturn(true);
         Mockito.when(mockRepository.save(userToBeUnblocked)).thenReturn(userToBeUnblocked);
 
         User result = userService.unblockUser(userId, adminUser);
@@ -246,7 +242,6 @@ public class UserServiceTests {
     public void unblockUser_WithNonAdminUser_ShouldThrowAuthorizationException() {
         int userId = 123;
         User regularUser = Helpers.createMockUser();
-        //Mockito.when(userService.isAdmin(regularUser)).thenReturn(false);
         AuthorizationException exception = Assertions.assertThrows(AuthorizationException.class, () -> userService.unblockUser(userId, regularUser));
         Assertions.assertEquals("You are not authorized to perform this operation", exception.getMessage());
         Mockito.verify(mockRepository, never()).findById(anyInt());
@@ -258,7 +253,6 @@ public class UserServiceTests {
         int userId = 1;
         User requester = Helpers.createMockAdmin();
         User userToBeBlocked = Helpers.createMockUser();
-        //Mockito.when(userService.isAdmin(requester)).thenReturn(true);
 
         Mockito.when(mockRepository.findById(userId)).thenReturn(Optional.of(userToBeBlocked));
         Mockito.when(mockRepository.save(userToBeBlocked)).thenReturn(userToBeBlocked);
@@ -273,7 +267,6 @@ public class UserServiceTests {
     public void blockUser_WithNonAdminUser_ShouldThrowAuthorizationException() {
         int userId = 1;
         User requester = Helpers.createMockUser();
-        //Mockito.when(userService.isAdmin(requester)).thenReturn(false);
         Assertions.assertThrows(AuthorizationException.class, () -> {
             userService.blockUser(userId, requester);
         });
@@ -477,6 +470,7 @@ public class UserServiceTests {
         User mockUser = Helpers.createMockUser();
         Assertions.assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(1, mockUser));
     }
+
     @Test
     public void restoreUser_Should_CallRepository_When_ValidUser() {
         User mockUser = Helpers.createMockUser();

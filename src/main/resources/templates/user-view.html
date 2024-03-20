@@ -22,15 +22,14 @@
 
                     <div class="card-body mb-10" th:style="text-align">
                         <h2 class="card-title" th:text="${user.username}">Username</h2>
-                        <p>First Name: Pesho</p>
-                        <p>Last Name: Peshov</p>
-                        <p>Email: pesho@peshomail.com</p>
-                        <p>Phone: 0888123456</p>
-                        <p>User Role: USER</p>
+                        <p th:text="'First Name: ' + ${user.firstName}">First Name: Pesho</p>
+                        <p th:text="'Last Name: ' + ${user.lastName}">Last Name: Peshov</p>
+                        <p th:text="'Email: ' + ${user.email}">Email: pesho@peshomail.com</p>
+                        <p th:text="'Phone: ' + ${user.phone}">Phone: 0888123456</p>
 
                         <div>
                             <a href="#" data-bs-toggle="modal"
-                               data-bs-target="#editProfileModal" class="btn btn-warning" style="height: 36px">Edit</a>
+                               data-bs-target="#editProfileModal" class="btn btn-warning" style="height: 36px"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
                         </div>
                     </div>
                 </div>
@@ -78,7 +77,6 @@
 <script src="../assets/js/app.min.js"></script>
 <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
 <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="../assets/js/dashboard.js"></script>
 <script src="https://kit.fontawesome.com/03af3564c7.js" crossorigin="anonymous"></script>
 <script src="/assets/libs/dataTables/datatables.js"></script>
 <script src="/assets/js/index.js"></script>

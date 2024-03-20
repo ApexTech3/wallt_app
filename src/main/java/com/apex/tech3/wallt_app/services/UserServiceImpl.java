@@ -2,9 +2,10 @@ package com.apex.tech3.wallt_app.services;
 
 import com.apex.tech3.wallt_app.exceptions.*;
 import com.apex.tech3.wallt_app.helpers.AuthenticationHelper;
-import com.apex.tech3.wallt_app.helpers.TokenService;
 import com.apex.tech3.wallt_app.helpers.TransactionMapper;
 import com.apex.tech3.wallt_app.helpers.TransferMapper;
+import com.apex.tech3.wallt_app.helpers.utils.EmailServiceImpl;
+import com.apex.tech3.wallt_app.helpers.utils.TokenService;
 import com.apex.tech3.wallt_app.models.AdminFinancialActivity;
 import com.apex.tech3.wallt_app.models.FinancialActivity;
 import com.apex.tech3.wallt_app.models.User;
@@ -150,7 +151,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void handleForgottenPassword(String username, String email) {
-        User user = repository.getByEmail(email);//todo find by email and username
+        User user = repository.findByUsernameAndEmail(username, email);
         if (user == null) {
             throw new EntityNotFoundException("User with this username and email not found");
         }
@@ -182,7 +183,7 @@ public class UserServiceImpl implements UserService {
         boolean duplicateExists = true;
         try {
             User userByEmail = repository.getByEmail(user.getEmail());
-            if (userByEmail.getId() == user.getId())
+            if (userByEmail == null || userByEmail.getId() == user.getId())
                 duplicateExists = false;
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
@@ -317,8 +318,8 @@ public class UserServiceImpl implements UserService {
         BigDecimal totalSent = transactionService.getSentAmountByUserId(userId);
         BigDecimal totalReceived = transactionService.getReceivedAmountByUserId(userId);
         Map<String, BigDecimal> stats = new HashMap<>();
-        if(totalSent == null) totalSent = BigDecimal.ZERO;
-        if(totalReceived == null) totalReceived = BigDecimal.ZERO;
+        if (totalSent == null) totalSent = BigDecimal.ZERO;
+        if (totalReceived == null) totalReceived = BigDecimal.ZERO;
         stats.put("totalSent", totalSent);
         stats.put("totalReceived", totalReceived);
         return stats;

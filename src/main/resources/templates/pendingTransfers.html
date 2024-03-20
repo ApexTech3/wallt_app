@@ -61,8 +61,8 @@
                     <form action="#" th:action="@{/transfers/withdrawal/confirm}" th:object="${withdrawal}"
                           method="post">
                         <input type="hidden" th:value="${withdrawal.id}" name="withdrawalId"/>
-                        <button type="submit" class="btn btn-primary me-2"
-                                onclick="return confirm('Are you sure you want to confirm this withdrawal?')">Confirm
+                        <button type="submit" class="btn btn-success me-2"
+                                onclick="return confirm('Are you sure you want to confirm this withdrawal?')"><i class="fa-solid fa-square-check fa-xl"></i>
                         </button>
                     </form>
 
@@ -70,8 +70,8 @@
                     <form action="#" th:action="@{/transfers/withdrawal/cancel}" th:object="${withdrawal}"
                           method="post">
                         <input type="hidden" th:value="${withdrawal.id}" name="withdrawalId"/>
-                        <button type="submit" class="btn btn-primary"
-                                onclick="return confirm('Are you sure you want to cancel this withdrawal?')">Cancel
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Are you sure you want to cancel this withdrawal?')"><i class="fa-solid fa-ban fa-xl"></i>
                         </button>
                     </form>
                 </div>

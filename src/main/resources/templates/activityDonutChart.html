@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="col-4 d-flex justify-content-center mr-2">
-                <div id="breakup"
+                <div th:unless="${stats.get('totalSent')== 0 && stats.get('totalReceived')==0}" id="breakup"
                      th:attr="data-series='[' + ${stats.get('totalSent')} + ',' + ${stats.get('totalReceived')} + ']'"></div>
             </div>
         </div>

@@ -71,6 +71,7 @@ public class TransactionMapper {
     public FinancialActivity moneyReceivedToActivity(Transaction transaction) {
         FinancialActivity activity = new FinancialActivity();
         activity.setDescription("Money received from " + transaction.getSenderWallet().getHolder().getUsername());
+        activity.setAmount(transaction.getAmount().divide(BigDecimal.valueOf(transaction.getExchangeRate()), 2, RoundingMode.HALF_UP));
         activity.setCurrencySymbol(transaction.getReceiverWallet().getCurrency().getSymbol());
         activity.setTimestamp(transaction.getStampCreated());
         activity.setWalletId(transaction.getReceiverWallet().getId());

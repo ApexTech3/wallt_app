@@ -87,7 +87,8 @@
                   </div>
                   <div class="col-md-6">
                     <label for="exampleInputphone" class="form-label">Phone</label>
-                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone" aria-describedby="phoneHelp" maxlength="10">
+                    <input type="text" th:field="*{phone}" class="form-control" id="exampleInputphone"
+                           aria-describedby="phoneHelp" minlength="10" maxlength="10">
                     <label class="error" th:errors="*{phone}">Phone error placeholder</label>
                   </div>
                 </div>
@@ -109,7 +110,7 @@
                 document.getElementById('password').addEventListener('input', function () {
                   var password = document.getElementById('password').value;
                   var passwordError = document.getElementById('passwordError');
-                  var pattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+]).{8,}$/;
+                  var pattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+\-]).{8,}$/;
 
                   if (!pattern.test(password)) {
                     passwordError.innerText = 'Password must be at least 8 characters long and contain at least one capital letter, one digit, and one special symbol (+, -, *, &, ^, …)';
