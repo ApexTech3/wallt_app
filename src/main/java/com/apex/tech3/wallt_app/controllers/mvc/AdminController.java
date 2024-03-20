@@ -108,7 +108,7 @@ public class AdminController {
     }
 
     private Pageable createPageable(UserFilterOptions filterOptions) {
-        final int PAGE_SIZE = 10;
+        final int PAGE_SIZE = 1000;
         if (filterOptions.getSortBy() == null || filterOptions.getSortBy().isEmpty())
             return PageRequest.of(filterOptions.getPage(), PAGE_SIZE);
         Sort sort = Sort.by(filterOptions.getSortBy());
