@@ -105,41 +105,6 @@
                   <a class="text-primary fw-bold ms-2" th:href="@{/auth/login}">Sign In</a>
                 </div>
               </form>
-
-              <script>
-                document.getElementById('password').addEventListener('input', function () {
-                  var password = document.getElementById('password').value;
-                  var passwordError = document.getElementById('passwordError');
-                  var pattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+\-]).{8,}$/;
-
-                  if (!pattern.test(password)) {
-                    passwordError.innerText = 'Password must be at least 8 characters long and contain at least one capital letter, one digit, and one special symbol (+, -, *, &, ^, …)';
-                    passwordError.style.color = 'red';
-                  } else {
-                    passwordError.innerText = '';
-                    checkPasswordMatch();
-                  }
-                });
-
-                document.getElementById('passwordConfirmation').addEventListener('input', checkPasswordMatch);
-
-                function checkPasswordMatch() {
-                  var password = document.getElementById('password').value;
-                  var passwordConfirmation = document.getElementById('passwordConfirmation').value;
-                  var passwordMatchSpan = document.getElementById('passwordMatch');
-
-                  if (password === passwordConfirmation && password !== '') {
-                    passwordMatchSpan.innerText = 'Passwords match';
-                    passwordMatchSpan.style.color = 'green';
-                    document.getElementById('submitButton').disabled = false;
-                  } else {
-                    passwordMatchSpan.innerText = 'Passwords do not match';
-                    passwordMatchSpan.style.color = 'red';
-                    document.getElementById('submitButton').disabled = true;
-                  }
-                }
-              </script>
-
             </div>
           </div>
         </div>
@@ -149,6 +114,47 @@
 </div>
 <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
 <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+      document.getElementById('password').addEventListener('input', function () {
+        var password = document.getElementById('password').value;
+        var passwordError = document.getElementById('passwordError');
+        var pattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()-_=+\-]).{8,}$/;
+     
+        if (!pattern.test(password)) {
+          passwordError.innerText = 'Password must be at least 8 characters long and contain at least one capital letter, one digit, and one special symbol (+, -, *, &, ^, …)';
+          passwordError.style.color = 'red';
+        } else {
+          passwordError.innerText = '';
+          checkPasswordMatch();
+        }
+      });
+     
+      document.getElementById('passwordConfirmation').addEventListener('input', checkPasswordMatch);
+     
+      function checkPasswordMatch() {
+        var password = document.getElementById('password').value;
+        var passwordConfirmation = document.getElementById('passwordConfirmation').value;
+        var passwordMatchSpan = document.getElementById('passwordMatch');
+     
+        if (password === passwordConfirmation && password !== '') {
+          passwordMatchSpan.innerText = 'Passwords match';
+          passwordMatchSpan.style.color = 'green';
+          document.getElementById('submitButton').disabled = false;
+        } else {
+          passwordMatchSpan.innerText = 'Passwords do not match';
+          passwordMatchSpan.style.color = 'red';
+          document.getElementById('submitButton').disabled = true;
+        }
+      }
+
+          $('#profilePicture').on('change', function() {
+     let fileSize = this.files[0].size / 1024 / 1024; // in MB
+     if (fileSize > 10) {
+      alert('File size is more than 10MB');
+      $(this).val(''); // clear the input
+     }
+     });
+         </script>
 </body>
 
 </html>
