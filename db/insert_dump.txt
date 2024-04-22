@@ -1,0 +1,1075 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.2
+-- Dumped by pg_dump version 16.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: defaultdb; Type: DATABASE; Schema: -; Owner: doadmin
+--
+
+CREATE DATABASE defaultdb WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.UTF-8';
+
+
+ALTER DATABASE defaultdb OWNER TO doadmin;
+
+\connect defaultdb
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: wallt_db; Type: SCHEMA; Schema: -; Owner: doadmin
+--
+
+CREATE SCHEMA wallt_db;
+
+
+ALTER SCHEMA wallt_db OWNER TO doadmin;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: cards; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.cards (
+    card_id integer NOT NULL,
+    number character varying(16) NOT NULL,
+    cvv character varying(3) NOT NULL,
+    holder_id integer NOT NULL,
+    first_last_name character varying(30),
+    stamp_created timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    expiration_month character varying(2),
+    expiration_year character varying(2),
+    is_active boolean DEFAULT true
+);
+
+
+ALTER TABLE wallt_db.cards OWNER TO doadmin;
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.cards_card_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.cards_card_id_seq OWNER TO doadmin;
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.cards_card_id_seq OWNED BY wallt_db.cards.card_id;
+
+
+--
+-- Name: currencies; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.currencies (
+    currency_id integer NOT NULL,
+    name character varying(20) NOT NULL,
+    symbol character varying,
+    ticker character varying(3),
+    rate_to_usd double precision
+);
+
+
+ALTER TABLE wallt_db.currencies OWNER TO doadmin;
+
+--
+-- Name: currencies_currency_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.currencies_currency_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.currencies_currency_id_seq OWNER TO doadmin;
+
+--
+-- Name: currencies_currency_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.currencies_currency_id_seq OWNED BY wallt_db.currencies.currency_id;
+
+
+--
+-- Name: increment_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.increment_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.increment_seq OWNER TO doadmin;
+
+--
+-- Name: roles; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.roles (
+    role_id integer NOT NULL,
+    name character varying NOT NULL
+);
+
+
+ALTER TABLE wallt_db.roles OWNER TO doadmin;
+
+--
+-- Name: roles_role_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.roles_role_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.roles_role_id_seq OWNER TO doadmin;
+
+--
+-- Name: roles_role_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.roles_role_id_seq OWNED BY wallt_db.roles.role_id;
+
+
+--
+-- Name: transactions; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.transactions (
+    transaction_id integer NOT NULL,
+    receiver_wallet integer NOT NULL,
+    sender_wallet integer NOT NULL,
+    amount numeric NOT NULL,
+    exchange_rate double precision NOT NULL,
+    status character varying(10) DEFAULT 'FAILED'::character varying NOT NULL,
+    stamp_created timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+
+ALTER TABLE wallt_db.transactions OWNER TO doadmin;
+
+--
+-- Name: transactions_transaction_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.transactions_transaction_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.transactions_transaction_id_seq OWNER TO doadmin;
+
+--
+-- Name: transactions_transaction_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.transactions_transaction_id_seq OWNED BY wallt_db.transactions.transaction_id;
+
+
+--
+-- Name: transfers; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.transfers (
+    transfer_id integer NOT NULL,
+    card_id integer NOT NULL,
+    amount numeric DEFAULT 0 NOT NULL,
+    status character varying DEFAULT 'FAILED'::character varying NOT NULL,
+    currency_id integer NOT NULL,
+    wallet_id integer NOT NULL,
+    direction character varying(20) NOT NULL,
+    stamp_created timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE wallt_db.transfers OWNER TO doadmin;
+
+--
+-- Name: transfers_transfer_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.transfers_transfer_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.transfers_transfer_id_seq OWNER TO doadmin;
+
+--
+-- Name: transfers_transfer_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.transfers_transfer_id_seq OWNED BY wallt_db.transfers.transfer_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.users (
+    user_id integer NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(32) NOT NULL,
+    first_name character varying(50) NOT NULL,
+    middle_name character varying(50) NOT NULL,
+    last_name character varying(50) NOT NULL,
+    email character varying(100) NOT NULL,
+    phone character varying(10) NOT NULL,
+    photo character varying(255),
+    verified boolean DEFAULT false NOT NULL,
+    blocked boolean DEFAULT false NOT NULL,
+    stamp_created timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    is_deleted boolean DEFAULT false NOT NULL,
+    confirmation_token character varying(100),
+    street character varying(50),
+    number integer,
+    city character varying(20),
+    country character varying(20)
+);
+
+
+ALTER TABLE wallt_db.users OWNER TO doadmin;
+
+--
+-- Name: users_roles; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.users_roles (
+    user_id integer NOT NULL,
+    role_id integer NOT NULL
+);
+
+
+ALTER TABLE wallt_db.users_roles OWNER TO doadmin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.users_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.users_user_id_seq OWNER TO doadmin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.users_user_id_seq OWNED BY wallt_db.users.user_id;
+
+
+--
+-- Name: wallets; Type: TABLE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE TABLE wallt_db.wallets (
+    wallet_id integer NOT NULL,
+    holder_id integer NOT NULL,
+    amount numeric DEFAULT 0 NOT NULL,
+    currency_id integer DEFAULT 0 NOT NULL,
+    stamp_created timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    is_active boolean DEFAULT true NOT NULL,
+    is_default boolean DEFAULT false NOT NULL,
+    CONSTRAINT chk_amount_positive CHECK ((amount >= (0)::numeric))
+);
+
+
+ALTER TABLE wallt_db.wallets OWNER TO doadmin;
+
+--
+-- Name: wallets_wallet_id_seq; Type: SEQUENCE; Schema: wallt_db; Owner: doadmin
+--
+
+CREATE SEQUENCE wallt_db.wallets_wallet_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE wallt_db.wallets_wallet_id_seq OWNER TO doadmin;
+
+--
+-- Name: wallets_wallet_id_seq; Type: SEQUENCE OWNED BY; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER SEQUENCE wallt_db.wallets_wallet_id_seq OWNED BY wallt_db.wallets.wallet_id;
+
+
+--
+-- Name: cards card_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.cards ALTER COLUMN card_id SET DEFAULT nextval('wallt_db.cards_card_id_seq'::regclass);
+
+
+--
+-- Name: currencies currency_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.currencies ALTER COLUMN currency_id SET DEFAULT nextval('wallt_db.currencies_currency_id_seq'::regclass);
+
+
+--
+-- Name: roles role_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.roles ALTER COLUMN role_id SET DEFAULT nextval('wallt_db.roles_role_id_seq'::regclass);
+
+
+--
+-- Name: transactions transaction_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transactions ALTER COLUMN transaction_id SET DEFAULT nextval('wallt_db.transactions_transaction_id_seq'::regclass);
+
+
+--
+-- Name: transfers transfer_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transfers ALTER COLUMN transfer_id SET DEFAULT nextval('wallt_db.transfers_transfer_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users ALTER COLUMN user_id SET DEFAULT nextval('wallt_db.users_user_id_seq'::regclass);
+
+
+--
+-- Name: wallets wallet_id; Type: DEFAULT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.wallets ALTER COLUMN wallet_id SET DEFAULT nextval('wallt_db.wallets_wallet_id_seq'::regclass);
+
+
+--
+-- Data for Name: cards; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (373, '1234432481234123', '459', 368, 'new user', '2024-03-20 02:10:03.23231', '01', '28', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (41, '0003124177370041', '000', 1, 'Pesho Pesheev', '2024-02-29 23:12:54', '12', '24', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (403, '0000000000000000', '222', 401, 'MOQ EKARTATA', '2024-03-20 15:11:59.449592', '02', '22', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (164, '1234123412341234', '123', 1, 'P P', '2024-03-12 18:24:58.854859', '11', '25', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (308, '0011223344556677', '123', 305, 'Bai Shile', '2024-03-19 10:47:04.458865', '11', '27', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (314, '7766554433221111', '023', 305, 'Bai Shile', '2024-03-19 10:51:36.247059', '11', '25', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (344, '9999999966666666', '123', 255, 'Mariika Mariikova', '2024-03-19 17:59:05.219736', '11', '27', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (351, '1234567812345678', '123', 349, 'pesh pesh', '2024-03-20 00:52:11.017334', '01', '55', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (356, '4132123465412342', '982', 320, 'Lucky Taylor', '2024-03-20 02:25:40.293725', '12', '25', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (1, '7895656565646565', '123', 1, 'Pesho Peshov', '2024-02-26 18:28:11.029178', '10', '25', false);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (170, '4321432143214321', '123', 1, 'G G', '2024-03-14 10:27:12.764613', '11', '25', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (2, '1153124177370041', '000', 1, 'Pesho Pesheev', '2024-02-27 12:47:37.476429', '12', '26', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (39, '1113124177370041', '000', 1, 'Pesho Pesheev', '2024-02-28 20:03:06', '12', '25', true);
+INSERT INTO wallt_db.cards (card_id, number, cvv, holder_id, first_last_name, stamp_created, expiration_month, expiration_year, is_active) VALUES (9, '0023124177370041', '000', 3, 'Gosho Goshov', '2024-02-29 23:12:54', '12', '24', true);
+
+
+--
+-- Data for Name: currencies; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd) VALUES (2, 'US Dollar', '$', 'USD', 1);
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd) VALUES (4, 'Bitcoin', '₿', 'BTC', 62549);
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd) VALUES (3, 'Euro', '€', 'EUR', 1.08644);
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd) VALUES (1, 'Bulgarian Lev', 'лв', 'BGN', 0.555502);
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd) VALUES (5, 'British Pound', '£', 'GBP', 1.27184);
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.roles (role_id, name) VALUES (1, 'ADMIN');
+INSERT INTO wallt_db.roles (role_id, name) VALUES (2, 'USER');
+
+
+--
+-- Data for Name: transactions; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (3, 1, 2, 123123, 2, 'FAILED', '2024-03-01 14:10:42.72196');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (4, 2, 1, 666, 1, 'SUCCESSFUL', '2024-03-01 14:11:19.600193');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (5, 1, 2, 12312, 1, 'SUCCESSFUL', '2024-03-01 14:11:19.600193');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (103, 1, 7, 10, 1, 'SUCCESSFUL', '2024-03-04 18:42:41.007621');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (104, 7, 1, 41, 1, 'SUCCESSFUL', '2024-03-04 18:48:22.925369');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (105, 2, 1, 2, 1, 'SUCCESSFUL', '2024-03-04 19:14:42.339112');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (106, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:15:00.687622');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (107, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:22:24.064476');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (108, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:22:58.425434');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (109, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:24:22.527945');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (110, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:27:25.282826');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (111, 2, 1, 2000, 1, 'FAILED', '2024-03-04 19:32:46.359385');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (112, 1, 2, 2000, 1, 'FAILED', '2024-03-04 20:18:44.900789');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (113, 2, 1, 500, 1, 'SUCCESSFUL', '2024-03-04 20:19:04.417971');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (119, 2, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-05 12:13:33.097524');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (120, 4, 2, 5.549180, 0.554918, 'FAILED', '2024-03-05 12:14:13.371032');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (121, 4, 7, 5.549180, 0.554918, 'SUCCESSFUL', '2024-03-05 12:14:36.616899');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (122, 7, 4, 27.0310207994694705, 1.8020680532979647, 'FAILED', '2024-03-05 13:22:23.82677');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (123, 7, 4, 27.0310207994694705, 1.8020680532979647, 'FAILED', '2024-03-05 13:23:08.55511');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (124, 7, 4, 27.0310207994694705, 1.8020680532979647, 'FAILED', '2024-03-05 13:23:30.766017');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (125, 7, 4, 25.2289527461715058, 1.8020680532979647, 'FAILED', '2024-03-05 13:24:06.343241');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (126, 7, 4, 3.6041361065959294, 1.8020680532979647, 'SUCCESSFUL', '2024-03-05 13:40:42.249539');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (127, 7, 4, 3.6041361065959294, 1.8020680532979647, 'SUCCESSFUL', '2024-03-05 13:41:08.317853');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (128, 7, 4, 3.6041361065959294, 1.8020680532979647, 'SUCCESSFUL', '2024-03-05 13:41:17.604512');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (129, 7, 4, 3.6041361065959294, 1.8020680532979647, 'SUCCESSFUL', '2024-03-05 13:41:21.529275');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (130, 7, 4, 3.6041361065959294, 1.8020680532979647, 'FAILED', '2024-03-05 13:41:27.452666');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (131, 7, 4, 3.6041361065959294, 1.8020680532979647, 'FAILED', '2024-03-05 13:42:26.963804');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (132, 7, 4, 3.6041361065959294, 1.8020680532979647, 'FAILED', '2024-03-05 13:42:31.30608');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (135, 2, 1, 8.0, 1, 'SUCCESSFUL', '2024-03-05 14:43:50.846511');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (136, 2, 1, 3000, 1, 'FAILED', '2024-03-05 14:44:15.530645');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (139, 2, 1, 100.0, 1, 'SUCCESSFUL', '2024-03-05 14:48:06.326322');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (140, 2, 1, 100.0, 1, 'SUCCESSFUL', '2024-03-05 14:59:14.164896');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (153, 2, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-06 16:16:39.46643');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (154, 2, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-06 16:16:55.302413');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (159, 1, 3, 39.1164099921069440, 1.9558204996053472, 'SUCCESSFUL', '2024-03-07 12:56:28.683201');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (7, 1, 3, 15.848, 1.9558204996053472, 'SUCCESSFUL', '2024-03-08 12:56:28.683');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (161, 1, 3, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-12 14:17:55.303358');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (6, 3, 1, 100, 1, 'SUCCESSFUL', '2024-03-01 14:11:19.600193');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (229, 12, 7, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-17 21:48:33.571683');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (230, 13, 7, 10.0, 1, 'SUCCESSFUL', '2024-03-17 22:04:26.321262');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (231, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-17 22:06:16.185107');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (232, 12, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-17 22:51:16.775742');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (233, 12, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-17 22:51:18.553328');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (234, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-17 23:09:37.694083');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (235, 12, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-17 23:14:20.260693');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (236, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-17 23:16:26.218896');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (237, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-17 23:17:36.328871');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (238, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-17 23:18:03.764167');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (239, 12, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-18 10:55:11.74525');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (240, 2, 1, 10.230, 1, 'SUCCESSFUL', '2024-03-18 10:55:56.657735');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (251, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-18 11:56:53.418775');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (252, 13, 7, 0.0108532, 1.08532, 'SUCCESSFUL', '2024-03-18 11:57:37.402899');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (256, 2, 1, 2.0, 1, 'SUCCESSFUL', '2024-03-18 12:44:42.832458');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (257, 2, 185, 4.5715222789673434, 2.2857611394836717, 'SUCCESSFUL', '2024-03-18 12:47:25.078264');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (258, 2, 1, 2.0, 1, 'SUCCESSFUL', '2024-03-18 12:50:12.846096');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (259, 2, 1, 2.0, 1, 'SUCCESSFUL', '2024-03-18 12:50:15.621077');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (260, 2, 7, 3.9116409992106944, 1.9558204996053472, 'SUCCESSFUL', '2024-03-18 12:50:26.992749');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (261, 2, 185, 4.5715222789673434, 2.2857611394836717, 'SUCCESSFUL', '2024-03-18 12:52:39.553809');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (262, 2, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-18 12:55:07.524989');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (263, 2, 7, 0.0000000000000000, 1.9558204996053472, 'SUCCESSFUL', '2024-03-18 13:00:09.365255');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (264, 2, 7, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-18 13:04:51.731535');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (265, 2, 185, 22.8576113948367170, 2.2857611394836717, 'SUCCESSFUL', '2024-03-18 13:35:07.236159');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (266, 2, 1, 10.0, 1, 'SUCCESSFUL', '2024-03-18 13:35:44.568702');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (267, 2, 7, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-18 15:02:53.769301');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (272, 2, 7, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-18 15:18:57.653355');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (276, 13, 7, 2170.64000, 1.08532, 'FAILED', '2024-03-18 18:21:39.503229');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (277, 13, 7, 2170.64000, 1.08532, 'FAILED', '2024-03-18 18:24:46.724188');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (278, 13, 7, 2170.64000, 1.08532, 'FAILED', '2024-03-18 18:25:05.669799');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (279, 13, 7, 0.0108532, 1.08532, 'SUCCESSFUL', '2024-03-18 18:43:33.803843');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (280, 13, 7, 10.85320, 1.08532, 'SUCCESSFUL', '2024-03-18 18:46:18.249701');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (281, 13, 7, 5.42660, 1.08532, 'SUCCESSFUL', '2024-03-18 18:48:47.562944');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (282, 13, 7, 2.17064, 1.08532, 'SUCCESSFUL', '2024-03-18 18:50:34.469696');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (283, 13, 7, 2.17064, 1.08532, 'SUCCESSFUL', '2024-03-18 23:12:43.30482');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (284, 13, 185, 1.26841, 1.26841, 'SUCCESSFUL', '2024-03-18 23:13:11.329761');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (290, 3, 185, 11.6869678988685370, 1.1686967898868537, 'SUCCESSFUL', '2024-03-19 09:36:40.462211');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (299, 2, 7, 19.5582049960534720, 1.9558204996053472, 'SUCCESSFUL', '2024-03-19 10:10:29.519088');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (317, 7, 313, 1.0, 1, 'SUCCESSFUL', '2024-03-19 12:44:05.863771');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (362, 336, 321, 10.0, 1, 'SUCCESSFUL', '2024-03-20 02:34:01.678215');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (376, 8, 372, 10.0, 1, 'SUCCESSFUL', '2024-03-20 02:11:31.066918');
+INSERT INTO wallt_db.transactions (transaction_id, receiver_wallet, sender_wallet, amount, exchange_rate, status, stamp_created) VALUES (382, 8, 1, 200.0, 1, 'SUCCESSFUL', '2024-03-20 11:53:44.174119');
+
+
+--
+-- Data for Name: transfers; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (20, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:06:32.781993');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (21, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:06:36.264199');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (22, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:06:41.625035');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (23, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:11:06.683032');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (24, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:12:22.810094');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (25, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:12:43.820458');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (26, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:12:49.127893');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (27, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:13:08.969587');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (28, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:13:13.88368');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (29, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:13:27.434781');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (30, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:13:32.907268');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (31, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:14:29.34281');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (32, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:14:39.80883');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (33, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:14:43.893827');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (34, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:15:03.364267');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (35, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:15:10.304193');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (36, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:15:16.579049');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (37, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-27 17:15:18.674989');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (38, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-27 17:15:22.748004');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (42, 1, 100, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-29 11:14:52.161065');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (43, 1, 100, 'FAILED', 1, 1, 'WITHDRAW', '2024-02-29 11:17:03.366139');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (44, 1, 100, 'FAILED', 1, 1, 'WITHDRAW', '2024-02-29 11:17:13.679556');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (45, 1, 100, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:17:17.357724');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (46, 1, 100, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:17:24.6376');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (47, 1, 100, 'FAILED', 1, 1, 'WITHDRAW', '2024-02-29 11:17:39.84871');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (48, 1, 100, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:17:47.573154');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (49, 1, 100, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:17:48.984551');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (50, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-29 11:22:03.290206');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (51, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-29 11:22:14.704378');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (52, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-29 11:22:19.059895');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (53, 1, 100, 'FAILED', 1, 1, 'WITHDRAW', '2024-02-29 11:22:31.970668');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (56, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-02-29 11:43:24.272262');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (57, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-29 11:43:28.956858');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (58, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-02-29 11:43:30.295866');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (59, 1, 10, 'FAILED', 1, 1, 'WITHDRAW', '2024-02-29 11:43:50.314651');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (60, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:43:52.995845');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (61, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:43:54.237784');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (62, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-02-29 11:44:01.81207');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (63, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:00:59.134384');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (64, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:01:04.681825');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (65, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:01:07.447644');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (66, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:02:02.581425');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (67, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:02:49.494245');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (68, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:02:51.814009');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (69, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:02:53.072194');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (70, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:02:55.199772');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (71, 2, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:02:57.229977');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (72, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:30.908768');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (73, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:33.021017');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (74, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:34.334781');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (75, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:35.824834');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (76, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:37.065909');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (77, 9, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:53.074323');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (78, 9, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:03:56.028572');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (79, 9, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:03:57.659545');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (80, 2, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:14:26.305826');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (81, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:14:31.731365');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (82, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-01 08:14:32.954255');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (83, 1, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-01 08:14:33.808319');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (84, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-01 08:14:50.814442');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (85, 1, 10, 'FAILED', 1, 1, 'WITHDRAW', '2024-03-01 08:14:54.731348');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (86, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-01 08:14:59.620667');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (87, 1, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-01 09:12:20.492354');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (114, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-05 11:11:37.592991');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (115, 1, 200, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-05 11:12:32.297436');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (116, 39, 200, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-05 11:13:16.818606');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (117, 39, 200, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-05 11:13:40.332522');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (118, 1, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-05 11:15:10.405625');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (157, 9, 150, 'FAILED', 3, 3, 'DEPOSIT', '2024-03-07 12:52:39.270622');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (158, 9, 100, 'FAILED', 3, 3, 'WITHDRAW', '2024-03-07 12:55:50.447306');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (175, 39, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-14 18:35:36.963732');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (176, 39, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-14 18:35:52.780602');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (177, 39, 10, 'FAILED', 1, 1, 'DEPOSIT', '2024-03-14 18:36:24.680257');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (178, 39, 10.23, 'FAILED', 3, 7, 'DEPOSIT', '2024-03-14 18:39:42.173431');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (179, 39, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-14 18:44:20.713326');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (180, 39, 10.23, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-14 18:44:30.144651');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (181, 39, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-14 18:44:47.801201');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (182, 39, 200, 'FAILED', 3, 7, 'DEPOSIT', '2024-03-14 19:53:31.830206');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (183, 39, 200, 'SUCCESSFUL', 3, 7, 'DEPOSIT', '2024-03-14 19:53:46.267735');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (193, 39, 1, 'SUCCESSFUL', 3, 7, 'DEPOSIT', '2024-03-15 11:44:18.978638');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (194, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-15 12:00:58.011603');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (195, 39, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-15 13:07:05.933072');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (196, 39, 10.23, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-15 13:07:18.353943');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (197, 39, 10.23, 'FAILED', 1, 1, 'WITHDRAW', '2024-03-15 13:07:32.738484');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (198, 39, 10.23, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-15 13:07:52.498701');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (200, 39, 10, 'FAILED', 3, 7, 'WITHDRAW', '2024-03-15 14:51:01.07222');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (201, 39, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-15 14:52:07.884926');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (204, 39, 10000, 'FAILED', 1, 1, 'WITHDRAW', '2024-03-15 14:57:04.750455');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (205, 39, 100000, 'FAILED', 3, 7, 'WITHDRAW', '2024-03-15 14:57:43.21534');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (206, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-15 14:59:23.791643');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (207, 39, 10000, 'CANCELLED', 3, 7, 'WITHDRAW', '2024-03-15 14:59:30.831841');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (208, 39, 100, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-17 10:30:16.663222');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (218, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-17 14:16:41.484201');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (219, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-17 14:17:06.319469');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (220, 39, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-17 14:17:28.029473');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (222, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-17 14:17:45.755613');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (221, 39, 10, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-17 14:17:41.569079');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (223, 39, 10, 'FAILED', 1, 1, 'WITHDRAW', '2024-03-17 14:17:49.960252');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (224, 39, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-17 14:19:46.778763');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (225, 39, 20, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-17 14:26:36.307997');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (226, 39, 10, 'CANCELLED', 3, 7, 'WITHDRAW', '2024-03-17 14:36:08.767004');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (227, 39, 10, 'CANCELLED', 3, 7, 'WITHDRAW', '2024-03-17 14:36:47.22743');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (228, 39, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-17 14:43:19.790168');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (244, 39, 10, 'CANCELLED', 3, 7, 'WITHDRAW', '2024-03-18 10:58:15.403458');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (247, 39, 10, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-18 11:06:31.79164');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (268, 1, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-18 15:03:01.800859');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (271, 1, 10, 'SUCCESSFUL', 4, 187, 'DEPOSIT', '2024-03-18 15:07:19.207045');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (269, 1, 10, 'CANCELLED', 5, 185, 'WITHDRAW', '2024-03-18 15:03:21.06547');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (270, 1, 10, 'CANCELLED', 5, 185, 'WITHDRAW', '2024-03-18 15:06:56.424892');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (285, 1, 20, 'SUCCESSFUL', 1, 1, 'WITHDRAW', '2024-03-18 23:14:13.629123');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (286, 1, 3, 'SUCCESSFUL', 4, 187, 'DEPOSIT', '2024-03-18 23:14:31.38299');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (287, 1, 1000, 'FAILED', 1, 1, 'WITHDRAW', '2024-03-18 23:15:23.911137');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (293, 41, 10.23, 'SUCCESSFUL', 1, 1, 'DEPOSIT', '2024-03-19 09:43:15.88903');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (294, 41, 10, 'SUCCESSFUL', 4, 187, 'DEPOSIT', '2024-03-19 09:43:31.039087');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (295, 2, 10, 'FAILED', 5, 185, 'DEPOSIT', '2024-03-19 09:43:37.752336');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (296, 39, 10, 'SUCCESSFUL', 5, 185, 'WITHDRAW', '2024-03-19 09:45:44.36278');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (309, 308, 10, 'FAILED', 2, 306, 'DEPOSIT', '2024-03-19 10:47:14.525813');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (310, 308, 10, 'FAILED', 2, 306, 'DEPOSIT', '2024-03-19 10:47:21.690452');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (311, 308, 10, 'SUCCESSFUL', 2, 306, 'DEPOSIT', '2024-03-19 10:47:28.290652');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (315, 308, 2, 'FAILED', 3, 313, 'DEPOSIT', '2024-03-19 12:43:32.766308');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (316, 308, 2, 'SUCCESSFUL', 3, 313, 'DEPOSIT', '2024-03-19 12:43:41.09348');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (318, 1, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-19 13:34:49.676459');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (319, 1, 3, 'FAILED', 3, 7, 'WITHDRAW', '2024-03-19 13:36:47.531093');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (334, 1, 10, 'SUCCESSFUL', 3, 7, 'DEPOSIT', '2024-03-19 14:01:10.545585');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (335, 1, 696969, 'SUCCESSFUL', 3, 7, 'DEPOSIT', '2024-03-19 14:03:22.047529');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (337, 41, 10, 'FAILED', 3, 7, 'DEPOSIT', '2024-03-19 16:24:40.941988');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (338, 1, 10, 'SUCCESSFUL', 3, 7, 'WITHDRAW', '2024-03-19 16:24:50.606432');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (343, 1, 10, 'SUCCESSFUL', 2, 336, 'DEPOSIT', '2024-03-19 17:58:23.826839');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (345, 344, 10, 'SUCCESSFUL', 1, 16, 'DEPOSIT', '2024-03-19 17:59:13.973056');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (346, 344, 10, 'SUCCESSFUL', 1, 16, 'DEPOSIT', '2024-03-19 17:59:43.07959');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (347, 344, 10, 'SUCCESSFUL', 1, 16, 'DEPOSIT', '2024-03-19 18:01:20.07508');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (353, 351, 20, 'SUCCESSFUL', 1, 352, 'DEPOSIT', '2024-03-20 00:56:39.155705');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (354, 351, 10, 'PENDING', 1, 352, 'WITHDRAW', '2024-03-20 00:56:48.677213');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (355, 41, 10, 'CANCELLED', 3, 7, 'WITHDRAW', '2024-03-20 01:27:59.098832');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (357, 356, 50, 'SUCCESSFUL', 2, 321, 'DEPOSIT', '2024-03-20 02:25:53.708799');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (358, 356, 100, 'FAILED', 2, 321, 'WITHDRAW', '2024-03-20 02:26:05.137218');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (359, 356, 100, 'FAILED', 2, 321, 'WITHDRAW', '2024-03-20 02:26:13.991856');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (360, 356, 100, 'FAILED', 2, 321, 'WITHDRAW', '2024-03-20 02:26:36.107379');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (361, 356, 10, 'SUCCESSFUL', 2, 321, 'WITHDRAW', '2024-03-20 02:27:10.758528');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (374, 373, 20, 'FAILED', 2, 369, 'DEPOSIT', '2024-03-20 02:10:28.87953');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (375, 373, 20, 'SUCCESSFUL', 1, 372, 'DEPOSIT', '2024-03-20 02:10:43.620939');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (377, 373, 5, 'SUCCESSFUL', 1, 372, 'WITHDRAW', '2024-03-20 02:13:26.419607');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (378, 373, 50, 'SUCCESSFUL', 2, 369, 'DEPOSIT', '2024-03-20 03:23:19.757882');
+INSERT INTO wallt_db.transfers (transfer_id, card_id, amount, status, currency_id, wallet_id, direction, stamp_created) VALUES (379, 373, 20, 'SUCCESSFUL', 2, 369, 'WITHDRAW', '2024-03-20 03:23:45.807304');
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (3, 'PresentPro', 'Qwer!234', 'Oliver', 'James', 'Smith', 'gosho@goshomail.com', '0888452462', NULL, true, false, '2024-02-26 18:29:07.579437', false, NULL, 'GreenHill Str', 1, 'Burgas', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (255, 'VisualVirtuoso', 'Qwer!234', 'Benjamin', 'Thomas', 'Anderson', 'boyanbot@gmail.com', '0888452465', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710756431/qa85vkxhfiaeijy71xng.png', true, false, '2024-03-18 12:07:13.02439', false, '8040fe49-c597-49ff-9763-735b8f3d5985', 'BlackHill Str', 1, 'Plovdiv', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (21, 'cgerlingf', 'Qwer!234', 'Gothart', 'Clyve', 'Gerling', 'cgerlingf@google.ca', '2509579952', NULL, true, false, '2024-03-20 00:51:21.116878', false, NULL, '74901 Village Green Hill', 442633, 'Caronoan West', 'Philippines');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (330, 'PresentologyPro', 'Qwer!234', 'Mia', 'Emily', 'Davis', 'creativemind88@gmail.com', '0888452468', NULL, true, false, '2024-03-19 14:38:45.889429', false, 'dac1aa1f-2af5-49a3-ac27-6e410134c50f', 'BlackHill Str', 0, 'Varna', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (332, 'TalkTactician', 'Qwer!234', 'Daniel', 'Joseph', 'Wilson', 'artistic.soul73@gmail.com', '0888452469', NULL, true, false, '2024-03-19 14:40:49.070125', false, '61a64b55-bdf8-412e-89f0-0953e99232c9', 'RedHill Str', 0, 'Stara Zagora', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (5, 'PresentationProdigy', 'Qwer!234', 'Isabella', 'Marie', 'Brown', 'wise.thinker29@gmail.com', '0888452464', NULL, true, false, '2024-02-26 18:29:07.579437', false, NULL, 'GreenHill Str', 1, 'Stara Zagora', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (349, 'PitchPerfector', 'Qwer!234', 'Charlotte', 'Anne', 'Thompson', 'visualstoryteller55@gmail.com', '0888452460', NULL, true, false, '2024-03-20 00:51:23.916291', false, '92261ad2-45dd-4482-a81d-87aec7fe8a54', 'BlueHill Str', 0, 'Plovdiv', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (305, 'SpeechCraftsman', 'Qwer!234', 'Ava', 'Elizabeth', 'Martinez', 'innovation.guru21@gmail.com', '0888452466', NULL, true, false, '2024-03-19 10:43:04.106195', false, 'b1966f72-93e7-43d1-bcd6-08bfb2b5e42a', 'RedHill Str', 2, 'Pleven', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (4, 'DisplayDiva', 'Qwer!234', 'Ethan', 'Alexander', 'Williams', 'ivan@ivanmail.com', '0888452463', NULL, true, false, '2024-02-26 18:29:07.579437', false, NULL, 'GreenHill Str', 1, 'Sofia', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (320, 'ExpoExpert', 'Qwer!234', 'Lucas', 'Michael', 'Taylor', 'techwizard42@gmail.com', '0888452467', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710894240/rsfjc8h4jibkzgbhdd6z.png', true, false, '2024-03-19 14:18:23.080049', false, '706ebbb8-c5ea-4d1b-a6fe-be4b9d79d251', 'BlackHill Str', 0, 'Varna', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (2, 'SlideMaster', 'Qwer!234', 'Sophia', 'Grace', 'Johnson', 'tosho@toshomail.com', '0888452461', NULL, true, false, '2024-02-26 18:29:07.579437', false, NULL, 'GreenHill Str', 1, 'Plovdiv', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (18, 'bpuddingc', 'Qwer!234', 'Gerhardt', 'Barney', 'Pudding', 'bpuddingc@mysql.com', '1477763809', NULL, true, false, '2024-03-20 00:51:20.682966', false, NULL, '4 Leroy Park', 788912, 'Twyford', 'United Kingdom');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (16, 'lprestwicha', 'Qwer!234', 'Rosana', 'Letty', 'Prestwich', 'lprestwicha@telegraph.co.uk', '1079883715', NULL, true, false, '2024-03-20 00:51:20.388923', false, NULL, '64697 Tomscot Point', 236706, 'Nawābganj', 'Bangladesh');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (13, 'ioates7', 'Qwer!234', 'Fleurette', 'Issy', 'Oates', 'ioates7@house.gov', '8196585696', NULL, true, false, '2024-03-20 00:51:19.953807', false, NULL, '35368 Dawn Street', 268946, 'Bat Khela', 'Pakistan');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (15, 'fbrodie9', 'Qwer!234', 'Hedvige', 'Francklyn', 'Brodie', 'fbrodie9@chron.com', '2923418784', NULL, true, false, '2024-03-20 00:51:20.237876', false, NULL, '49273 Prairieview Way', 313993, 'Cukangpanjang', 'Indonesia');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (20, 'lastelle', 'Qwer!234', 'Patrizia', 'Lynda', 'Astell', 'lastelle@wp.com', '3538732989', NULL, true, false, '2024-03-20 00:51:20.969872', false, NULL, '698 2nd Street', 974832, 'Succha', 'Peru');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (24, 'rashmenti', 'Qwer!234', 'Dollie', 'Reggy', 'Ashment', 'rashmenti@paypal.com', '3505071395', NULL, true, false, '2024-03-20 00:51:21.545795', false, NULL, '9684 Warrior Hill', 185935, 'Kampungbaru', 'Indonesia');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (22, 'dpoyntzg', 'Qwer!234', 'Catharine', 'Diane-marie', 'Poyntz', 'dpoyntzg@yahoo.co.jp', '5802694649', NULL, true, false, '2024-03-20 00:51:21.262744', false, NULL, '19242 Eliot Hill', 113096, 'Caigangan', 'Philippines');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (17, 'emabbotb', 'Qwer!234', 'Carena', 'Ewell', 'Mabbot', 'emabbotb@unc.edu', '4558869027', NULL, true, false, '2024-03-20 00:51:20.547893', false, NULL, '990 Washington Alley', 606267, 'Jerada', 'Morocco');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (14, 'qwadsworth8', 'Qwer!234', 'Phillie', 'Querida', 'Wadsworth', 'qwadsworth8@4shared.com', '1572021034', NULL, true, false, '2024-03-20 00:51:20.097832', false, NULL, '983 Scoville Hill', 977659, 'Komga', 'South Africa');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (12, 'jbarnicott6', 'Qwer!234', 'Rhonda', 'Jackie', 'Barnicott', 'jbarnicott6@webeden.co.uk', '6424974365', NULL, true, false, '2024-03-20 00:51:19.806834', false, NULL, '5 Hanson Lane', 366470, 'Dongjingcheng', 'China');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (6, 'ablois0', 'Qwer!234', 'Denny', 'Amaleta', 'Blois', 'ablois0@dailymail.co.uk', '7694032915', NULL, true, false, '2024-03-20 00:51:18.910137', false, NULL, '38225 Briar Crest Circle', 176064, 'Petauke', 'Zambia');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (7, 'imatijasevic1', 'Qwer!234', 'Cally', 'Isadore', 'Matijasevic', 'imatijasevic1@loc.gov', '8225258254', NULL, true, false, '2024-03-20 00:51:19.062742', false, NULL, '87252 Lake View Trail', 854396, 'Youxi', 'China');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (1, 'pesho', '1234', 'pesho', 'peshov', 'peshov', 'pesho@peshomail.com', '0888412465', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710887797/hynz6rdizxubiduo1pxd.png', true, false, '2024-02-26 18:29:07.579437', false, '3f19599f-369f-463b-b3d5-20134d2156f1', 'RedHill Str', 1, 'Sofia', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (25, 'ncettellj', 'Qwer!234', 'Carmine', 'Nestor', 'Cettell', 'ncettellj@auda.org.au', '4582563524', NULL, true, false, '2024-03-20 00:51:21.686966', false, NULL, '6 Golf View Terrace', 302686, 'Agrela', 'Portugal');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (10, 'aokeaveny4', 'Qwer!234', 'Sid', 'Ardys', 'O''Keaveny', 'aokeaveny4@digg.com', '3963615648', NULL, true, false, '2024-03-20 00:51:19.51604', false, NULL, '37627 Dwight Road', 711429, 'Alençon', 'France');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (11, 'daddis5', 'Qwer!234', 'Catlee', 'Drusy', 'Addis', 'daddis5@yahoo.co.jp', '6232065017', NULL, true, false, '2024-03-20 00:51:19.668711', false, NULL, '5440 Transport Way', 864466, 'Wonda', 'Indonesia');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (23, 'okippingh', 'Qwer!234', 'Deni', 'Oliviero', 'Kipping', 'okippingh@chron.com', '5306645086', NULL, true, false, '2024-03-20 00:51:21.399949', false, NULL, '76658 Northfield Drive', 480854, 'Pilar', 'Philippines');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (19, 'mdyballd', 'Qwer!234', 'Dreddy', 'Maximilianus', 'Dyball', 'mdyballd@odnoklassniki.ru', '6581727685', NULL, true, false, '2024-03-20 00:51:20.822824', false, NULL, '7 Forster Pass', 105025, 'Batobato', 'Philippines');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (9, 'ajoanic3', 'Qwer!234', 'Rutledge', 'Agatha', 'Joanic', 'ajoanic3@sfgate.com', '1056556059', NULL, true, false, '2024-03-20 00:51:19.371704', false, NULL, '5 Oakridge Way', 374043, 'Mosal’sk', 'Russia');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (8, 'dbinns2', 'Qwer!234', 'Jennine', 'Del', 'Binns', 'dbinns2@tuttocitta.it', '8933513972', NULL, true, false, '2024-03-20 00:51:19.223012', false, NULL, '3 Steensland Way', 26720, 'Tabonok', 'Philippines');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (393, 'max97', 'k9mk!AGPZ3S8C4W', 'Petar', 'Pep4ov', 'Andreev', 'andreev.petar.biz@gmail.com', '0898685003', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710941463/yhcwqmvv8jj4avstilwe.jpg', false, false, '2024-03-20 13:31:04.787018', false, 'c9ed9a23-ab32-429e-b818-9a4f3151e7fd', 'Petko Yu Todorov', 1, 'Sofia', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (395, 'kandita za rabota ', 'A!@#a123', 'Ivan', 'Dge', 'Stefanov', 'stefeanpvivan1998@gmail.com', '0888681440', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710947016/u8bq9oanwnzaiufdftjp.png', true, false, '2024-03-20 15:03:38.177486', false, NULL, 'Zad bloka 99', 9, 'Sofia', 'България');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (397, 'kanditaZaRabota', 'A!@#a123', 'vankataDge', 'Dge', 'Stefi', 'stefanovivan1998@abv.bg', '0888696969', NULL, false, false, '2024-03-20 15:06:48.149853', false, '83e6772e-b77f-4554-a226-bef8dd4709c7', 'Zad bloka 99', 9, 'PlevenDge', 'България');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (401, 'BezrabotniqNomad1', 'A!@#a123', 'vankataDge', 'Dge', 'Stefi', '1pi4avu66cia@abv.bg', '0888696960', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710947410/rrsjms2oelonnqiukw7q.png', false, false, '2024-03-20 15:10:11.797302', false, '085e6cd3-f32c-4727-a605-eab979c585a9', 'Zad bloka 99', 9, 'PlevenDge', 'България');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (368, 'newUser', 'Dc.7tiLBYzA4.y5', 'UserEdited', 'NewsFlash', 'Name', 'rawice2187@fryshare.commm', '1234567890', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710904065/oe3j7wp7pvmtksqawx2c.png', true, true, '2024-03-20 01:56:14.098475', false, NULL, '1', 2, 'Sofia', 'Bulgaria');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (380, 'asdf', 'Asdf!234', 'Asdf', 'Asdf', 'Asdf', 'asdf@asdf.com', '0878555878', NULL, false, false, '2024-03-20 11:34:21.407178', false, 'b8dc2d71-a7bc-40cf-8464-4401008ae912', 'Asdf', 2, 'S', 'Asdf');
+INSERT INTO wallt_db.users (user_id, username, password, first_name, middle_name, last_name, email, phone, photo, verified, blocked, stamp_created, is_deleted, confirmation_token, street, number, city, country) VALUES (385, 'doncho', '1234', 'Doncho', 'Donchov', 'Donchov', 'doncho@donchomail.com', '0834563456', 'https://res.cloudinary.com/dhixuwvrk/image/upload/v1710936747/hkagcrrxzzsd5cxfte2w.jpg', false, false, '2024-03-20 14:08:48.327608', false, '82105b83-36fe-41be-a9ea-3f1b590dcc89', 'DonchoStr', 25, 'Sofia', 'Bulgaria');
+
+
+--
+-- Data for Name: users_roles; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (1, 1);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (1, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (2, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (3, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (4, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (5, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (6, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (7, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (248, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (249, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (250, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (255, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (300, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (301, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (303, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (305, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (320, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (330, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (332, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (339, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (341, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (349, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (364, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (366, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (368, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (370, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (380, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (383, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (385, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (389, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (393, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (395, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (397, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (401, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (8, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (9, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (10, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (11, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (12, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (13, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (14, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (15, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (16, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (17, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (18, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (19, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (20, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (21, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (22, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (23, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (24, 2);
+INSERT INTO wallt_db.users_roles (user_id, role_id) VALUES (25, 2);
+
+
+--
+-- Data for Name: wallets; Type: TABLE DATA; Schema: wallt_db; Owner: doadmin
+--
+
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (2, 2, 1370.3751169361959862, 1, '2024-02-26 18:29:28.878875', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (9, 3, 300, 2, '2024-03-13 22:36:26.130007', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (10, 3, 0.5, 4, '2024-03-13 22:36:26.130007', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (12, 4, 59.5582049960534720, 1, '2024-03-17 19:47:24.736454', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (306, 305, 0, 2, '2024-03-19 10:43:04.144109', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (313, 305, 1, 3, '2024-03-19 10:51:09.078455', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (331, 330, 0, 2, '2024-03-19 14:38:45.947347', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (333, 332, 0, 2, '2024-03-19 14:40:49.116756', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (4, 2, 0.3034555736162824, 2, '2024-02-26 18:29:28.878875', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (16, 255, 30, 1, '2024-03-19 08:14:06.6625', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (350, 349, 0, 2, '2024-03-20 00:51:23.97503', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (352, 349, 20, 1, '2024-03-20 00:56:20.160534', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (321, 320, 30, 2, '2024-03-19 14:18:23.137943', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (336, 1, 20.0, 2, '2024-03-19 16:24:25.44796', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (3, 3, 308.2557988427376260, 3, '2024-02-26 18:29:28.878875', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (13, 4, 84.9087864, 2, '2024-03-17 20:00:12.511563', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (372, 368, 5, 1, '2024-03-20 02:09:18.966319', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (369, 368, 30, 2, '2024-03-20 01:56:14.101207', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (381, 380, 0, 2, '2024-03-20 11:34:21.408709', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (1, 1, 328.4446149881604160, 1, '2024-02-26 18:29:28.878875', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (185, 1, 4966, 5, '2024-03-14 23:21:06.041938', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (8, 3, 232.0, 1, '2024-03-13 22:36:26.130007', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (386, 385, 0, 2, '2024-03-20 14:08:48.372457', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (394, 393, 0, 2, '2024-03-20 13:31:04.790773', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (396, 395, 0, 2, '2024-03-20 15:03:38.180156', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (398, 397, 0, 2, '2024-03-20 15:06:48.151378', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (402, 401, 0, 2, '2024-03-20 15:10:11.79855', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (404, 401, 0, 4, '2024-03-20 15:12:08.448542', true, false);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (187, 1, 13.5, 4, '2024-03-14 23:21:25.339359', true, true);
+INSERT INTO wallt_db.wallets (wallet_id, holder_id, amount, currency_id, stamp_created, is_active, is_default) VALUES (7, 1, 698466.200820, 3, '2024-02-27 12:45:28.035422', true, false);
+
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.cards_card_id_seq', 9, true);
+
+
+--
+-- Name: currencies_currency_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.currencies_currency_id_seq', 5, true);
+
+
+--
+-- Name: increment_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.increment_seq', 404, true);
+
+
+--
+-- Name: roles_role_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.roles_role_id_seq', 2, true);
+
+
+--
+-- Name: transactions_transaction_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.transactions_transaction_id_seq', 7, true);
+
+
+--
+-- Name: transfers_transfer_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.transfers_transfer_id_seq', 1, true);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.users_user_id_seq', 25, true);
+
+
+--
+-- Name: wallets_wallet_id_seq; Type: SEQUENCE SET; Schema: wallt_db; Owner: doadmin
+--
+
+SELECT pg_catalog.setval('wallt_db.wallets_wallet_id_seq', 16, true);
+
+
+--
+-- Name: cards cards2_pk_2; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.cards
+    ADD CONSTRAINT cards2_pk_2 UNIQUE (number);
+
+
+--
+-- Name: cards cards_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.cards
+    ADD CONSTRAINT cards_pkey PRIMARY KEY (card_id);
+
+
+--
+-- Name: currencies currencies_pk; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.currencies
+    ADD CONSTRAINT currencies_pk UNIQUE (ticker);
+
+
+--
+-- Name: currencies currencies_pk_2; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.currencies
+    ADD CONSTRAINT currencies_pk_2 UNIQUE (name);
+
+
+--
+-- Name: currencies currencies_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.currencies
+    ADD CONSTRAINT currencies_pkey PRIMARY KEY (currency_id);
+
+
+--
+-- Name: roles roles_pk_2; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.roles
+    ADD CONSTRAINT roles_pk_2 UNIQUE (name);
+
+
+--
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (role_id);
+
+
+--
+-- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transactions
+    ADD CONSTRAINT transactions_pkey PRIMARY KEY (transaction_id);
+
+
+--
+-- Name: transfers transfers_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transfers
+    ADD CONSTRAINT transfers_pkey PRIMARY KEY (transfer_id);
+
+
+--
+-- Name: users users_pk_2; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users
+    ADD CONSTRAINT users_pk_2 UNIQUE (username);
+
+
+--
+-- Name: users users_pk_3; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users
+    ADD CONSTRAINT users_pk_3 UNIQUE (email);
+
+
+--
+-- Name: users users_pk_4; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users
+    ADD CONSTRAINT users_pk_4 UNIQUE (phone);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: users_roles users_roles_pk; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.users_roles
+    ADD CONSTRAINT users_roles_pk PRIMARY KEY (user_id, role_id);
+
+
+--
+-- Name: wallets wallets_pkey; Type: CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.wallets
+    ADD CONSTRAINT wallets_pkey PRIMARY KEY (wallet_id);
+
+
+--
+-- Name: transfers c; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transfers
+    ADD CONSTRAINT c FOREIGN KEY (card_id) REFERENCES wallt_db.cards(card_id);
+
+
+--
+-- Name: cards cards2_users_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.cards
+    ADD CONSTRAINT cards2_users_id_fk FOREIGN KEY (holder_id) REFERENCES wallt_db.users(user_id);
+
+
+--
+-- Name: transactions transactions_wallets_wallet_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transactions
+    ADD CONSTRAINT transactions_wallets_wallet_id_fk FOREIGN KEY (sender_wallet) REFERENCES wallt_db.wallets(wallet_id);
+
+
+--
+-- Name: transactions transactions_wallets_wallet_id_fk_2; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transactions
+    ADD CONSTRAINT transactions_wallets_wallet_id_fk_2 FOREIGN KEY (receiver_wallet) REFERENCES wallt_db.wallets(wallet_id);
+
+
+--
+-- Name: transfers transfers_currencies_currency_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transfers
+    ADD CONSTRAINT transfers_currencies_currency_id_fk FOREIGN KEY (currency_id) REFERENCES wallt_db.currencies(currency_id);
+
+
+--
+-- Name: transfers transfers_wallets_wallet_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.transfers
+    ADD CONSTRAINT transfers_wallets_wallet_id_fk FOREIGN KEY (wallet_id) REFERENCES wallt_db.wallets(wallet_id);
+
+
+--
+-- Name: wallets wallets_currencies_currency_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.wallets
+    ADD CONSTRAINT wallets_currencies_currency_id_fk FOREIGN KEY (currency_id) REFERENCES wallt_db.currencies(currency_id);
+
+
+--
+-- Name: wallets wallets_users_id_fk; Type: FK CONSTRAINT; Schema: wallt_db; Owner: doadmin
+--
+
+ALTER TABLE ONLY wallt_db.wallets
+    ADD CONSTRAINT wallets_users_id_fk FOREIGN KEY (holder_id) REFERENCES wallt_db.users(user_id);
+
+
+--
+-- Name: DATABASE defaultdb; Type: ACL; Schema: -; Owner: doadmin
+--
+
+GRANT ALL ON DATABASE defaultdb TO boyanbot;
+GRANT ALL ON DATABASE defaultdb TO ivaylo37;
+GRANT ALL ON DATABASE defaultdb TO andreev5r;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
