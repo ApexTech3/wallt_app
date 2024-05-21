@@ -40,6 +40,7 @@ public class HibernateConfig {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(dbPassword);
+        dataSource.setSchema("public");
 
         return dataSource;
     }

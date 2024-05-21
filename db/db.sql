@@ -1,7 +1,7 @@
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-drop schema if exists wallt_db cascade;
-create schema wallt_db;
-SET search_path TO wallt_db;
+drop schema if exists public cascade;
+create schema public;
+SET search_path TO public;
 CREATE SEQUENCE increment_SEQ START 1;
 
 
