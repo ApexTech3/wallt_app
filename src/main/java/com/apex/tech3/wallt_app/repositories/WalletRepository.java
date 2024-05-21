@@ -26,17 +26,17 @@ public interface WalletRepository extends JpaRepository<Wallet, Integer>, JpaSpe
 //               SELECT
 //                   SUM(w.amount * c.rate_to_usd /
 //                       (SELECT mc.rate_to_usd
-//                        FROM wallt_db.currencies mc
+//                        FROM public.currencies mc
 //                        WHERE mc.currency_id =
 //                           (SELECT currency_id
-//                            FROM wallt_db.wallets w
+//                            FROM public.wallets w
 //                            WHERE holder_id = :userId AND w.is_default = true)
 //                       )
 //                   )as total
 //               FROM
-//                   wallt_db.wallets w
+//                   public.wallets w
 //               JOIN
-//                   wallt_db.currencies c ON w.currency_id = c.currency_id
+//                   public.currencies c ON w.currency_id = c.currency_id
 //               WHERE
 //                   holder_id = :userId AND w.is_active = true;""", nativeQuery = true)
 //       BigDecimal getTotalBalanceInDefault(int userId);

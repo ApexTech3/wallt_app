@@ -9,11 +9,11 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users", schema = "wallt_db")
+@Table(name = "users", schema = "public")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    @SequenceGenerator(name = "user_sequence", sequenceName = "wallt_db.increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "user_sequence", sequenceName = "public.increment_SEQ", allocationSize = 1)
     @Column(name = "user_id")
     private int id;
     @Column(name = "username", unique = true, nullable = false)
@@ -41,7 +41,7 @@ public class User {
     @Column(name = "country")
     private String country;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", schema = "wallt_db",
+    @JoinTable(name = "users_roles", schema = "public",
             joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     @Column(name = "blocked")

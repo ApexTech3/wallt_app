@@ -8,11 +8,11 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "cards", schema = "wallt_db")
+@Table(name = "cards", schema = "public")
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "card_sequence")
-    @SequenceGenerator(name = "card_sequence", sequenceName = "wallt_db.increment_seq", allocationSize = 1)
+    @SequenceGenerator(name = "card_sequence", sequenceName = "public.increment_seq", allocationSize = 1)
     @Column(name = "card_id")
     private int id;
     @Column(name = "first_last_name")

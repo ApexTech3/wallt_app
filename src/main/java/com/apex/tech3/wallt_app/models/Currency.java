@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "currencies", schema = "wallt_db")
+@Table(name = "currencies", schema = "public")
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_sequence")
