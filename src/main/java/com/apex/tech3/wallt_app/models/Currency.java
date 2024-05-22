@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "currencies", schema = "public")
+@Table(name = "currencies", schema = "wallt_db")
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "currency_sequence")
-    @SequenceGenerator(name = "currency_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "currency_sequence", sequenceName = "wallt_db.currencies_currency_id_seq", allocationSize = 1)
     @Column(name = "currency_id")
     private int id;
     @Column(name = "name")

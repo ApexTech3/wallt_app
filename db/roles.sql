@@ -10,7 +10,7 @@ create table roles
 alter table roles
     owner to postgres;
 
-INSERT INTO public.roles (role_id, name)
+INSERT INTO wallt_db.roles (role_id, name)
 VALUES (1, 'ADMIN');
-INSERT INTO public.roles (role_id, name)
+INSERT INTO wallt_db.roles (role_id, name)
 VALUES (2, 'USER');

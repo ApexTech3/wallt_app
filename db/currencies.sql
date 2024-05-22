@@ -12,13 +12,13 @@ create table currencies
     rate_to_usd double precision
 );
 
-INSERT INTO public.currencies (currency_id, name, symbol, ticker, rate_to_usd)
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd)
 VALUES (2, 'US Dollar', '$', 'USD', 1);
-INSERT INTO public.currencies (currency_id, name, symbol, ticker, rate_to_usd)
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd)
 VALUES (4, 'Bitcoin', '₿', 'BTC', 62549);
-INSERT INTO public.currencies (currency_id, name, symbol, ticker, rate_to_usd)
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd)
 VALUES (3, 'Euro', '€', 'EUR', 1.08644);
-INSERT INTO public.currencies (currency_id, name, symbol, ticker, rate_to_usd)
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd)
 VALUES (1, 'Bulgarian Lev', 'лв', 'BGN', 0.555502);
-INSERT INTO public.currencies (currency_id, name, symbol, ticker, rate_to_usd)
+INSERT INTO wallt_db.currencies (currency_id, name, symbol, ticker, rate_to_usd)
 VALUES (5, 'British Pound', '£', 'GBP', 1.27184);

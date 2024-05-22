@@ -24,6 +24,7 @@ public class HibernateConfig {
         dbPassword = env.getProperty("spring.datasource.password");
     }
 
+
     @Bean(name = "entityManagerFactory")
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
@@ -40,7 +41,6 @@ public class HibernateConfig {
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(dbPassword);
-        dataSource.setSchema("public");
 
         return dataSource;
     }
@@ -51,7 +51,6 @@ public class HibernateConfig {
         // Configure code-first capabilities
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "validate");
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        hibernateProperties.setProperty("hibernate.transaction.coordinator_class", "jdbc");
         return hibernateProperties;
     }
 }

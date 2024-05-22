@@ -10,11 +10,11 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "transactions", schema = "public")
+@Table(name = "transactions", schema = "wallt_db")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence")
-    @SequenceGenerator(name = "transaction_sequence", sequenceName = "public.increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "transaction_sequence", sequenceName = "wallt_db.transactions_transaction_id_seq", allocationSize = 1)
     @Column(name = "transaction_id")
     private int id;
     @ManyToOne

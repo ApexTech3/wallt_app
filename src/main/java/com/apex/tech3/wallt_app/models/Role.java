@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "roles", schema = "public")
+@Table(name = "roles", schema = "wallt_db")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_sequence")
-    @SequenceGenerator(name = "role_sequence", sequenceName = "increment_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "role_sequence", sequenceName = "wallt_db.roles_role_id_seq", allocationSize = 1)
     @Column(name = "role_id")
     private int id;
     @Column(name = "name")

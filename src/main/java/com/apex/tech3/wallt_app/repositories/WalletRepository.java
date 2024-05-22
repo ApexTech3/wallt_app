@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@SuppressWarnings("SpringDataMethodInconsistencyInspection")
 public interface WalletRepository extends JpaRepository<Wallet, Integer>, JpaSpecificationExecutor<Wallet> {
 
        Wallet findByIdAndIsActiveTrue(int id);

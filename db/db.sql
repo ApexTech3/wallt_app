@@ -1,7 +1,7 @@
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-drop schema if exists public cascade;
+drop schema if exists wallt_db cascade;
 create schema public;
-SET search_path TO public;
+SET search_path TO wallt_db;
 CREATE SEQUENCE increment_SEQ START 1;
 
 
@@ -126,27 +126,27 @@ create table transfers
     direction   varchar(20)           not null
 );
 
-INSERT INTO public.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
 VALUES ('pesho', '1234', 'pesho', 'peshov', 'peshov', 'pesho@peshomail.com', 'pesho', 'pesho', 1, false, false, false);
-INSERT INTO public.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
 VALUES ('gosho', '1234', 'gosho', 'goshov', 'gosho', 'gosho@goshomail.com', 'gosho', 'gosho', 1, false, false, false);
-INSERT INTO public.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
 VALUES ('tosho', '1234', 'tosho', 'toshov', 'toshov', 'tosho@toshomail.com', 'tosho', 'tosho', 1, false, false, false);
-INSERT INTO public.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
 VALUES ('ivan', '1234', 'ivan', 'ivanov', 'ivanov', 'ivan@ivanmail.com', 'ivan', 'ivan', 1, false, false, false);
-INSERT INTO public.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
+INSERT INTO wallt_db.users (username, password, first_name, middle_name, last_name, email, phone, photo, address_id,
                             verified, blocked)
 VALUES ('mariika', '1234', 'mariika', 'mariikova', 'mariikova', 'mariika@mariikamail.com', 'mariika', 'mariika', 1, false, false, false);
 
-INSERT INTO public.wallets (holder_id, amount, currency_id)
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
 VALUES (1, 12345678, 1);
-INSERT INTO public.wallets (holder_id, amount, currency_id)
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
 VALUES (1, 23456789, 2);
-INSERT INTO public.wallets (holder_id, amount, currency_id)
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
 VALUES (1, 3456789, 3);
-INSERT INTO public.wallets (holder_id, amount, currency_id)
+INSERT INTO wallt_db.wallets (holder_id, amount, currency_id)
 VALUES (2, 3456, 2);
